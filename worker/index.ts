@@ -32,15 +32,43 @@ const worker = {
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       return handleImageOptimization(request, {
-        fetchAsset: (path) => env.ASSETS.fetch(new Request(new URL(path, request.url))),
+        fetchAsset: (path) => {
+          if (env?.ASSETS?.fetch) {
+            return env.ASSETS.fetch(new Request(new URL(path, request.url)));
+          }
+          return globalThis.fetch(new Request(new URL(path, request.url)));
+        },
         transformImage: async (body, { width, format, quality }) => {
-          const result = await env.IMAGES.input(body).transform(width > 0 ? { width } : {}).output({ format, quality });
-          return result.response();
+          if (env?.IMAGES?.input) {
+            const result = await env.IMAGES.input(body).transform(width > 0 ? { width } : {}).output({ format, quality });
+            return result.response();
+          }
+          return new Response(body);
         },
       }, allowedWidths);
     }
 
-    return handler.fetch(request, env, ctx);
+    const response = await handler.fetch(request, env, ctx);
+
+    // Apply security headers to HTML responses
+    const contentType = response.headers.get("content-type") ?? "";
+    if (contentType.includes("text/html")) {
+      const securedResponse = new Response(response.body, response);
+      securedResponse.headers.set(
+        "Content-Security-Policy",
+        "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'"
+      );
+      securedResponse.headers.set("X-Content-Type-Options", "nosniff");
+      securedResponse.headers.set("X-Frame-Options", "DENY");
+      securedResponse.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+      securedResponse.headers.set(
+        "Permissions-Policy",
+        "camera=(), microphone=(), geolocation=(), payment=()"
+      );
+      return securedResponse;
+    }
+
+    return response;
   },
 };
 
