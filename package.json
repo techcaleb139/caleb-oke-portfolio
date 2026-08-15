@@ -6,12 +6,14 @@
     "node": ">=22.13.0"
   },
   "scripts": {
-    "dev": "vinext dev",
-    "build": "vinext build",
-    "start": "vinext start",
+    "dev": "vite --config vite.config.vercel.ts",
+    "build": "vite build --config vite.config.vercel.ts",
+    "build:vercel": "vite build --config vite.config.vercel.ts",
+    "build:cloudflare": "vinext build",
+    "dev:cloudflare": "vinext dev",
+    "start:cloudflare": "vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "build:vercel": "vite build -c vite.config.vercel.ts",
     "dev:vercel": "vercel dev"
   },
   "dependencies": {
