@@ -86,6 +86,12 @@ export default function Home() {
     const encoded = encodeURIComponent(brief);
 
     try {
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, business, workflow: process, outcome }),
+      });
+
       await navigator.clipboard.writeText(brief);
       setCopied(true);
       setBriefData({ encoded });
@@ -766,7 +772,7 @@ export default function Home() {
               <p className="formStatus" aria-live="polite">
                 {copied
                   ? "Your project brief is copied! Send it directly via WhatsApp or Email."
-                  : "Your details stay locally in your browser."}
+                  : "We'll follow up as soon as possible."}
               </p>
             </form>
           </div>
