@@ -8,50 +8,47 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { name, business, workflow, outcome } = req.body || {};
+    const { name, business, workflow, outcome, website, _honeypot } = req.body || {};
 
-    // 2. Input Validation (Basic)
-    if (!name || !workflow) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    // 2. Honeypot Spam Protection
+    if ((website && website.trim() !== '') || (_honeypot && _honeypot.trim() !== '')) {
+      // If a bot filled out the hidden honeypot field, return success without doing anything
+      return res.status(200).json({ success: true, message: 'Your message has been received.' });
     }
 
-    // 3. Insert into Neon Postgres Database
-    const sql = neon(process.env.DATABASE_URL!);
+    // 3. Trim values and Input Validation
+    const safeName = typeof name === 'string' ? name.trim() : '';
+    const safeBusiness = typeof business === 'string' ? business.trim() : '';
+    const safeWorkflow = typeof workflow === 'string' ? workflow.trim() : '';
+    const safeOutcome = typeof outcome === 'string' ? outcome.trim() : '';
+
+    if (!safeName || !safeWorkflow) {
+      return res.status(400).json({ error: 'Name and workflow are required fields.' });
+    }
+
+    // 4. Length Limits to prevent oversized payloads
+    if (safeName.length > 200 || safeBusiness.length > 200) {
+      return res.status(400).json({ error: 'Name or business field exceeds maximum length.' });
+    }
+    if (safeWorkflow.length > 5000 || safeOutcome.length > 5000) {
+      return res.status(400).json({ error: 'Workflow or outcome field exceeds maximum length.' });
+    }
+
+    // 5. Insert into Neon Postgres Database (Parameterized)
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL environment variable is not configured.');
+    }
+    const sql = neon(process.env.DATABASE_URL);
+    
     await sql`
       INSERT INTO contact_submissions (name, business, workflow, outcome, status)
-      VALUES (${name}, ${business}, ${workflow}, ${outcome}, 'pending')
+      VALUES (${safeName}, ${safeBusiness}, ${safeWorkflow}, ${safeOutcome}, 'pending')
     `;
 
-    // 4. Send to n8n webhook (with timeout)
-    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
-    
-    if (n8nWebhookUrl) {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
-
-      try {
-        const response = await fetch(n8nWebhookUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, business, workflow, outcome, source: 'Portfolio Contact Form' }),
-          signal: controller.signal
-        });
-        
-        if (!response.ok) {
-          console.warn(`n8n webhook responded with status: ${response.status}`);
-        }
-      } catch (webhookError: any) {
-         console.warn('n8n webhook failed:', webhookError);
-      } finally {
-        clearTimeout(timeoutId);
-      }
-    } else {
-      console.warn('N8N_WEBHOOK_URL is not set. Skipped webhook dispatch.');
-    }
-
-    return res.status(200).json({ success: true, message: 'Message sent successfully.' });
+    // 6. Return Clean Success Response
+    return res.status(200).json({ success: true, message: 'Your message has been received.' });
   } catch (error: any) {
     console.error('Contact form error:', error);
-    return res.status(500).json({ error: 'An internal error occurred while processing your request.' });
+    return res.status(500).json({ error: 'An internal server error occurred while processing your request.' });
   }
 }
