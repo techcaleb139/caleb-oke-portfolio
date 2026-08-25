@@ -47,7 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 6. Return Clean Success Response
     return res.status(200).json({ success: true, message: 'Your message has been received.' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Contact form error:', error);
     return res.status(500).json({ error: 'An internal server error occurred while processing your request.' });
   }

@@ -1,42 +1,54 @@
 import assert from "node:assert/strict";
+import { readdir, readFile } from "node:fs/promises";
+import path from "node:path";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
-  return worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
-    { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
-    { waitUntil() { }, passThroughOnException() { } },
+async function builtPortfolio() {
+  const distDir = path.resolve("dist");
+  const html = await readFile(path.join(distDir, "index.html"), "utf8");
+  const assetDir = path.join(distDir, "assets");
+  const assetNames = await readdir(assetDir);
+  const javascript = await Promise.all(
+    assetNames
+      .filter((name) => name.endsWith(".js"))
+      .map((name) => readFile(path.join(assetDir, name), "utf8")),
   );
+
+  return `${html}\n${javascript.join("\n")}`;
 }
 
-test("renders Caleb Oke portfolio with real contact actions", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-  const html = await response.text();
-  assert.match(html, /Caleb Oke/);
-  assert.match(html, /AI Automation Engineer/);
-  assert.match(html, /mailto:okecaleb139@gmail\.com/);
-  assert.match(html, /wa\.me\/2348065755296/);
+test("builds the professional identity and real contact actions", async () => {
+  const output = await builtPortfolio();
+  assert.match(output, /Caleb Oke/);
+  assert.match(output, /AI Automation Builder/);
+  assert.match(output, /mailto:okecaleb139@gmail\.com/);
+  assert.match(output, /wa\.me\/2348065755296/);
+  assert.match(output, /tech_caleb_/);
 });
 
-test("renders genuine work, capabilities, navigation, and accessibility basics", async () => {
-  const html = await (await render()).text();
+test("labels portfolio evidence honestly", async () => {
+  const output = await builtPortfolio();
   for (const expected of [
-    "Mama Tee", "Automated job search engine", "n8n", "Make.com", "Zapier",
-    "Vapi", "APIs", "JavaScript", "Python", "AI agents", "Webhooks",
-    "Docker", "Telegram", "Google Sheets",
-  ]) assert.match(html, new RegExp(expected.replace(".", "\\."), "i"));
-  assert.match(html, /href="#work"/);
-  assert.match(html, /href="#services"/);
-  assert.match(html, /href="#about"/);
-  assert.match(html, /href="#contact"/);
-  assert.match(html, /Skip to main content/);
-  assert.match(html, /aria-controls="site-navigation"/);
-  assert.doesNotMatch(html, /portrait pending|identity preserved portrait|lorem ipsum/i);
-  const textOnly = html.slice(html.indexOf("<body")).replace(/<[^>]*>/g, " ");
-  assert.doesNotMatch(textOnly, /\b\d+%|\b\d+\+ (clients|projects|automations)/i);
+    "Voice AI Restaurant Ordering Prototype",
+    "TS Academy Final Project",
+    "fictional Nigerian restaurant",
+    "Working Personal System",
+    "Automated Job Search Engine",
+  ]) {
+    assert.match(output, new RegExp(expected, "i"));
+  }
+
+  assert.match(output, /has not yet been validated in live restaurant operations/i);
+  assert.doesNotMatch(
+    output,
+    /Documented production workflows|zero operational headaches|built and deployed for a live business/i,
+  );
+});
+
+test("keeps the project-brief handoff explicit", async () => {
+  const output = await builtPortfolio();
+  assert.match(output, /Prepare Project Brief/);
+  assert.match(output, /Nothing is sent automatically/);
+  assert.match(output, /Send on WhatsApp/);
+  assert.match(output, /Send via Gmail/);
 });

@@ -16,12 +16,12 @@ const capabilities = [
   {
     num: "01",
     title: "Voice AI Systems",
-    desc: "Autonomous conversational phone agents that handle inbound reservations, customer qualification, support triage, and call routing according to strict business logic.",
+    desc: "Controlled conversational phone systems for reservations, customer qualification, support triage, and call routing with explicit business rules and human fallback.",
   },
   {
     num: "02",
     title: "Workflow Automation",
-    desc: "Production-grade automated pipelines that bridge CRMs, databases, messaging channels, spreadsheets, and internal tooling with zero manual intervention.",
+    desc: "Automated pipelines that connect CRMs, databases, messaging channels, spreadsheets, and internal tools while keeping important approvals visible to people.",
   },
   {
     num: "03",
@@ -58,8 +58,8 @@ const processSteps = [
   },
   {
     num: "05",
-    title: "Deploy & Monitor",
-    desc: "Launch with end-to-end documentation, environment configs, error alerting, and clear system ownership.",
+    title: "Pilot & Handover",
+    desc: "Release in a controlled pilot with documentation, environment setup, error alerts, a manual fallback, and clear system ownership.",
   },
 ];
 
@@ -85,21 +85,14 @@ export default function Home() {
     const brief = `Automation project brief\n\nName: ${name}\nBusiness: ${business}\nCurrent manual process: ${process}\nDesired outcome: ${outcome}`;
     const encoded = encodeURIComponent(brief);
 
-    try {
-      fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, business, workflow: process, outcome }),
-      });
+    setBriefData({ encoded });
 
+    try {
       await navigator.clipboard.writeText(brief);
       setCopied(true);
-      setBriefData({ encoded });
       window.setTimeout(() => setCopied(false), 6000);
     } catch {
-      window.location.href = `mailto:okecaleb139@gmail.com?subject=${encodeURIComponent(
-        "Automation project enquiry"
-      )}&body=${encoded}`;
+      setCopied(false);
     }
   }
 
@@ -122,7 +115,7 @@ export default function Home() {
           <a className="navBrand" href="#top" aria-label="Caleb Oke Home">
             <span className="brandName">Caleb Oke</span>
             <span className="brandDot">/</span>
-            <span className="brandRole">AI Automation Engineer</span>
+            <span className="brandRole">AI Automation Builder</span>
           </a>
 
           <button
@@ -174,7 +167,7 @@ export default function Home() {
       <section className="hero shell" id="top">
         <div>
           <div className="heroBadge">
-            AI Automation Engineer · Systems &amp; Workflows
+            AI Automation Builder · Systems &amp; Workflows
           </div>
 
           <h1 className="heroTitle">
@@ -330,37 +323,37 @@ export default function Home() {
         <section className="shell section" id="work">
           <div className="sectionHeading">
             <span className="sectionKicker">Selected Work</span>
-            <h2>Systems I have engineered.</h2>
+            <h2>Systems I have built and tested.</h2>
             <p>
-              Documented production workflows demonstrating voice processing,
-              data normalization, and API automation.
+              Documented prototypes and working personal systems demonstrating
+              voice processing, data normalization, and API automation.
             </p>
           </div>
 
           {/* Case 01: Mama Tee's Voice AI */}
           <article className="caseCard">
             <div className="caseHeader">
-              <span className="caseTag">Voice AI · Hospitality Operations</span>
-              <span className="caseNumber">Case Study 01</span>
+              <span className="caseTag">Voice AI · Academy Prototype</span>
+              <span className="caseNumber">TS Academy Final Project</span>
             </div>
 
             <div className="caseIntro">
               <div>
-                <h3>Mama Tee&apos;s Kitchen — Autonomous Voice Ordering</h3>
+                <h3>Voice AI Restaurant Ordering Prototype — TS Academy Final Project</h3>
                 <p>
-                  A localized conversational voice assistant for an Abuja restaurant
-                  that handles inbound phone calls, takes food orders with Nigerian
-                  menu items, manages table reservations, and syncs directly into
-                  Google Sheets in real-time.
+                  Built as a graded prototype around a fictional Nigerian restaurant
+                  scenario. The workflow was demonstrated end to end with test calls
+                  and sample data; it has not yet been validated in live restaurant
+                  operations.
                 </p>
               </div>
 
               <div className="outcomeBox">
-                <small>Demonstrated Outcome</small>
+                <small>Controlled Test Result</small>
                 <p>
-                  Live voice conversations are automatically transcribed, parsed,
-                  and validated into structured Google Sheets records without
-                  human administrative delay.
+                  A controlled test call reached the n8n webhook and routed sample
+                  order and reservation fields into Google Sheets. No formal
+                  accuracy, latency, or error-rate benchmark was recorded.
                 </p>
               </div>
             </div>
@@ -368,8 +361,8 @@ export default function Home() {
             <figure className="caseVisualWrapper">
               <img src="/voice-ordering-case-study.webp" alt="Architecture diagram of the Voice AI Ordering System" className="object-contain w-full h-full" width="800" height="450" loading="lazy" />
               <figcaption>
-                <span>Live System Flow</span>
-                <span>Customer Speech → LLM Menu Parser → Google Sheets Real-Time Sync</span>
+                <span>Prototype Test Flow</span>
+                <span>Test Call → Vapi Extraction → n8n Routing → Google Sheets</span>
               </figcaption>
             </figure>
 
@@ -377,9 +370,9 @@ export default function Home() {
               <div className="engCard">
                 <small>Technical Complexity</small>
                 <p>
-                  Handling localized Nigerian dish names, customer speech
-                  interruptions, ambiguous order quantities, and strict data
-                  sanitization before persisting records.
+                  Known failure cases included mis-transcribed Nigerian dish names,
+                  customer interruptions, ambiguous quantities, and missing fields
+                  that required validation or human review.
                 </p>
               </div>
               <div className="engCard">
@@ -418,7 +411,7 @@ export default function Home() {
           <article className="caseCard">
             <div className="caseHeader">
               <span className="caseTag">Data Automation · Intelligence Engine</span>
-              <span className="caseNumber">Case Study 02</span>
+                <span className="caseNumber">Working Personal System</span>
             </div>
 
             <div className="caseIntro">
@@ -445,7 +438,7 @@ export default function Home() {
             <figure className="caseVisualWrapper">
               <img src="/job-pipeline-case-study.webp" alt="Architecture diagram of the automated Job Alert Pipeline" className="object-contain w-full h-full" width="800" height="450" loading="lazy" />
               <figcaption>
-                <span>Live System Flow</span>
+                <span>Working System Flow</span>
                 <span>110 Raw Listings Ingested → 3 High-Confidence Alerts Dispatched</span>
               </figcaption>
             </figure>
@@ -500,7 +493,8 @@ export default function Home() {
               <h2>What I build for businesses.</h2>
               <p>
                 From customer-facing voice interfaces to back-office workflow
-                orchestration, I build systems that run quietly and reliably.
+                orchestration, I build, test, and document practical systems with
+                clear human ownership.
               </p>
             </div>
 
@@ -522,8 +516,8 @@ export default function Home() {
             <span className="sectionKicker">Work Methodology</span>
             <h2>Clear engineering before complex tooling.</h2>
             <p>
-              A disciplined delivery framework focused on measurable reliability
-              and zero operational headaches.
+              A disciplined delivery framework focused on measurable outcomes,
+              visible failure paths, and clear ownership.
             </p>
           </div>
 
@@ -542,7 +536,7 @@ export default function Home() {
         <section className="shell section" id="about">
           <div className="aboutCard">
             <div className="aboutPortraitBox">
-              <img src="/caleb-portrait.webp" alt="Caleb Oke, AI Automation Engineer" className="object-cover w-full h-full" width="400" height="400" loading="eager" />
+              <img src="/caleb-portrait.webp" alt="Caleb Oke, AI Automation Builder" className="object-cover w-full h-full" width="400" height="400" loading="eager" />
             </div>
 
             <div className="aboutBio">
@@ -736,17 +730,17 @@ export default function Home() {
                   id="outcome"
                   name="outcome"
                   required
-                  placeholder="e.g. Instant response times, automated CRM sync, zero manual entry..."
+                  placeholder="e.g. Reduce missed enquiries, speed up follow-up, or keep records consistent..."
                 />
               </div>
 
               <button className="btnPrimary btnFull" type="submit">
-                {copied
-                  ? "✓ Brief Copied to Clipboard!"
-                  : "Generate & Copy Project Brief ↗"}
+                {briefData
+                  ? "✓ Brief Ready — Choose a Send Option Below"
+                  : "Prepare Project Brief ↗"}
               </button>
 
-              {briefData && copied && (
+              {briefData && (
                 <div className="briefActionsRow">
                   <div className="briefActionsButtons">
                     <a
@@ -771,8 +765,10 @@ export default function Home() {
 
               <p className="formStatus" aria-live="polite">
                 {copied
-                  ? "Your project brief is copied! Send it directly via WhatsApp or Email."
-                  : "We'll follow up as soon as possible."}
+                  ? "Brief copied. Choose WhatsApp or Gmail below to send it to me."
+                  : briefData
+                    ? "Brief ready. Choose WhatsApp or Gmail below to send it to me."
+                    : "Nothing is sent automatically. Prepare the brief, then choose WhatsApp or Gmail."}
               </p>
             </form>
           </div>
@@ -797,7 +793,7 @@ export default function Home() {
       <footer className="footer">
         <div className="shell footerContainer">
           <div>
-            <strong>Caleb Oke</strong> · AI Automation Engineer
+            <strong>Caleb Oke</strong> · AI Automation Builder
           </div>
 
           <div className="footerLinks">

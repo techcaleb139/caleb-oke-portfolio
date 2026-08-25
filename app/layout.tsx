@@ -9,8 +9,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const image = `${protocol}://${host}/og.png`;
-  const title = "Caleb Oke | AI Automation Engineer";
-  const description = "Caleb Oke builds production voice AI agents, intelligent workflows, and multi-source data pipelines using n8n, Vapi, Make.com, Zapier, Python, and custom APIs.";
+  const title = "Caleb Oke | AI Automation Builder";
+  const description = "Caleb Oke builds and tests practical voice AI prototypes, workflow automations, and data pipelines using n8n, Vapi, Make.com, Zapier, Python, and custom APIs.";
   return {
     title,
     description,
