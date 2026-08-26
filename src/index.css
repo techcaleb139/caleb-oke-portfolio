@@ -144,10 +144,15 @@ h1 { max-width: 12ch; font-size: clamp(3.5rem, 6.6vw, 6rem); font-weight: 740; }
 
 .contact { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(500px, 1.2fr); align-items: start; gap: clamp(60px, 9vw, 120px); }
 .contactIntro { position: sticky; top: 120px; }
-.contactIntro ul { margin: 38px 0 0; padding: 0; list-style: none; }
-.contactIntro li { padding: 13px 0; border-top: 1px solid var(--line); }
-.contactIntro li:last-child { border-bottom: 1px solid var(--line); }
-.contactIntro a { font-size: 0.88rem; font-weight: 750; overflow-wrap: anywhere; }
+.contactMethods { margin-top: 38px; display: grid; gap: 10px; }
+.contactMethod { min-width: 0; display: grid; grid-template-columns: 42px minmax(0, 1fr) 24px; align-items: center; gap: 14px; padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; background: color-mix(in srgb, var(--surface) 88%, transparent); text-decoration: none; transition: border-color 180ms var(--ease-out), background-color 180ms var(--ease-out), transform 180ms var(--ease-out); }
+.contactMethod:hover { border-color: color-mix(in srgb, var(--accent) 48%, var(--line)); background: var(--surface); transform: translateY(-2px); }
+.contactIcon { width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--ink); color: #fff; font-size: 0.83rem; font-weight: 850; letter-spacing: -0.02em; }
+.contactMethod small, .contactMethod strong { display: block; }
+.contactMethod small { margin-bottom: 3px; color: var(--muted); font-size: 0.7rem; font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; }
+.contactMethod strong { overflow-wrap: anywhere; font-size: 0.85rem; line-height: 1.35; }
+.contactArrow { color: var(--muted); font-size: 1rem; transition: color 180ms var(--ease-out), transform 180ms var(--ease-out); }
+.contactMethod:hover .contactArrow { color: var(--accent-dark); transform: translate(2px, -2px); }
 .contactForm { position: relative; padding: clamp(26px, 4vw, 48px); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface); box-shadow: var(--shadow); }
 .formHeading { margin-bottom: 34px; }
 .formHeading h3 { font-size: 2rem; }

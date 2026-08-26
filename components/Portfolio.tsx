@@ -28,8 +28,8 @@ function validate(values: FormValues): FormErrors {
   const errors: FormErrors = {};
   if (!values.name.trim()) errors.name = "Enter your name so I know how to address you.";
   if (!values.replyContact.trim()) errors.replyContact = "Enter an email address or WhatsApp number so I can reply.";
-  if (!values.process.trim()) errors.process = "Describe the current manual process or bottleneck.";
-  if (!values.outcome.trim()) errors.outcome = "Describe the result you want the system to create.";
+  if (!values.process.trim()) errors.process = "Explain how this work is currently handled.";
+  if (!values.outcome.trim()) errors.outcome = "Describe what a successful result would look like.";
   return errors;
 }
 
@@ -61,7 +61,7 @@ export default function Portfolio() {
       window.requestAnimationFrame(() => errorSummaryRef.current?.focus());
       return;
     }
-    setBrief(`Automation project brief\n\nName: ${values.name.trim()}\nReply contact: ${values.replyContact.trim()}\nBusiness or team: ${values.business.trim() || "Not provided"}\nCurrent process: ${values.process.trim()}\nDesired outcome: ${values.outcome.trim()}`);
+    setBrief(`Automation project brief\n\nName: ${values.name.trim()}\nReply contact: ${values.replyContact.trim()}\nBusiness or team: ${values.business.trim() || "Not provided"}\nHow the process works today: ${values.process.trim()}\nWhat success looks like: ${values.outcome.trim()}`);
     setNotice("Your brief is ready. Review it, then submit it securely or use a direct send option.");
   }
 
@@ -153,8 +153,8 @@ export default function Portfolio() {
         <section className="section shell" id="work">
           <div className="sectionIntro"><h2>Built work, with the limits included.</h2><p>These are documented builds. I separate what was tested from what still needs real-world validation.</p></div>
           <CaseStudy
-            meta={["Academy prototype", "Voice AI"]}
-            title="Voice AI Restaurant Ordering Prototype — TS Academy Final Project"
+            meta={["TS Academy Final Project", "Academy prototype", "Voice AI"]}
+            title="Voice AI Restaurant Ordering Prototype"
             summary="Built as a graded prototype around a fictional Nigerian restaurant scenario. It handled test calls and sample data, but has not yet been validated in live restaurant operations."
             tested="A test call reached n8n and routed sample order and reservation fields into Google Sheets."
             limits="Dish-name transcription, interruptions, ambiguous quantities, and missing fields need stronger validation."
@@ -199,21 +199,21 @@ export default function Portfolio() {
         </div></section>
 
         <section className="section shell contact" id="contact">
-          <div className="contactIntro"><h2>Tell me what is taking too much manual effort.</h2><p>Share the current process and the result you want. I will respond with questions, not a generic sales pitch.</p><ul>
-            <li><a href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry`}>Email: {EMAIL}</a></li>
-            <li><a href={`https://wa.me/${PHONE}?text=Hi%20Caleb%2C%20I%27d%20like%20to%20discuss%20an%20automation%20project.`} target="_blank" rel="noreferrer">WhatsApp: +234 806 575 5296</a></li>
-            <li><a href="https://www.linkedin.com/in/caleb-oke-6464b0216/" target="_blank" rel="noreferrer">LinkedIn profile</a></li>
-          </ul></div>
+          <div className="contactIntro"><h2>Tell me what is taking too much manual effort.</h2><p>Share the current process and the result you want. I will respond with questions, not a generic sales pitch.</p><div className="contactMethods" aria-label="Direct contact options">
+            <a className="contactMethod" href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry`}><span className="contactIcon" aria-hidden="true">@</span><span><small>Email</small><strong>{EMAIL}</strong></span><span className="contactArrow" aria-hidden="true">↗</span></a>
+            <a className="contactMethod" href={`https://wa.me/${PHONE}?text=Hi%20Caleb%2C%20I%27d%20like%20to%20discuss%20an%20automation%20project.`} target="_blank" rel="noreferrer"><span className="contactIcon" aria-hidden="true">W</span><span><small>WhatsApp</small><strong>+234 806 575 5296</strong></span><span className="contactArrow" aria-hidden="true">↗</span></a>
+            <a className="contactMethod" href="https://www.linkedin.com/in/caleb-oke-6464b0216/" target="_blank" rel="noreferrer"><span className="contactIcon" aria-hidden="true">in</span><span><small>LinkedIn</small><strong>View professional profile</strong></span><span className="contactArrow" aria-hidden="true">↗</span></a>
+          </div></div>
 
           <form className="contactForm" onSubmit={reviewBrief} noValidate>
             <div className="formHeading"><h3>Start with a short brief</h3><p>Nothing is sent until you review the message and press the secure submit button.</p></div>
             <input className="honeypot" type="text" name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" />
             {visibleErrors.length > 0 && <div className="errorSummary" role="alert" tabIndex={-1} ref={errorSummaryRef} aria-labelledby="error-title"><h4 id="error-title">Please fix {visibleErrors.length === 1 ? "this field" : "these fields"}</h4><ul>{visibleErrors.map((field) => <li key={field}><a href={`#${field}`}>{errors[field]}</a></li>)}</ul></div>}
-            <FormField label="Your name" name="name" value={values.name} error={touched.name ? errors.name : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="name" placeholder="Amina Yusuf" />
-            <FormField label="Reply email or WhatsApp" name="replyContact" value={values.replyContact} error={touched.replyContact ? errors.replyContact : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="email" placeholder="amina@example.com or +234..." />
+            <FormField label="Your name" name="name" value={values.name} error={touched.name ? errors.name : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="name" placeholder="John Robert" />
+            <FormField label="Reply email or WhatsApp" name="replyContact" value={values.replyContact} error={touched.replyContact ? errors.replyContact : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="email" placeholder="john.robert@example.com or +234..." />
             <FormField label="Business or team" optional name="business" value={values.business} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="organization" placeholder="Northstar Studio" />
-            <FormField multiline label="Current manual process" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="What happens today, who handles it, and where does it slow down?" />
-            <FormField multiline label="Desired outcome" name="outcome" value={values.outcome} error={touched.outcome ? errors.outcome : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="What should become faster, clearer, or more reliable?" />
+            <FormField multiline label="How does this process work today?" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Describe the steps, who handles them, and where delays or repeated work occur." />
+            <FormField multiline label="What would a successful result look like?" name="outcome" value={values.outcome} error={touched.outcome ? errors.outcome : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Tell me what should become faster, more accurate, easier to track, or more reliable." />
             <button className="button primary submitButton" type="submit">Review my brief</button>
             <p className="formNote">No account required. Your brief is stored only after you explicitly submit it.</p>
             {brief && <section className="briefReview" aria-labelledby="brief-title"><div className="briefReviewHeader"><h4 id="brief-title">Your brief is ready</h4><button type="button" className="textButton" onClick={copyBrief}>Copy brief</button></div><pre>{brief}</pre><div className="sendActions"><button className="button primary neonSubmit" type="button" onClick={submitBrief} disabled={submissionState === "submitting" || submissionState === "success"}>{submissionState === "submitting" ? "Submitting..." : submissionState === "success" ? "Brief submitted" : submissionState === "error" ? "Retry secure submission" : "Submit project brief"}</button><a className="button secondary" href={`https://wa.me/${PHONE}?text=${encodeURIComponent(brief)}`} target="_blank" rel="noreferrer">Send on WhatsApp</a><a className="button secondary" href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry&body=${encodeURIComponent(brief)}`}>Send by email</a></div></section>}
