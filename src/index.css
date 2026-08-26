@@ -73,13 +73,11 @@ h1 { max-width: 12ch; font-size: clamp(3.5rem, 6.6vw, 6rem); font-weight: 740; }
 .profileLinks a { color: var(--muted); font-size: 0.88rem; font-weight: 750; }
 .profileLinks a:hover { color: var(--accent); }
 
-.portraitFrame { position: relative; margin: 0; overflow: hidden; border: 1px solid #cfd1d2; border-radius: var(--radius-lg); background: #4a4a48; box-shadow: var(--shadow); animation: portraitReveal 650ms var(--ease-out) both; }
+.portraitFrame { position: relative; margin: 0; overflow: hidden; border: 1px solid #cfd1d2; border-radius: var(--radius-lg); background: #4a4a48; box-shadow: var(--shadow); }
 .portraitFrame img { width: 100%; height: min(68vh, 650px); object-fit: cover; object-position: center 25%; }
 .portraitFrame figcaption { position: absolute; right: 14px; bottom: 14px; left: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; border-radius: 12px; background: rgba(18, 22, 29, 0.88); color: #fff; backdrop-filter: blur(10px); }
 .portraitFrame figcaption strong { font-family: var(--display); font-size: 1rem; }
 .portraitFrame figcaption span { max-width: 22ch; color: #d6dce5; font-size: 0.72rem; line-height: 1.4; text-align: right; }
-@keyframes portraitReveal { from { opacity: 0.5; filter: blur(8px); clip-path: inset(0 0 18% 0 round 26px); } to { opacity: 1; filter: blur(0); clip-path: inset(0 round 26px); } }
-
 .proofBar { border-block: 1px solid var(--line); background: var(--surface); }
 .proofGrid { display: grid; grid-template-columns: repeat(3, 1fr); }
 .proofGrid div { min-height: 122px; padding: 28px clamp(22px, 3vw, 42px); display: flex; flex-direction: column; justify-content: center; gap: 5px; border-right: 1px solid var(--line); }

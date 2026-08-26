@@ -139,7 +139,15 @@ export default function Portfolio() {
             </div>
           </div>
           <figure className="portraitFrame">
-            <img src="/caleb-portrait.png" alt="Caleb Oke wearing a navy shirt against a grey studio background" width="1122" height="1402" fetchPriority="high" />
+            <img
+              src="/caleb-portrait.webp"
+              srcSet="/caleb-portrait-480.webp 480w, /caleb-portrait-800.webp 800w, /caleb-portrait.webp 1122w"
+              sizes="(max-width: 720px) calc(100vw - 30px), (max-width: 940px) 43vw, 410px"
+              alt="Caleb Oke wearing a navy shirt against a grey studio background"
+              width="1122"
+              height="1402"
+              fetchPriority="high"
+            />
             <figcaption><strong>Caleb Oke</strong><span>Computer Science student and automation builder</span></figcaption>
           </figure>
         </section>
