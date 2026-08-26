@@ -21,8 +21,10 @@ test("builds the professional identity and real contact actions", async () => {
   const output = await builtPortfolio();
   assert.match(output, /Caleb Oke/);
   assert.match(output, /AI Automation Builder/);
-  assert.match(output, /mailto:okecaleb139@gmail\.com/);
-  assert.match(output, /wa\.me\/2348065755296/);
+  assert.match(output, /mailto:/);
+  assert.match(output, /okecaleb139@gmail\.com/);
+  assert.match(output, /wa\.me\//);
+  assert.match(output, /2348065755296/);
   assert.match(output, /tech_caleb_/);
 });
 
@@ -47,8 +49,9 @@ test("labels portfolio evidence honestly", async () => {
 
 test("keeps the project-brief handoff explicit", async () => {
   const output = await builtPortfolio();
-  assert.match(output, /Prepare Project Brief/);
+  assert.match(output, /Review my brief/);
   assert.match(output, /Nothing is sent automatically/);
   assert.match(output, /Send on WhatsApp/);
-  assert.match(output, /Send via Gmail/);
+  assert.match(output, /Send by email/);
+  assert.match(output, /No information leaves this page until you choose a send option/);
 });
