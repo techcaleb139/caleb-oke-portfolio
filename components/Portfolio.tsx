@@ -19,13 +19,15 @@ const steps = [
   ["04", "Test", "Run normal and edge cases, document limitations, and agree on ownership before handover."],
 ];
 
-type FormValues = { name: string; business: string; process: string; outcome: string };
+type FormValues = { name: string; replyContact: string; business: string; process: string; outcome: string };
 type FormErrors = Partial<Record<keyof FormValues, string>>;
-const emptyForm: FormValues = { name: "", business: "", process: "", outcome: "" };
+type SubmissionState = "idle" | "submitting" | "success" | "error";
+const emptyForm: FormValues = { name: "", replyContact: "", business: "", process: "", outcome: "" };
 
 function validate(values: FormValues): FormErrors {
   const errors: FormErrors = {};
   if (!values.name.trim()) errors.name = "Enter your name so I know how to address you.";
+  if (!values.replyContact.trim()) errors.replyContact = "Enter an email address or WhatsApp number so I can reply.";
   if (!values.process.trim()) errors.process = "Describe the current manual process or bottleneck.";
   if (!values.outcome.trim()) errors.outcome = "Describe the result you want the system to create.";
   return errors;
@@ -38,6 +40,7 @@ export default function Portfolio() {
   const [touched, setTouched] = useState<Partial<Record<keyof FormValues, boolean>>>({});
   const [brief, setBrief] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
+  const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const errors = useMemo(() => validate(values), [values]);
   const visibleErrors = (Object.keys(errors) as Array<keyof FormValues>).filter((field) => touched[field]);
@@ -46,19 +49,56 @@ export default function Portfolio() {
     setValues((current) => ({ ...current, [field]: value }));
     setBrief(null);
     setNotice("");
+    setSubmissionState("idle");
   }
 
   function reviewBrief(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (new FormData(event.currentTarget).get("website")) return;
-    setTouched({ name: true, business: true, process: true, outcome: true });
+    setTouched({ name: true, replyContact: true, business: true, process: true, outcome: true });
     if (Object.keys(errors).length) {
       setBrief(null);
       window.requestAnimationFrame(() => errorSummaryRef.current?.focus());
       return;
     }
-    setBrief(`Automation project brief\n\nName: ${values.name.trim()}\nBusiness or team: ${values.business.trim() || "Not provided"}\nCurrent process: ${values.process.trim()}\nDesired outcome: ${values.outcome.trim()}`);
-    setNotice("Your brief is ready. Review it, then choose how you want to send it.");
+    setBrief(`Automation project brief\n\nName: ${values.name.trim()}\nReply contact: ${values.replyContact.trim()}\nBusiness or team: ${values.business.trim() || "Not provided"}\nCurrent process: ${values.process.trim()}\nDesired outcome: ${values.outcome.trim()}`);
+    setNotice("Your brief is ready. Review it, then submit it securely or use a direct send option.");
+  }
+
+  async function submitBrief() {
+    if (!brief || submissionState === "submitting" || submissionState === "success") return;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    setSubmissionState("submitting");
+    setNotice("Submitting your brief securely...");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: values.name.trim(),
+          contact: values.replyContact.trim(),
+          business: values.business.trim(),
+          workflow: values.process.trim(),
+          outcome: values.outcome.trim(),
+          website: "",
+        }),
+        signal: controller.signal,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(typeof result.error === "string" ? result.error : "The submission could not be saved.");
+      setSubmissionState("success");
+      setNotice("Brief submitted successfully. I now have your details and can follow up using the contact you provided.");
+    } catch (error) {
+      const message = error instanceof Error && error.name === "AbortError"
+        ? "The request timed out. Try again, or use WhatsApp or email below."
+        : "The brief could not be submitted. Your text is still here, so you can retry or use WhatsApp or email.";
+      setSubmissionState("error");
+      setNotice(message);
+    } finally {
+      window.clearTimeout(timeout);
+    }
   }
 
   async function copyBrief() {
@@ -166,17 +206,18 @@ export default function Portfolio() {
           </ul></div>
 
           <form className="contactForm" onSubmit={reviewBrief} noValidate>
-            <div className="formHeading"><h3>Start with a short brief</h3><p>Nothing is sent automatically. You will review the message before choosing WhatsApp or email.</p></div>
+            <div className="formHeading"><h3>Start with a short brief</h3><p>Nothing is sent until you review the message and press the secure submit button.</p></div>
             <input className="honeypot" type="text" name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" />
             {visibleErrors.length > 0 && <div className="errorSummary" role="alert" tabIndex={-1} ref={errorSummaryRef} aria-labelledby="error-title"><h4 id="error-title">Please fix {visibleErrors.length === 1 ? "this field" : "these fields"}</h4><ul>{visibleErrors.map((field) => <li key={field}><a href={`#${field}`}>{errors[field]}</a></li>)}</ul></div>}
             <FormField label="Your name" name="name" value={values.name} error={touched.name ? errors.name : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="name" placeholder="Amina Yusuf" />
+            <FormField label="Reply email or WhatsApp" name="replyContact" value={values.replyContact} error={touched.replyContact ? errors.replyContact : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="email" placeholder="amina@example.com or +234..." />
             <FormField label="Business or team" optional name="business" value={values.business} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="organization" placeholder="Northstar Studio" />
             <FormField multiline label="Current manual process" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="What happens today, who handles it, and where does it slow down?" />
             <FormField multiline label="Desired outcome" name="outcome" value={values.outcome} error={touched.outcome ? errors.outcome : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="What should become faster, clearer, or more reliable?" />
             <button className="button primary submitButton" type="submit">Review my brief</button>
-            <p className="formNote">No account required. No information leaves this page until you choose a send option.</p>
-            {brief && <section className="briefReview" aria-labelledby="brief-title"><div className="briefReviewHeader"><h4 id="brief-title">Your brief is ready</h4><button type="button" className="textButton" onClick={copyBrief}>Copy brief</button></div><pre>{brief}</pre><div className="sendActions"><a className="button primary" href={`https://wa.me/${PHONE}?text=${encodeURIComponent(brief)}`} target="_blank" rel="noreferrer">Send on WhatsApp</a><a className="button secondary" href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry&body=${encodeURIComponent(brief)}`}>Send by email</a></div></section>}
-            <p className="formStatus" aria-live="polite">{notice}</p>
+            <p className="formNote">No account required. Your brief is stored only after you explicitly submit it.</p>
+            {brief && <section className="briefReview" aria-labelledby="brief-title"><div className="briefReviewHeader"><h4 id="brief-title">Your brief is ready</h4><button type="button" className="textButton" onClick={copyBrief}>Copy brief</button></div><pre>{brief}</pre><div className="sendActions"><button className="button primary neonSubmit" type="button" onClick={submitBrief} disabled={submissionState === "submitting" || submissionState === "success"}>{submissionState === "submitting" ? "Submitting..." : submissionState === "success" ? "Brief submitted" : submissionState === "error" ? "Retry secure submission" : "Submit project brief"}</button><a className="button secondary" href={`https://wa.me/${PHONE}?text=${encodeURIComponent(brief)}`} target="_blank" rel="noreferrer">Send on WhatsApp</a><a className="button secondary" href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry&body=${encodeURIComponent(brief)}`}>Send by email</a></div></section>}
+            <p className={`formStatus ${submissionState}`} aria-live="polite">{notice}</p>
           </form>
         </section>
       </div>

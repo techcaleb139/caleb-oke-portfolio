@@ -1,38 +1,56 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { neon } from '@neondatabase/serverless';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+type ContactRequest = {
+  method?: string;
+  body?: Record<string, unknown>;
+};
+
+type ContactResponse = {
+  setHeader(name: string, value: string): void;
+  status(code: number): ContactResponse;
+  json(body: Record<string, unknown>): void;
+};
+
+export default async function handler(req: ContactRequest, res: ContactResponse) {
+  res.setHeader('Cache-Control', 'no-store');
   // 1. Enforce POST method
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
   try {
-    const { name, business, workflow, outcome, website, _honeypot } = req.body || {};
+    const { name, contact, business, workflow, outcome, website, _honeypot } = req.body || {};
 
     // 2. Honeypot Spam Protection
-    if ((website && website.trim() !== '') || (_honeypot && _honeypot.trim() !== '')) {
+    const websiteFilled = typeof website === 'string' && website.trim() !== '';
+    const legacyHoneypotFilled = typeof _honeypot === 'string' && _honeypot.trim() !== '';
+    if (websiteFilled || legacyHoneypotFilled) {
       // If a bot filled out the hidden honeypot field, return success without doing anything
       return res.status(200).json({ success: true, message: 'Your message has been received.' });
     }
 
     // 3. Trim values and Input Validation
     const safeName = typeof name === 'string' ? name.trim() : '';
+    const safeContact = typeof contact === 'string' ? contact.trim() : '';
     const safeBusiness = typeof business === 'string' ? business.trim() : '';
     const safeWorkflow = typeof workflow === 'string' ? workflow.trim() : '';
     const safeOutcome = typeof outcome === 'string' ? outcome.trim() : '';
 
-    if (!safeName || !safeWorkflow) {
-      return res.status(400).json({ error: 'Name and workflow are required fields.' });
+    if (!safeName || !safeContact || !safeWorkflow || !safeOutcome) {
+      return res.status(400).json({ error: 'Name, reply contact, workflow, and outcome are required fields.' });
     }
 
     // 4. Length Limits to prevent oversized payloads
-    if (safeName.length > 200 || safeBusiness.length > 200) {
-      return res.status(400).json({ error: 'Name or business field exceeds maximum length.' });
+    if (safeName.length > 200 || safeContact.length > 320 || safeBusiness.length > 200) {
+      return res.status(400).json({ error: 'Name, reply contact, or business field exceeds maximum length.' });
     }
-    if (safeWorkflow.length > 5000 || safeOutcome.length > 5000) {
+    if (safeWorkflow.length > 4500 || safeOutcome.length > 5000) {
       return res.status(400).json({ error: 'Workflow or outcome field exceeds maximum length.' });
     }
+
+    // Preserve the current database schema while keeping the visitor's reply route
+    // beside the workflow details consumed by the existing automation.
+    const workflowWithContact = `Reply contact: ${safeContact}\n\n${safeWorkflow}`;
 
     // 5. Insert into Neon Postgres Database (Parameterized)
     if (!process.env.DATABASE_URL) {
@@ -42,7 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     
     await sql`
       INSERT INTO contact_submissions (name, business, workflow, outcome, status)
-      VALUES (${safeName}, ${safeBusiness}, ${safeWorkflow}, ${safeOutcome}, 'pending')
+      VALUES (${safeName}, ${safeBusiness}, ${workflowWithContact}, ${safeOutcome}, 'pending')
     `;
 
     // 6. Return Clean Success Response

@@ -50,8 +50,11 @@ test("labels portfolio evidence honestly", async () => {
 test("keeps the project-brief handoff explicit", async () => {
   const output = await builtPortfolio();
   assert.match(output, /Review my brief/);
-  assert.match(output, /Nothing is sent automatically/);
+  assert.match(output, /Nothing is sent until you review/);
   assert.match(output, /Send on WhatsApp/);
   assert.match(output, /Send by email/);
-  assert.match(output, /No information leaves this page until you choose a send option/);
+  assert.match(output, /Submit project brief/);
+  assert.match(output, /\/api\/contact/);
+  assert.match(output, /Reply email or WhatsApp/);
+  assert.match(output, /stored only after you explicitly submit it/);
 });

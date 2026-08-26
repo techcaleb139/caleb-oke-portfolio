@@ -68,6 +68,7 @@ h1 { max-width: 12ch; font-size: clamp(3.5rem, 6.6vw, 6rem); font-weight: 740; }
 .button.secondary { border-color: var(--line); background: var(--surface); color: var(--ink); }
 .button.secondary:hover { border-color: var(--ink); }
 .button:active { transform: scale(0.98); }
+.button:disabled { cursor: not-allowed; opacity: 0.68; box-shadow: none; transform: none; }
 .profileLinks { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 22px; }
 .profileLinks a { color: var(--muted); font-size: 0.88rem; font-weight: 750; }
 .profileLinks a:hover { color: var(--accent); }
@@ -175,6 +176,9 @@ h1 { max-width: 12ch; font-size: clamp(3.5rem, 6.6vw, 6rem); font-weight: 740; }
 .briefReviewHeader .textButton { margin: 0; }
 .briefReview pre { margin: 18px 0 0; padding: 18px; overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere; border-radius: var(--radius-sm); background: #f0f1ee; color: #333943; font-family: var(--body); font-size: 0.8rem; line-height: 1.6; }
 .sendActions { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.neonSubmit { grid-column: 1 / -1; border: 0; }
+.formStatus.success { color: #177246; font-weight: 750; }
+.formStatus.error { color: var(--danger); font-weight: 750; }
 
 .footer { padding-block: 36px; border-top: 1px solid #2d3540; background: var(--night); color: #fff; }
 .footerLayout { display: flex; align-items: center; justify-content: space-between; gap: 30px; }
