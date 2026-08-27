@@ -17,6 +17,28 @@ async function builtPortfolio() {
   return `${html}\n${javascript.join("\n")}`;
 }
 
+async function builtHtml() {
+  return readFile(path.resolve("dist", "index.html"), "utf8");
+}
+
+test("ships crawlable content before JavaScript runs", async () => {
+  const html = await builtHtml();
+  assert.match(html, /<h1[^>]*>I build practical automations for real work\.<\/h1>/);
+  assert.match(html, /Voice AI Restaurant Ordering Prototype/);
+  assert.match(html, /Automated Job Search Engine and Alert Pipeline/);
+  assert.match(html, /Tell me what is taking too much manual effort\./);
+});
+
+test("publishes complete search and social metadata", async () => {
+  const html = await builtHtml();
+  assert.match(html, /rel="canonical" href="https:\/\/caleb-oke-portfolio\.vercel\.app\/"/);
+  assert.match(html, /name="robots" content="index, follow/);
+  assert.match(html, /property="og:title" content="Caleb Oke \| AI Automation Builder"/);
+  assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  assert.match(html, /type="application\/ld\+json"/);
+  assert.match(html, /"@type": "ProfilePage"/);
+});
+
 test("builds the professional identity and real contact actions", async () => {
   const output = await builtPortfolio();
   assert.match(output, /Caleb Oke/);

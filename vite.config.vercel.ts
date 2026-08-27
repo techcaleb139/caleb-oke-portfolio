@@ -1,7 +1,10 @@
+import { createElement, StrictMode } from 'react';
+import { renderToString } from 'react-dom/server';
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
+import App from './src/App.tsx';
 
-function inlinePageCss(): Plugin {
+function preparePageHtml(): Plugin {
   return {
     name: 'inline-page-css',
     apply: 'build',
@@ -18,11 +21,13 @@ function inlinePageCss(): Plugin {
         source = source.replace(stylesheet, `<style>${css}</style>`);
         delete bundle[fileName];
       }
+      const appMarkup = renderToString(createElement(StrictMode, null, createElement(App)));
+      source = source.replace('<div id="root"></div>', `<div id="root">${appMarkup}</div>`);
       html.source = source;
     },
   };
 }
 
 export default defineConfig({
-  plugins: [react(), inlinePageCss()],
+  plugins: [react(), preparePageHtml()],
 });

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://caleboke.dev/sitemap.xml
+Sitemap: https://caleb-oke-portfolio.vercel.app/sitemap.xml
