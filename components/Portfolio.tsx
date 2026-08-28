@@ -1,8 +1,8 @@
 "use client";
 
-/* eslint-disable @next/next/no-img-element -- This shared component is deployed by Vite, not Next Image. */
-
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import type { PortfolioProject } from "../lib/project-types.ts";
+import { builtProjects, publishedProjects } from "../src/content/project-data.ts";
 
 const EMAIL = "okecaleb139@gmail.com";
 const PHONE = "2348065755296";
@@ -53,16 +53,41 @@ function validate(values: FormValues): FormErrors {
   return errors;
 }
 
-export default function Portfolio() {
+type PortfolioProps = { initialProjects?: PortfolioProject[] };
+
+function projectAnchor(project: PortfolioProject): string {
+  if (project.slug === "voice-ai-restaurant-ordering-prototype") return "voice-ai";
+  if (project.slug === "automated-job-search-alert-pipeline") return "job-pipeline";
+  return project.slug;
+}
+
+export default function Portfolio({ initialProjects = builtProjects }: PortfolioProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [values, setValues] = useState<FormValues>(emptyForm);
   const [touched, setTouched] = useState<Partial<Record<keyof FormValues, boolean>>>({});
   const [brief, setBrief] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
+  const [projects, setProjects] = useState<PortfolioProject[]>(initialProjects);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const errors = useMemo(() => validate(values), [values]);
   const visibleErrors = (Object.keys(errors) as Array<keyof FormValues>).filter((field) => touched[field]);
+  const visibleProjects = useMemo(() => publishedProjects(projects), [projects]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/projects", { signal: controller.signal, headers: { Accept: "application/json" } })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Project request failed")))
+      .then((result: { projects?: PortfolioProject[] }) => {
+        if (Array.isArray(result.projects) && result.projects.length) setProjects(result.projects);
+      })
+      .catch((error: unknown) => {
+        if (!(error instanceof DOMException && error.name === "AbortError")) {
+          console.info("Using the built project snapshot.");
+        }
+      });
+    return () => controller.abort();
+  }, []);
 
   function updateField(field: keyof FormValues, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
@@ -188,8 +213,12 @@ export default function Portfolio() {
         <section className="projectIndex" aria-labelledby="documented-systems-title">
           <div className="shell projectIndexInner">
             <h2 id="documented-systems-title">Documented systems</h2>
-            <a href="#voice-ai"><span>Voice AI ordering</span><strong>Academy prototype</strong></a>
-            <a href="#job-pipeline"><span>Job alert pipeline</span><strong>Working personal system</strong></a>
+            {visibleProjects.map((project) => (
+              <a href={`#${projectAnchor(project)}`} key={project.id || project.slug}>
+                <span>{project.title}</span>
+                <strong>{project.statusLabel}</strong>
+              </a>
+            ))}
           </div>
         </section>
 
@@ -199,51 +228,9 @@ export default function Portfolio() {
             <p>I show what each build did, what the test demonstrated, and what still needs stronger validation.</p>
           </header>
 
-          <CaseStudy
-            id="voice-ai"
-            variant="split"
-            context="TS Academy final project / Academy prototype"
-            title="Voice AI Restaurant Ordering Prototype"
-            summary="Built as a graded prototype around a fictional Nigerian restaurant scenario. It handled test calls and sample data, but has not yet been validated in live restaurant operations."
-            observed="A test call reached n8n and routed sample order and reservation fields into Google Sheets."
-            limitation="Dish-name transcription, interruptions, ambiguous quantities, and missing fields need stronger validation."
-            nextTest="Add field-level confirmation and test noisy calls, interruptions, and incomplete orders before any live pilot."
-            tools="Vapi / n8n / Webhooks / Google Sheets / REST APIs"
-            image="/voice-ordering-case-study.webp"
-            alt="Workflow diagram for the restaurant voice ordering prototype"
-            caption="Test path from Vapi through n8n to Google Sheets"
-            href="https://github.com/techcaleb139/voice-ai-ordering-system"
-            stages={[
-              ["Enquiry", "A test caller describes an order or reservation."],
-              ["Capture", "Vapi transcribes the call and collects the details."],
-              ["Route", "n8n receives the webhook and applies the workflow rules."],
-              ["Record", "The sample fields are written to Google Sheets."],
-              ["Review", "A person checks missing or uncertain information."],
-            ]}
-          />
-
-          <CaseStudy
-            id="job-pipeline"
-            variant="wide"
-            context="Working personal system / Data automation"
-            title="Automated Job Search Engine and Alert Pipeline"
-            summary="A self-hosted workflow that collects remote job listings, normalizes inconsistent fields, filters them, removes duplicates, and sends selected matches to Telegram."
-            observed="A recorded run processed 110 listings into 3 high-priority alerts."
-            limitation="It runs locally, so scheduled monitoring depends on my computer being online."
-            nextTest="Move the workflow to dependable hosting and measure repeated scheduled runs, API failures, and duplicate handling over time."
-            tools="n8n / REST APIs / JavaScript / Regex / Docker / Telegram"
-            image="/job-pipeline-case-study.webp"
-            alt="Workflow diagram for the automated job alert pipeline"
-            caption="Multiple job sources routed through normalization, filtering, deduplication, and Telegram"
-            href="https://github.com/techcaleb139/job-alert-pipeline"
-            stages={[
-              ["Fetch", "Collect listings from several job sources."],
-              ["Normalize", "Convert inconsistent fields into one structure."],
-              ["Filter", "Keep roles that match the configured criteria."],
-              ["Deduplicate", "Remove repeated listings before delivery."],
-              ["Alert", "Send selected matches to Telegram for human review."],
-            ]}
-          />
+          {visibleProjects.map((project) => (
+            <CaseStudy project={project} key={project.id || project.slug} />
+          ))}
         </section>
 
         <section className="section capabilitiesSection" id="services">
@@ -384,53 +371,41 @@ export default function Portfolio() {
   );
 }
 
-type CaseProps = {
-  id: string;
-  variant: "split" | "wide";
-  context: string;
-  title: string;
-  summary: string;
-  observed: string;
-  limitation: string;
-  nextTest: string;
-  tools: string;
-  image: string;
-  alt: string;
-  caption: string;
-  href: string;
-  stages: string[][];
-};
-
-function CaseStudy({ id, variant, context, title, summary, observed, limitation, nextTest, tools, image, alt, caption, href, stages }: CaseProps) {
+function CaseStudy({ project }: { project: PortfolioProject }) {
+  const id = projectAnchor(project);
   return (
-    <article className={`caseStudy ${variant}`} id={id}>
+    <article className={`caseStudy ${project.layoutVariant}`} id={id}>
       <header className="caseHeader">
-        <h3>{title}</h3>
-        <p>{summary}</p>
+        <h3>{project.title}</h3>
+        <p>{project.summary}</p>
         <dl className="caseMeta">
-          <div><dt>Project status</dt><dd>{context}</dd></div>
+          <div><dt>Project status</dt><dd>{project.statusLabel} / {project.category}</dd></div>
         </dl>
-        <a className="textLink" href={href} target="_blank" rel="noreferrer">Read the repository</a>
+        <div className="caseLinks">
+          <a className="textLink" href={`/projects/${project.slug}`}>Read the full case study</a>
+          {project.repositoryUrl && <a className="textLink" href={project.repositoryUrl} target="_blank" rel="noreferrer">View repository</a>}
+          {project.liveUrl && <a className="textLink" href={project.liveUrl} target="_blank" rel="noreferrer">Open live project</a>}
+        </div>
       </header>
 
       <figure className="caseVisual">
-        <img src={image} alt={alt} width="800" height="450" loading="lazy" />
-        <figcaption>{caption}</figcaption>
+        <img src={project.imageUrl} alt={project.imageAlt} width="800" height="450" loading="lazy" />
+        {project.imageCaption && <figcaption>{project.imageCaption}</figcaption>}
       </figure>
 
-      <ol className="verificationRail" aria-label={`${title} system path`}>
-        {stages.map(([stage, detail]) => (
-          <li key={stage}><strong>{stage}</strong><span>{detail}</span></li>
+      <ol className="verificationRail" aria-label={`${project.title} system path`}>
+        {project.stages.map((stage) => (
+          <li key={`${project.slug}-${stage.title}`}><strong>{stage.title}</strong><span>{stage.detail}</span></li>
         ))}
       </ol>
 
       <div className="evidencePanel">
-        <div className="observedEvidence"><h4>What the test showed</h4><p>{observed}</p></div>
-        <div><h4>Known limit</h4><p>{limitation}</p></div>
-        <div><h4>Next test</h4><p>{nextTest}</p></div>
+        <div className="observedEvidence"><h4>What the test showed</h4><p>{project.observedResult}</p></div>
+        <div><h4>Known limit</h4><p>{project.knownLimit}</p></div>
+        <div><h4>Next test</h4><p>{project.nextTest}</p></div>
       </div>
 
-      <p className="toolLine"><strong>System components</strong><span>{tools}</span></p>
+      <p className="toolLine"><strong>System components</strong><span>{project.tools.join(" / ")}</span></p>
     </article>
   );
 }

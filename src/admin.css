@@ -1,0 +1,1043 @@
+.adminBoot,
+.adminLogin,
+.adminShell {
+  --admin-text-micro: 0.7rem;
+  --admin-text-control: 0.82rem;
+  --admin-text-body: 0.95rem;
+  --admin-text-title: 1.1rem;
+  --admin-text-mark: 1.35rem;
+  --admin-text-page: 2.35rem;
+  --admin-text-display: 2.85rem;
+  min-height: 100dvh;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--body);
+}
+
+.adminBoot {
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.adminBootMark {
+  font-family: var(--display);
+  font-size: var(--admin-text-mark);
+  font-weight: 700;
+}
+
+.adminBoot p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--admin-text-control);
+}
+
+.adminLogin {
+  padding: 32px;
+  display: grid;
+  place-items: center;
+}
+
+.adminLogin > section {
+  width: min(100%, 520px);
+  padding: clamp(30px, 5vw, 54px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.adminBrand {
+  display: inline-flex;
+  align-items: baseline;
+  min-height: 44px;
+  padding-block: 8px;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.adminBrand strong {
+  font-family: var(--display);
+  font-size: var(--admin-text-title);
+}
+
+.adminBrand span {
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+}
+
+.adminLoginCopy {
+  margin: 62px 0 36px;
+}
+
+.adminLoginCopy h1 {
+  max-width: 11ch;
+  font-size: var(--admin-text-display);
+}
+
+.adminLoginCopy p {
+  max-width: 42ch;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: var(--admin-text-body);
+}
+
+.adminLogin form,
+.securityForm {
+  display: grid;
+  gap: 22px;
+}
+
+.adminLogin form > label,
+.securityForm > label {
+  display: grid;
+  gap: 8px;
+  font-size: var(--admin-text-control);
+  font-weight: 650;
+}
+
+.adminLogin input,
+.securityForm input,
+.adminSearch input,
+.adminField input,
+.adminField textarea,
+.adminField select,
+.adminSlugField > div input,
+.adminDangerZone input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--canvas);
+  color: var(--ink);
+  padding: 11px 12px;
+  font: inherit;
+  transition: border-color 160ms var(--ease-out), box-shadow 160ms var(--ease-out), background-color 160ms var(--ease-out);
+}
+
+.adminField textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+
+.adminLogin input:focus,
+.securityForm input:focus,
+.adminSearch input:focus,
+.adminField input:focus,
+.adminField textarea:focus,
+.adminField select:focus,
+.adminDangerZone input:focus,
+.markdownTextarea:focus {
+  outline: 0;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.adminPrimaryButton,
+.adminSecondaryButton,
+.adminTopbar button,
+.projectRailHeading button,
+.projectFilters button,
+.projectRailItem,
+.markdownTabs button,
+.markdownToolbar button,
+.adminSlugField button,
+.adminUploadButton,
+.adminTextAction,
+.adminDangerZone button {
+  min-height: 44px;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: var(--admin-text-control);
+  font-weight: 650;
+}
+
+.adminPrimaryButton {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 0 18px;
+}
+
+.adminSecondaryButton {
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  padding: 0 16px;
+}
+
+.adminPrimaryButton:disabled,
+.adminSecondaryButton:disabled,
+.adminTextAction:disabled,
+.adminDangerZone button:disabled,
+.stageOrder button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.adminPrimaryButton:active,
+.adminSecondaryButton:active,
+.adminTopbar button:active,
+.projectRailHeading button:active,
+.projectFilters button:active,
+.projectRailItem:active,
+.markdownTabs button:active,
+.markdownToolbar button:active,
+.adminSlugField button:active,
+.adminUploadButton:active {
+  transform: scale(0.98);
+}
+
+.adminLoginNote {
+  margin: 28px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.adminInlineError,
+.adminInlineMessage {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: var(--admin-text-control);
+  font-weight: 600;
+}
+
+.adminInlineMessage.success {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.adminReauthOverlay {
+  position: fixed;
+  z-index: 200;
+  inset: 0;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--canvas), transparent 10%);
+  backdrop-filter: blur(10px);
+}
+
+.adminReauthOverlay > section {
+  width: min(100%, 480px);
+  padding: 34px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.adminReauthOverlay h1 {
+  margin-top: 12px;
+  font-size: var(--admin-text-page);
+}
+
+.adminReauthOverlay > section > p:not(.realStatus) {
+  margin: 12px 0 28px;
+  color: var(--muted);
+  font-size: var(--admin-text-body);
+}
+
+.adminReauthOverlay form {
+  display: grid;
+  gap: 20px;
+}
+
+.adminReauthOverlay form > label {
+  display: grid;
+  gap: 8px;
+  font-size: var(--admin-text-control);
+  font-weight: 650;
+}
+
+.adminReauthOverlay input {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--canvas);
+  color: var(--ink);
+  font: inherit;
+}
+
+.adminReauthOverlay input:focus {
+  outline: 0;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.adminTopbar {
+  position: sticky;
+  z-index: 60;
+  top: 0;
+  min-height: 72px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto minmax(140px, 1fr);
+  align-items: center;
+  gap: 28px;
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--canvas), transparent 4%);
+  backdrop-filter: blur(16px);
+}
+
+.adminTopbar nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adminTopbar nav button,
+.adminTopbar nav a,
+.adminSignOut {
+  min-height: 44px;
+  min-width: max-content;
+  padding: 0 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.adminTopbar nav button[data-current="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.adminSignOut {
+  justify-self: end;
+}
+
+.adminNotice {
+  position: sticky;
+  z-index: 55;
+  top: 72px;
+  min-height: 48px;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  border-bottom: 1px solid currentColor;
+  font-size: var(--admin-text-control);
+  font-weight: 600;
+}
+
+.adminNotice.info { background: var(--accent-soft); color: var(--accent); }
+.adminNotice.success { background: var(--success-soft); color: var(--success); }
+.adminNotice.error { background: var(--danger-soft); color: var(--danger); }
+.adminNotice button { min-height: 44px; border: 0; border-bottom: 1px solid currentColor; background: transparent; color: inherit; }
+
+.adminWorkspace {
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  align-items: start;
+}
+
+.projectRail {
+  position: sticky;
+  top: 72px;
+  height: calc(100dvh - 72px);
+  overflow: auto;
+  border-right: 1px solid var(--line);
+  background: var(--surface-quiet);
+}
+
+.adminNotice + .adminWorkspace .projectRail { top: 120px; height: calc(100dvh - 120px); }
+
+.projectRailHeading {
+  padding: 24px 20px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.projectRailHeading h1 {
+  font-family: var(--body);
+  font-size: var(--admin-text-title);
+  letter-spacing: -0.015em;
+}
+
+.projectRailHeading p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+}
+
+.projectRailHeading button {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--canvas);
+  padding: 0 13px;
+}
+
+.adminSearch {
+  display: block;
+  padding: 0 20px 14px;
+}
+
+.adminSearch input {
+  min-height: 44px;
+  background: var(--surface);
+  font-size: var(--admin-text-control);
+}
+
+.projectFilters {
+  padding: 0 20px 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.projectFilters button {
+  min-height: 44px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+.projectFilters button[data-current="true"] {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.projectRailList {
+  border-top: 1px solid var(--line);
+}
+
+.projectRailItem {
+  width: 100%;
+  min-height: 94px;
+  padding: 16px 20px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+.projectRailItem[data-current="true"] {
+  background: var(--surface);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.projectRailItem strong {
+  overflow: hidden;
+  font-size: var(--admin-text-control);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.projectRailItem > span {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.realStatus {
+  width: fit-content;
+  color: var(--muted);
+  font-family: var(--data);
+  font-size: var(--admin-text-micro);
+  font-style: normal;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.realStatus.published { color: var(--success); }
+.realStatus.draft { color: var(--accent); }
+.realStatus.archived { color: var(--muted); }
+
+.projectRailEmpty {
+  padding: 32px 20px;
+}
+
+.projectRailEmpty strong { font-size: var(--admin-text-control); }
+.projectRailEmpty p { margin: 7px 0 0; color: var(--muted); font-size: 0.76rem; }
+.projectRailSkeleton { padding: 20px; display: grid; gap: 16px; }
+.projectRailSkeleton i { height: 58px; border-radius: var(--radius); background: var(--line); opacity: 0.6; }
+
+.adminMain {
+  min-width: 0;
+}
+
+.adminEditorGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 292px;
+  align-items: start;
+}
+
+.adminEditorCanvas {
+  min-width: 0;
+  padding: 44px clamp(30px, 5vw, 74px) 120px;
+}
+
+.adminEditorHeader {
+  padding-bottom: 34px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.adminEditorHeader h1 {
+  max-width: 19ch;
+  font-family: var(--display);
+  font-size: var(--admin-text-page);
+  line-height: 1.05;
+}
+
+.adminEditorHeader p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.adminEditorHeader a {
+  min-width: max-content;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.adminEditorSection {
+  padding: 48px 0 52px;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.34fr) minmax(0, 0.66fr);
+  gap: clamp(36px, 6vw, 78px);
+  border-bottom: 1px solid var(--line);
+}
+
+.adminEditorSection > header h2 {
+  font-family: var(--body);
+  font-size: var(--admin-text-title);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+}
+
+.adminEditorSection > header p {
+  max-width: 34ch;
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.adminSectionFields {
+  min-width: 0;
+  display: grid;
+  gap: 28px;
+}
+
+.adminTwoColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.adminField {
+  min-width: 0;
+}
+
+.adminField > label,
+.adminSlugField > label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.adminField > label span,
+.adminSlugField > label span {
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+  font-weight: 500;
+}
+
+.adminFieldHelp {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+  line-height: 1.45;
+}
+
+.adminFieldError {
+  margin: 7px 0 0;
+  color: var(--red);
+  font-size: var(--admin-text-micro);
+  line-height: 1.45;
+}
+
+.adminSlugField > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.adminSlugField button {
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0 13px;
+}
+
+.stageList {
+  display: grid;
+  gap: 20px;
+}
+
+.stageEditor {
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.stageOrder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stageOrder span {
+  margin-right: auto;
+  color: var(--accent);
+  font-family: var(--data);
+  font-size: var(--admin-text-micro);
+}
+
+.stageOrder button,
+.adminTextAction {
+  min-height: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--admin-text-micro);
+}
+
+.dangerText,
+.adminDangerZone button { color: var(--danger); }
+
+.adminImagePreview {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #101a22;
+}
+
+.adminImagePreview img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+
+.adminImagePreview figcaption {
+  padding: 10px 12px;
+  border-top: 1px solid #2c3942;
+  color: #cbd6dd;
+  font-size: var(--admin-text-micro);
+}
+
+.adminUploadRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.adminUploadButton {
+  position: relative;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.adminUploadButton input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.adminUploadRow span {
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+}
+
+.markdownEditor {
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.markdownTabs {
+  padding: 8px;
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-quiet);
+}
+
+.markdownTabs button,
+.markdownToolbar button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+}
+
+.markdownTabs button[aria-selected="true"] {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.markdownToolbar {
+  padding: 8px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-bottom: 1px solid var(--line);
+}
+
+.markdownToolbar button {
+  min-height: 44px;
+  padding: 0 9px;
+  font-size: var(--admin-text-micro);
+}
+
+.markdownTextarea {
+  width: 100%;
+  min-height: 520px;
+  padding: 20px;
+  display: block;
+  border: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--data);
+  font-size: var(--admin-text-control);
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.markdownPreview {
+  min-height: 520px;
+  max-height: 720px;
+  padding: 28px;
+  overflow: auto;
+}
+
+.markdownEditor > .adminFieldHelp {
+  margin: 0;
+  padding: 11px 14px;
+  border-top: 1px solid var(--line);
+  background: var(--surface-quiet);
+}
+
+.publishInspector {
+  position: sticky;
+  top: 72px;
+  min-height: calc(100dvh - 72px);
+  padding: 30px 22px 60px;
+  border-left: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.adminNotice + .adminWorkspace .publishInspector { top: 120px; min-height: calc(100dvh - 120px); }
+
+.publishStatus {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.publishStatus strong {
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+  font-weight: 500;
+}
+
+.adminCheck {
+  margin: 22px 0;
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.adminCheck input { width: 17px; height: 17px; accent-color: var(--accent); }
+.publishInspector .adminField { margin-top: 20px; }
+
+.publishActions {
+  margin-top: 28px;
+  padding-top: 24px;
+  display: grid;
+  gap: 9px;
+  border-top: 1px solid var(--line);
+}
+
+.publishErrorSummary {
+  margin-top: 28px;
+  padding: 16px;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius);
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.publishErrorSummary:focus {
+  outline: 3px solid var(--danger);
+  outline-offset: 3px;
+}
+
+.publishErrorSummary h2 {
+  font-family: var(--body);
+  font-size: var(--admin-text-control);
+  letter-spacing: 0;
+}
+
+.publishErrorSummary ul {
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  list-style: none;
+}
+
+.publishErrorSummary button {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--admin-text-micro);
+  text-align: left;
+}
+
+.publishActions .adminTextAction {
+  justify-self: start;
+  margin-top: 5px;
+}
+
+.publishChecklist {
+  margin-top: 34px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.publishChecklist h2 {
+  font-family: var(--body);
+  font-size: var(--admin-text-control);
+  letter-spacing: 0;
+}
+
+.publishChecklist ul {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.publishChecklist li {
+  padding: 8px 0;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-size: var(--admin-text-micro);
+}
+
+.publishChecklist li span {
+  color: var(--danger);
+  font-family: var(--data);
+  font-size: var(--admin-text-micro);
+  text-transform: uppercase;
+}
+
+.publishChecklist li[data-complete="true"] span { color: var(--success); }
+
+.adminDangerZone {
+  margin-top: 30px;
+  padding-top: 24px;
+  display: grid;
+  gap: 12px;
+  border-top: 1px solid var(--danger);
+}
+
+.adminDangerZone p {
+  margin: 0;
+  color: var(--danger);
+  font-size: var(--admin-text-micro);
+}
+
+.adminDangerZone button {
+  padding: 0;
+  justify-self: start;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+}
+
+.adminEmptyState {
+  min-height: calc(100dvh - 72px);
+  padding: 80px;
+  display: grid;
+  place-content: center;
+  justify-items: start;
+}
+
+.adminEmptyState h1 { max-width: 11ch; font-size: var(--admin-text-display); }
+.adminEmptyState p { max-width: 48ch; margin: 20px 0 28px; color: var(--muted); }
+
+.securityPage {
+  width: min(1080px, calc(100% - 48px));
+  margin: 0 auto;
+  padding-block: 68px 110px;
+}
+
+.securityPage > header {
+  padding-bottom: 38px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.securityPage > header h1 { font-size: var(--admin-text-display); }
+.securityPage > header p { margin: 12px 0 0; color: var(--muted); }
+
+.securityGrid {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 70px;
+}
+
+.securitySummary,
+.securityForm {
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.securitySummary h2,
+.securityForm h2 {
+  font-family: var(--body);
+  font-size: var(--admin-text-title);
+  letter-spacing: -0.015em;
+}
+
+.securitySummary dl { margin: 22px 0 0; }
+.securitySummary dl div { padding: 13px 0; border-bottom: 1px solid var(--line); }
+.securitySummary dt { color: var(--muted); font-size: var(--admin-text-micro); }
+.securitySummary dd { margin: 5px 0 0; overflow-wrap: anywhere; font-size: var(--admin-text-control); font-weight: 600; }
+.securityForm > p { margin: 8px 0 0; color: var(--muted); font-size: 0.78rem; }
+.securityForm { align-content: start; }
+
+@media (hover: hover) and (pointer: fine) {
+  .adminPrimaryButton:hover { background: var(--accent-hover); }
+  .adminSecondaryButton:hover,
+  .adminUploadButton:hover,
+  .adminSlugField button:hover { border-color: var(--accent); color: var(--accent); }
+  .adminTopbar nav button:hover,
+  .adminTopbar nav a:hover,
+  .adminSignOut:hover { color: var(--ink); }
+  .projectRailItem:hover { background: var(--surface); }
+  .markdownToolbar button:hover { color: var(--ink); }
+}
+
+@media (max-width: 1240px) {
+  .adminEditorGrid { grid-template-columns: 1fr; }
+  .publishInspector { position: static; min-height: 0; border-top: 1px solid var(--line); border-left: 0; }
+  .adminEditorCanvas { padding-bottom: 60px; }
+  .publishInspector { padding: 32px clamp(30px, 5vw, 74px) 70px; }
+  .publishActions { max-width: 520px; }
+  .publishChecklist { max-width: 620px; }
+}
+
+@media (max-width: 900px) {
+  .adminTopbar { grid-template-columns: 1fr auto; gap: 14px; }
+  .adminTopbar nav { grid-column: 1 / -1; grid-row: 2; margin-inline: -24px; padding: 7px 24px; border-top: 1px solid var(--line); }
+  .adminTopbar { padding-top: 12px; }
+  .adminSignOut { grid-column: 2; grid-row: 1; }
+  .adminWorkspace { grid-template-columns: 1fr; }
+  .projectRail, .adminNotice + .adminWorkspace .projectRail { position: static; height: auto; max-height: 430px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .adminEditorSection { grid-template-columns: 1fr; gap: 22px; }
+  .adminEditorSection > header p { max-width: 60ch; }
+  .securityGrid { grid-template-columns: 1fr; gap: 48px; }
+}
+
+@media (max-width: 640px) {
+  .adminLogin { padding: 16px; }
+  .adminLogin > section { padding: 28px 20px; }
+  .adminLoginCopy { margin-top: 48px; }
+  .adminTopbar { padding-inline: 16px; }
+  .adminBrand span { display: none; }
+  .adminTopbar nav { margin-inline: -16px; padding-inline: 16px; overflow-x: auto; }
+  .adminNotice { top: 112px; padding-inline: 16px; justify-content: space-between; }
+  .adminEditorCanvas { padding: 32px 16px 80px; }
+  .adminEditorHeader { flex-direction: column; }
+  .adminEditorHeader h1 { font-size: var(--admin-text-page); }
+  .adminTwoColumns { grid-template-columns: 1fr; }
+  .stageEditor { padding: 16px; }
+  .stageOrder { flex-wrap: wrap; }
+  .publishInspector { padding: 30px 16px 64px; }
+  .markdownTextarea { min-height: 420px; padding: 14px; }
+  .markdownPreview { min-height: 420px; padding: 20px 14px; }
+  .securityPage { width: min(100% - 32px, 1080px); padding-top: 48px; }
+  .securityPage > header h1 { font-size: var(--admin-text-display); }
+  .adminEmptyState { padding: 60px 20px; }
+}

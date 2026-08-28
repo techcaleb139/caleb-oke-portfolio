@@ -1,100 +1,78 @@
-# vinext-starter
+# Caleb Oke — AI Automation Portfolio
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+An evidence-first portfolio and private publishing system for Caleb Oke. The public site presents practical automation work with observed results, known limits, and next tests. The private CMS manages project cards and full Markdown case studies.
 
-## Prerequisites
+## Public site
 
-- Node.js `>=22.13.0`
+- Production homepage: `https://caleb-oke-portfolio.vercel.app/`
+- Case studies: `/projects/<project-slug>`
+- Project data API: `/api/projects`
+- Contact form submissions continue to use the existing Neon `contact_submissions` table.
 
-## Quick Start
+## Private publishing desk
+
+Open `/admin` on the deployed Vercel site. The admin area supports:
+
+- private drafts, publishing, unpublishing, archiving, and confirmed permanent deletion;
+- all homepage card fields and full Markdown case-study content;
+- project image uploads through Vercel Blob, with an HTTPS URL fallback;
+- search metadata, display order, and homepage visibility;
+- a publish checklist, optimistic version checks, and an audit trail;
+- password rotation and eight-hour secure sessions.
+
+When published content changes, existing public pages read the update from Neon immediately. A Vercel Deploy Hook is still required to automatically rebuild crawler-ready HTML, the sitemap, and a route for a brand-new project slug. Until that hook is configured, run a production Vercel deployment after publishing a new project.
+
+### Using the CMS
+
+1. Open `https://caleb-oke-portfolio.vercel.app/admin` and sign in with the private access details generated in `.cms-private/CMS_ADMIN_ACCESS.txt`.
+2. Select an existing project or choose **New project**.
+3. Save incomplete work as a private draft. Drafts never appear on the public portfolio.
+4. Complete the publish checklist, review the Markdown preview, and choose **Publish project**.
+5. Use **Move back to draft** to hide a published project or **Move to archive** before permanent deletion.
+6. Change the temporary administrator password from the **Security** page after the first sign-in.
+
+## Local development
 
 ```bash
 npm install
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+Use `vercel dev` when testing the API routes locally.
 
-## Included Shape
+## Required Vercel environment variables
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Neon connection string used by the CMS and contact form |
+| `CMS_ADMIN_EMAIL` | Lowercase administrator email |
+| `CMS_ADMIN_PASSWORD_HASH` | Scrypt password hash; never store a plain password here |
+| `CMS_DUMMY_PASSWORD_HASH` | Hash used to keep failed-login timing consistent |
+| `CMS_RATE_LIMIT_SECRET` | Random secret used to hash login identities |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob token for project image uploads |
+| `VERCEL_DEPLOY_HOOK_URL` | Vercel Deploy Hook used after publishing changes |
 
-## Workspace Auth Headers
+Generate the CMS secrets locally with `npm run cms:credentials`. The output directory is ignored by Git. Move the generated environment values into Vercel, keep the temporary password private, and delete the local access file after changing the password in `/admin`.
 
-Signed-in visitors receive both `oai-authenticated-user-id` and `oai-authenticated-user-email`. Private Sites require every visitor to sign in; public Sites may also have anonymous visitors, for whom neither header is present.
+## Database migration
 
-The user ID is stable for the same user on the same Site and different across Sites. Email and name are intended for display or contact purposes.
+`migrations/001_create_projects.sql` is the historical, incomplete migration Antigravity applied before the requested review pause. It is preserved exactly for traceability and must not be run again.
 
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
+`migrations/002_upgrade_projects_cms.sql` is the reviewed corrective migration. It renames the incomplete table to `projects_legacy_001`, creates the complete project, administrator, session, rate-limit, and audit schema, and imports any legacy rows as private drafts for manual review. It runs inside one transaction through `scripts/migrate-cms.mjs`, so a failed step rolls the whole upgrade back. The normal website and `/admin` never create or alter database tables.
 
-Treat the full name as optional and fall back to email when it is absent:
+The corrective migration was approved and applied to the configured Neon database on 28 August 2026. The legacy table was empty and remains preserved as `projects_legacy_001`. The reviewed schema, one administrator account, and two published project records were verified after migration.
 
-```tsx
-import { headers } from "next/headers";
+The migration runner is idempotent for the reviewed schema: it inspects the current columns before doing anything and skips schema changes when the upgrade is already present.
 
-export default async function Home() {
-  const requestHeaders = await headers();
-  const userId = requestHeaders.get("oai-authenticated-user-id");
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
+## Quality checks
 
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm run lint
+npm test
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+The build generates static HTML for the homepage and every published case study, then creates the current sitemap. Admin pages are marked `noindex`.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## Hosting
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+This repository is configured only for the existing Vercel project. It contains no ChatGPT, OpenAI Sites, Cloudflare Worker, or Next.js hosting scaffold.

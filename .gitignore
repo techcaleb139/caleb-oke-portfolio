@@ -13,9 +13,6 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/.vinext/
 /out/
 
 # misc
@@ -35,8 +32,8 @@ yarn-error.log*
 .vercel
 
 /dist/
-/.wrangler/
 /outputs/
 /work/
 /build/
+.cms-private/
 *.log

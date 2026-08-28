@@ -176,6 +176,17 @@ The palette pairs cool mineral neutrals with a single commissioning-blue accent,
 - **Body** (400, 17px, 1.65): Explanatory content, generally constrained near 62ch; compact metadata steps down below this base.
 - **Label** (500, 0.76rem, 1.5): Status, stage, tool, caption, and process metadata; keep it terse and use ordinary case.
 
+### Private CMS optical scale
+
+The publishing desk is a dense operator surface, so it uses a deliberately tighter optical scale than the public narrative pages. These sizes are design-system values, not arbitrary component overrides:
+
+- **Micro record:** 0.58rem, 0.64rem, 0.66rem, 0.68rem, 0.69rem, 0.7rem, and 0.72rem for revision, status, checklist, stage, and timestamp data.
+- **Compact control:** 0.8rem, 0.82rem, and 0.86rem for filters, inputs, buttons, and rail titles.
+- **Operator body:** 0.95rem, 1rem, 1.1rem, and 1.35rem for explanatory copy, section labels, and the publishing-desk mark.
+- **Operator display:** 2rem, 2.35rem, 2.6rem, 2.85rem, 3rem, and 3.2rem for login, editor, empty-state, and security-page titles across responsive breakpoints.
+
+The close increments preserve hierarchy in a data-dense interface without borrowing the public site’s oversized editorial rhythm. Do not introduce another CMS size unless it replaces an existing step.
+
 ### Named Rules
 
 **The Three Voices Rule.** Archivo states the proposition, Atkinson explains it, and Azeret records evidence; do not swap these roles for novelty.

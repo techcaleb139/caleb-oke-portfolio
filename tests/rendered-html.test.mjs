@@ -80,3 +80,26 @@ test("keeps the project-brief handoff explicit", async () => {
   assert.match(output, /Reply email or WhatsApp/);
   assert.match(output, /stored only after you explicitly submit it/);
 });
+
+test("pre-renders crawlable case studies with their own metadata", async () => {
+  const file = path.resolve("dist", "projects", "voice-ai-restaurant-ordering-prototype", "index.html");
+  const html = await readFile(file, "utf8");
+  assert.match(html, /<h1>Voice AI Restaurant Ordering Prototype<\/h1>/);
+  assert.match(html, /Evidence and limits\./);
+  assert.match(html, /System path\./);
+  assert.match(html, /rel="canonical" href="https:\/\/caleb-oke-portfolio\.vercel\.app\/projects\/voice-ai-restaurant-ordering-prototype"/);
+  assert.match(html, /"@type":"CreativeWork"/);
+});
+
+test("keeps the private publishing desk out of search results", async () => {
+  const html = await readFile(path.resolve("dist", "admin", "index.html"), "utf8");
+  assert.match(html, /name="robots" content="noindex, nofollow, noarchive"/);
+  assert.doesNotMatch(html, /Automation built for real work/);
+});
+
+test("adds published case studies to the sitemap", async () => {
+  const sitemap = await readFile(path.resolve("dist", "sitemap.xml"), "utf8");
+  assert.match(sitemap, /projects\/voice-ai-restaurant-ordering-prototype/);
+  assert.match(sitemap, /projects\/automated-job-search-alert-pipeline/);
+  assert.doesNotMatch(sitemap, /\/admin/);
+});

@@ -1,25 +1,18 @@
 import { neon } from '@neondatabase/serverless';
+import { type ApiRequest, type ApiResponse, assertSameOriginMutation, parseJsonBody, sendError } from './_lib/http';
 
-type ContactRequest = {
-  method?: string;
-  body?: Record<string, unknown>;
-};
-
-type ContactResponse = {
-  setHeader(name: string, value: string): void;
-  status(code: number): ContactResponse;
-  json(body: Record<string, unknown>): void;
-};
-
-export default async function handler(req: ContactRequest, res: ContactResponse) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
   // 1. Enforce POST method
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
   try {
-    const { name, contact, business, workflow, outcome, website, _honeypot } = req.body || {};
+    assertSameOriginMutation(req);
+    const { name, contact, business, workflow, outcome, website, _honeypot } = parseJsonBody<Record<string, unknown>>(req);
 
     // 2. Honeypot Spam Protection
     const websiteFilled = typeof website === 'string' && website.trim() !== '';
@@ -30,11 +23,17 @@ export default async function handler(req: ContactRequest, res: ContactResponse)
     }
 
     // 3. Trim values and Input Validation
-    const safeName = typeof name === 'string' ? name.trim() : '';
-    const safeContact = typeof contact === 'string' ? contact.trim() : '';
-    const safeBusiness = typeof business === 'string' ? business.trim() : '';
-    const safeWorkflow = typeof workflow === 'string' ? workflow.trim() : '';
-    const safeOutcome = typeof outcome === 'string' ? outcome.trim() : '';
+    const clean = (value: unknown) => typeof value === 'string'
+      ? [...value].filter((character) => {
+          const code = character.charCodeAt(0);
+          return code === 9 || code === 10 || code === 13 || (code >= 32 && code !== 127);
+        }).join('').trim()
+      : '';
+    const safeName = clean(name);
+    const safeContact = clean(contact);
+    const safeBusiness = clean(business);
+    const safeWorkflow = clean(workflow);
+    const safeOutcome = clean(outcome);
 
     if (!safeName || !safeContact || !safeWorkflow || !safeOutcome) {
       return res.status(400).json({ error: 'Name, reply contact, workflow, and outcome are required fields.' });
@@ -66,7 +65,6 @@ export default async function handler(req: ContactRequest, res: ContactResponse)
     // 6. Return Clean Success Response
     return res.status(200).json({ success: true, message: 'Your message has been received.' });
   } catch (error: unknown) {
-    console.error('Contact form error:', error);
-    return res.status(500).json({ error: 'An internal server error occurred while processing your request.' });
+    return sendError(res, error, 'Contact form error');
   }
 }
