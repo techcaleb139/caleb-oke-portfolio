@@ -23,10 +23,10 @@ async function builtHtml() {
 
 test("ships crawlable content before JavaScript runs", async () => {
   const html = await builtHtml();
-  assert.match(html, /<h1[^>]*>I build practical automations for real work\.<\/h1>/);
+  assert.match(html, /<h1[^>]*>Automation built for real work\.<\/h1>/);
   assert.match(html, /Voice AI Restaurant Ordering Prototype/);
   assert.match(html, /Automated Job Search Engine and Alert Pipeline/);
-  assert.match(html, /Tell me what is taking too much manual effort\./);
+  assert.match(html, /Describe the process that needs work\./);
 });
 
 test("publishes complete search and social metadata", async () => {
@@ -54,9 +54,9 @@ test("labels portfolio evidence honestly", async () => {
   const output = await builtPortfolio();
   for (const expected of [
     "Voice AI Restaurant Ordering Prototype",
-    "TS Academy Final Project",
+    "TS Academy final project",
     "fictional Nigerian restaurant",
-    "Working Personal System",
+    "Working personal system",
     "Automated Job Search Engine",
   ]) {
     assert.match(output, new RegExp(expected, "i"));
