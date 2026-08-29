@@ -9,27 +9,23 @@ const PHONE = "2348065755296";
 
 const capabilityRows = [
   {
-    problem: "Repeated manual work",
-    outcome: "Connect the steps, route decisions, notify the right person, and keep important approvals visible.",
+    service: "Workflow automation",
+    fit: "For teams moving information between forms, spreadsheets, email, and internal tools by hand.",
+    outcome: "I connect the steps, route decisions, send alerts, and keep important approvals visible.",
     tools: "n8n / Make / Zapier",
   },
   {
-    problem: "Messy incoming data",
-    outcome: "Collect, clean, normalize, filter, deduplicate, and deliver information in a dependable format.",
+    service: "Data and API workflows",
+    fit: "For businesses collecting inconsistent data from websites, APIs, documents, or several platforms.",
+    outcome: "I collect, clean, normalize, filter, and deliver the information in one dependable format.",
     tools: "REST APIs / Python / JavaScript",
   },
   {
-    problem: "Structured phone enquiries",
-    outcome: "Capture caller intent, validate required details, follow business rules, and hand uncertain cases to a person.",
+    service: "Voice AI prototypes",
+    fit: "For structured calls such as enquiries, bookings, order capture, and first-line qualification.",
+    outcome: "I capture intent, validate required details, follow business rules, and hand uncertain calls to a person.",
     tools: "Vapi / Webhooks / n8n",
   },
-];
-
-const systemLayers = [
-  ["Capture", "Forms, voice calls, webhooks"],
-  ["Orchestrate", "n8n, Make, Zapier"],
-  ["Process", "Python, JavaScript, REST APIs"],
-  ["Run and review", "Docker, logs, alerts, human approval"],
 ];
 
 const processSteps = [
@@ -170,9 +166,9 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
           </button>
           <div className={menuOpen ? "navLinks open" : "navLinks"} id="primary-navigation">
             <a href="#work" onClick={() => setMenuOpen(false)}>Work</a>
-            <a href="#services" onClick={() => setMenuOpen(false)}>Capabilities</a>
+            <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
             <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
-            <a className="navAction" href="#contact" onClick={() => setMenuOpen(false)}>Start a project</a>
+            <a className="navAction" href="#contact" onClick={() => setMenuOpen(false)}>Discuss a project</a>
           </div>
         </nav>
       </header>
@@ -180,11 +176,11 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
       <div id="content">
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="heroCopy">
-            <h1 id="hero-title">Automation built for real work.</h1>
-            <p className="heroLead">Workflow, data, and voice systems with tested logic, visible failures, and human control.</p>
+            <h1 id="hero-title">Repetitive work, automated.</h1>
+            <p className="heroLead">Workflow automation, data pipelines, and voice AI systems built around your real process.</p>
             <div className="heroActions">
-              <a className="button primary" href="#work">View case studies</a>
-              <a className="button secondary" href="#contact">Start a project</a>
+              <a className="button primary" href="#contact">Discuss a project</a>
+              <a className="button secondary" href="#work">See proof</a>
             </div>
             <nav className="profileLinks" aria-label="Professional profiles">
               <a href="https://github.com/techcaleb139" target="_blank" rel="noreferrer">GitHub</a>
@@ -205,63 +201,52 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
             />
             <figcaption>
               <strong>Caleb Oke</strong>
-              <span>Computer Science student building practical AI automation systems</span>
+              <span>AI Automation Builder</span>
             </figcaption>
           </figure>
         </section>
 
-        <section className="projectIndex" aria-labelledby="documented-systems-title">
-          <div className="shell projectIndexInner">
-            <h2 id="documented-systems-title">Documented systems</h2>
-            {visibleProjects.map((project) => (
-              <a href={`#${projectAnchor(project)}`} key={project.id || project.slug}>
-                <span>{project.title}</span>
-                <strong>{project.statusLabel}</strong>
-              </a>
-            ))}
+        <section className="section capabilitiesSection" id="services">
+          <div className="shell servicesLayout">
+            <header className="sectionIntro servicesIntro">
+              <h2>What I can build for you.</h2>
+              <p>Focused automation projects for small businesses, online teams, and creators with a clear process to improve.</p>
+              <a className="textLink" href="#contact">Tell me what is slowing you down</a>
+            </header>
+
+            <div className="capabilityTable" aria-label="Automation capabilities">
+              {capabilityRows.map((row, index) => (
+                <article className="capabilityRow" key={row.service}>
+                  <span className="serviceNumber" aria-hidden="true">0{index + 1}</span>
+                  <div>
+                    <h3>{row.service}</h3>
+                    <p className="serviceFit">{row.fit}</p>
+                  </div>
+                  <p>{row.outcome}</p>
+                  <span className="serviceTools">{row.tools}</span>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
         <section className="section workSection shell" id="work">
           <header className="sectionIntro workIntro">
-            <h2>Systems, tested and explained.</h2>
-            <p>I show what each build did, what the test demonstrated, and what still needs stronger validation.</p>
+            <h2>Proof, not promises.</h2>
+            <p>Each build includes the result I observed and the limitation I still need to solve.</p>
           </header>
 
-          {visibleProjects.map((project) => (
-            <CaseStudy project={project} key={project.id || project.slug} />
-          ))}
-        </section>
-
-        <section className="section capabilitiesSection" id="services">
-          <div className="shell">
-            <header className="sectionIntro">
-              <h2>Problems I can scope now.</h2>
-              <p>I am taking on focused pilots and small builds where the process, result, and handover can be clearly defined.</p>
-            </header>
-
-            <div className="capabilityTable" aria-label="Automation capabilities">
-              {capabilityRows.map((row) => (
-                <article className="capabilityRow" key={row.problem}>
-                  <h3>{row.problem}</h3>
-                  <p>{row.outcome}</p>
-                  <span>{row.tools}</span>
-                </article>
-              ))}
-            </div>
-
-            <dl className="systemMap">
-              {systemLayers.map(([term, detail]) => (
-                <div key={term}><dt>{term}</dt><dd>{detail}</dd></div>
-              ))}
-            </dl>
+          <div className="workGrid">
+            {visibleProjects.map((project) => (
+              <CaseStudy project={project} key={project.id || project.slug} />
+            ))}
           </div>
         </section>
 
         <section className="section processSection shell" aria-labelledby="process-title">
           <header className="sectionIntro processIntro">
-            <h2 id="process-title">From process map to handover.</h2>
-            <p>Every stage produces something you can inspect before the work moves forward.</p>
+            <h2 id="process-title">A clear path from problem to handover.</h2>
+            <p>You can inspect the rules, test results, and known limits before taking ownership.</p>
           </header>
           <ol className="processTrack">
             {processSteps.map(([title, detail]) => (
@@ -273,8 +258,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
         <section className="section aboutSection" id="about">
           <div className="shell aboutLayout">
             <div className="aboutStatement">
-              <h2>I care about systems that fail clearly, not silently.</h2>
-              <p>Impressive complexity matters less than a system that solves the actual problem predictably.</p>
+              <h2>Clear systems. Honest limits. Human control.</h2>
+              <p>I would rather show you a known failure than hide it behind a confident demo.</p>
             </div>
             <div className="aboutCopy">
               <p>I am a Computer Science student who moved from learning Python into building practical automation workflows. I completed a three-month AI and automation program at TS Academy and kept building after graduation.</p>
@@ -287,8 +272,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
         <section className="section contactSection shell" id="contact">
           <div className="contactIntro">
-            <h2>Describe the process that needs work.</h2>
-            <p>Share what happens today and what a useful result would look like. I will reply with questions, not a generic sales pitch.</p>
+            <h2>Tell me what is taking too much time.</h2>
+            <p>Share the current process and the result you want. I will reply with practical questions and a sensible next step.</p>
             <div className="contactMethods" aria-label="Direct contact options">
               <a href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry`}><span>Email</span><strong>{EMAIL}</strong></a>
               <a href={`https://wa.me/${PHONE}?text=Hi%20Caleb%2C%20I%27d%20like%20to%20discuss%20an%20automation%20project.`} target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>+234 806 575 5296</strong></a>
@@ -364,7 +349,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
       <footer className="footer">
         <div className="shell footerLayout">
           <div><strong>Caleb Oke</strong><span>Practical automation. Clear evidence. Human control.</span></div>
-          <nav aria-label="Footer navigation"><a href="#work">Work</a><a href="#services">Capabilities</a><a href="#about">About</a><a href="#top">Back to top</a></nav>
+          <nav aria-label="Footer navigation"><a href="#work">Work</a><a href="#services">Services</a><a href="#about">About</a><a href="#top">Back to top</a></nav>
         </div>
       </footer>
     </main>
@@ -374,38 +359,26 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 function CaseStudy({ project }: { project: PortfolioProject }) {
   const id = projectAnchor(project);
   return (
-    <article className={`caseStudy ${project.layoutVariant}`} id={id}>
-      <header className="caseHeader">
-        <h3>{project.title}</h3>
-        <p>{project.summary}</p>
-        <dl className="caseMeta">
-          <div><dt>Project status</dt><dd>{project.statusLabel} / {project.category}</dd></div>
-        </dl>
-        <div className="caseLinks">
-          <a className="textLink" href={`/projects/${project.slug}`}>Read the full case study</a>
-          {project.repositoryUrl && <a className="textLink" href={project.repositoryUrl} target="_blank" rel="noreferrer">View repository</a>}
-          {project.liveUrl && <a className="textLink" href={project.liveUrl} target="_blank" rel="noreferrer">Open live project</a>}
-        </div>
-      </header>
-
+    <article className="caseStudy" id={id}>
       <figure className="caseVisual">
         <img src={project.imageUrl} alt={project.imageAlt} width="800" height="450" loading="lazy" />
-        {project.imageCaption && <figcaption>{project.imageCaption}</figcaption>}
       </figure>
 
-      <ol className="verificationRail" aria-label={`${project.title} system path`}>
-        {project.stages.map((stage) => (
-          <li key={`${project.slug}-${stage.title}`}><strong>{stage.title}</strong><span>{stage.detail}</span></li>
-        ))}
-      </ol>
+      <header className="caseHeader">
+        <p className="caseStatus">{project.statusLabel}</p>
+        <h3>{project.title}</h3>
+        <p>{project.summary}</p>
+      </header>
 
-      <div className="evidencePanel">
-        <div className="observedEvidence"><h4>What the test showed</h4><p>{project.observedResult}</p></div>
+      <div className="caseEvidence">
+        <div><h4>Observed result</h4><p>{project.observedResult}</p></div>
         <div><h4>Known limit</h4><p>{project.knownLimit}</p></div>
-        <div><h4>Next test</h4><p>{project.nextTest}</p></div>
       </div>
 
-      <p className="toolLine"><strong>System components</strong><span>{project.tools.join(" / ")}</span></p>
+      <div className="caseFooter">
+        <span>{project.category}</span>
+        <a className="textLink" href={`/projects/${project.slug}`}>View case study</a>
+      </div>
     </article>
   );
 }

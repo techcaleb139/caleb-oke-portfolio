@@ -23,10 +23,10 @@ async function builtHtml() {
 
 test("ships crawlable content before JavaScript runs", async () => {
   const html = await builtHtml();
-  assert.match(html, /<h1[^>]*>Automation built for real work\.<\/h1>/);
+  assert.match(html, /<h1[^>]*>Repetitive work, automated\.<\/h1>/);
   assert.match(html, /Voice AI Restaurant Ordering Prototype/);
   assert.match(html, /Automated Job Search Engine and Alert Pipeline/);
-  assert.match(html, /Describe the process that needs work\./);
+  assert.match(html, /Tell me what is taking too much time\./);
 });
 
 test("publishes complete search and social metadata", async () => {
