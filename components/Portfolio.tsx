@@ -44,8 +44,7 @@ function validate(values: FormValues): FormErrors {
   const errors: FormErrors = {};
   if (!values.name.trim()) errors.name = "Enter your name so I know how to address you.";
   if (!values.replyContact.trim()) errors.replyContact = "Enter an email address or WhatsApp number so I can reply.";
-  if (!values.process.trim()) errors.process = "Explain how this work is currently handled.";
-  if (!values.outcome.trim()) errors.outcome = "Describe what a successful result would look like.";
+  if (!values.process.trim()) errors.process = "Describe the task or process you want help with.";
   return errors;
 }
 
@@ -101,8 +100,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
       window.requestAnimationFrame(() => errorSummaryRef.current?.focus());
       return;
     }
-    setBrief(`Automation project brief\n\nName: ${values.name.trim()}\nReply contact: ${values.replyContact.trim()}\nBusiness or team: ${values.business.trim() || "Not provided"}\nHow the process works today: ${values.process.trim()}\nWhat success looks like: ${values.outcome.trim()}`);
-    setNotice("Your brief is ready. Check the details, then submit it securely or use a direct send option.");
+    setBrief(`Automation project enquiry\n\nName: ${values.name.trim()}\nReply contact: ${values.replyContact.trim()}\nBusiness or team: ${values.business.trim() || "Not provided"}\nTask or process: ${values.process.trim()}\nDesired result: ${values.outcome.trim() || "Not provided yet"}`);
+    setNotice("Your message is ready. Check the details, then submit it securely or use a direct send option.");
   }
 
   async function submitBrief() {
@@ -129,11 +128,11 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(typeof result.error === "string" ? result.error : "The submission could not be saved.");
       setSubmissionState("success");
-      setNotice("Brief received. Your details were saved successfully. I will reply using the contact you provided.");
+      setNotice("Message received. Your details were saved successfully. I will reply using the contact you provided.");
     } catch (error) {
       const message = error instanceof Error && error.name === "AbortError"
         ? "The request timed out. Try again, or use WhatsApp or email below."
-        : "The brief could not be submitted. Your details are still here, so you can retry or use WhatsApp or email.";
+        : "The message could not be submitted. Your details are still here, so you can retry or use WhatsApp or email.";
       setSubmissionState("error");
       setNotice(message);
     } finally {
@@ -145,7 +144,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
     if (!brief) return;
     try {
       await navigator.clipboard.writeText(brief);
-      setNotice("Brief copied to your clipboard.");
+      setNotice("Message copied to your clipboard.");
     } catch {
       setNotice("Copy was blocked by your browser. You can still send with WhatsApp or email.");
     }
@@ -231,7 +230,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
         <section className="section workSection shell" id="work">
           <header className="sectionIntro workIntro">
             <h2>Selected projects</h2>
-            <p>These are systems I have built and tested. Each project states what worked and what still needs improvement.</p>
+            <p>These are systems I have built and tested. Each project shows an observed result and the next improvement I would make.</p>
           </header>
 
           <div className="workGrid">
@@ -300,8 +299,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
           <form className="contactForm" onSubmit={reviewBrief} noValidate>
             <div className="formHeading">
-              <h3>{brief ? "Review your project details" : "Describe the work"}</h3>
-              <p>You will review the information before it is submitted.</p>
+              <h3>{brief ? "Review your message" : "Start a conversation"}</h3>
+              <p>Share the task in a few sentences. I will ask follow-up questions if needed.</p>
             </div>
             <input className="honeypot" type="text" name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" />
 
@@ -315,43 +314,48 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
                 )}
 
                 <fieldset className="formGrid identityFields">
-                  <legend>About you</legend>
-                  <p className="groupHelp">Tell me how to reach you. A company name is optional.</p>
+                  <legend>Your details</legend>
+                  <p className="groupHelp">Tell me who you are and where I should reply.</p>
                   <FormField label="Your name" name="name" value={values.name} error={touched.name ? errors.name : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="name" placeholder="John Robert" />
                   <FormField label="Reply email or WhatsApp" name="replyContact" value={values.replyContact} error={touched.replyContact ? errors.replyContact : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="email" placeholder="john.robert@example.com or +234..." />
-                  <FormField label="Business or team" optional name="business" value={values.business} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="organization" placeholder="Northstar Studio" />
                 </fieldset>
 
-                <fieldset className="formGrid workFields">
-                  <legend>The work</legend>
-                  <p className="groupHelp">Describe the current steps. You do not need to suggest the software.</p>
-                  <FormField multiline label="How does this process work today?" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Describe the steps, who handles them, and where delays or repeated work occur." />
-                  <FormField multiline label="What would a successful result look like?" name="outcome" value={values.outcome} error={touched.outcome ? errors.outcome : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Tell me what should become faster, more accurate, easier to track, or more reliable." />
+                <fieldset className="workFields">
+                  <legend>What would you like to automate?</legend>
+                  <p className="groupHelp">A short description is enough. You do not need to suggest the software.</p>
+                  <FormField multiline label="Task or process" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="For example: enquiries arrive by WhatsApp, then someone copies the details into a spreadsheet and follows up manually." />
+                  <details className="optionalDetails">
+                    <summary>Add business and outcome details <span>Optional</span></summary>
+                    <div className="optionalFields">
+                      <FormField label="Business or team" optional name="business" value={values.business} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="organization" placeholder="Northstar Studio" />
+                      <FormField multiline label="Desired result" optional name="outcome" value={values.outcome} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="What should become faster, easier to track, or more reliable?" />
+                    </div>
+                  </details>
                 </fieldset>
 
-                <button className="button primary submitButton" type="submit">Review my brief</button>
-                <p className="formNote">No account required. Your brief is stored only after you explicitly submit it.</p>
+                <button className="button primary submitButton" type="submit">Review message</button>
+                <p className="formNote">No account required. Nothing is stored until you submit the reviewed message.</p>
               </>
             )}
 
             {brief && (
               <section className="briefReview" aria-labelledby="brief-title">
                 <div className="briefReviewHeader">
-                  <h4 id="brief-title">Check the details before sending</h4>
+                  <h4 id="brief-title">Check your message before sending</h4>
                   <button type="button" className="textButton" onClick={() => { setBrief(null); setNotice(""); setSubmissionState("idle"); }}>Edit details</button>
                 </div>
                 <dl className="reviewGrid">
                   <div><dt>Name</dt><dd>{values.name.trim()}</dd></div>
                   <div><dt>Reply contact</dt><dd>{values.replyContact.trim()}</dd></div>
                   <div><dt>Business or team</dt><dd>{values.business.trim() || "Not provided"}</dd></div>
-                  <div><dt>How the process works today</dt><dd>{values.process.trim()}</dd></div>
-                  <div><dt>What success looks like</dt><dd>{values.outcome.trim()}</dd></div>
+                  <div><dt>Task or process</dt><dd>{values.process.trim()}</dd></div>
+                  <div><dt>Desired result</dt><dd>{values.outcome.trim() || "Not provided yet"}</dd></div>
                 </dl>
                 <div className="sendActions">
                   <button className="button primary secureSubmit" type="button" onClick={submitBrief} disabled={submissionState === "submitting" || submissionState === "success"}>
-                    {submissionState === "submitting" ? "Submitting..." : submissionState === "success" ? "Brief submitted" : submissionState === "error" ? "Retry secure submission" : "Submit project brief"}
+                    {submissionState === "submitting" ? "Submitting..." : submissionState === "success" ? "Message submitted" : submissionState === "error" ? "Retry secure submission" : "Submit message"}
                   </button>
-                  <button className="button secondary" type="button" onClick={copyBrief}>Copy brief</button>
+                  <button className="button secondary" type="button" onClick={copyBrief}>Copy message</button>
                   <a className="button secondary" href={`https://wa.me/${PHONE}?text=${encodeURIComponent(brief)}`} target="_blank" rel="noreferrer">Send on WhatsApp</a>
                   <a className="button secondary" href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry&body=${encodeURIComponent(brief)}`}>Send by email</a>
                 </div>
@@ -389,7 +393,7 @@ function CaseStudy({ project }: { project: PortfolioProject }) {
 
       <div className="caseEvidence">
         <div><h4>What happened in testing</h4><p>{project.observedResult}</p></div>
-        <div><h4>What still needs work</h4><p>{project.knownLimit}</p></div>
+        <div><h4>Next improvement</h4><p>{project.nextTest}</p></div>
       </div>
 
       <div className="caseFooter">

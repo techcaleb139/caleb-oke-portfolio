@@ -95,10 +95,10 @@ export default function ProjectDetail({ slug, initialProject }: ProjectDetailPro
         </header>
 
         <section className="projectEvidence shell" aria-labelledby="project-evidence-title">
-          <h2 id="project-evidence-title">Test results and limits</h2>
+          <h2 id="project-evidence-title">Results and next steps</h2>
           <div className="projectEvidenceGrid">
             <div><h3>Result</h3><p>{project.observedResult}</p></div>
-            <div><h3>Current limitation</h3><p>{project.knownLimit}</p></div>
+            <div><h3>Current boundary</h3><p>{project.knownLimit}</p></div>
             <div><h3>Next improvement</h3><p>{project.nextTest}</p></div>
           </div>
         </section>

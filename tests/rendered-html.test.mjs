@@ -71,21 +71,21 @@ test("labels portfolio evidence honestly", async () => {
 
 test("keeps the project-brief handoff explicit", async () => {
   const output = await builtPortfolio();
-  assert.match(output, /Review my brief/);
-  assert.match(output, /You will review the information before it is submitted/);
+  assert.match(output, /Review message/);
+  assert.match(output, /Check your message before sending/);
   assert.match(output, /Send on WhatsApp/);
   assert.match(output, /Send by email/);
-  assert.match(output, /Submit project brief/);
+  assert.match(output, /Submit message/);
   assert.match(output, /\/api\/contact/);
   assert.match(output, /Reply email or WhatsApp/);
-  assert.match(output, /stored only after you explicitly submit it/);
+  assert.match(output, /Nothing is stored until you submit the reviewed message/);
 });
 
 test("pre-renders crawlable case studies with their own metadata", async () => {
   const file = path.resolve("dist", "projects", "voice-ai-restaurant-ordering-prototype", "index.html");
   const html = await readFile(file, "utf8");
   assert.match(html, /<h1>Voice AI Restaurant Ordering Prototype<\/h1>/);
-  assert.match(html, /Test results and limits/);
+  assert.match(html, /Results and next steps/);
   assert.match(html, /How information moves/);
   assert.match(html, /rel="canonical" href="https:\/\/caleb-oke-portfolio\.vercel\.app\/projects\/voice-ai-restaurant-ordering-prototype"/);
   assert.match(html, /"@type":"CreativeWork"/);

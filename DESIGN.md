@@ -2,16 +2,17 @@
 name: Caleb Oke Portfolio
 description: A light, professional service portfolio for practical automation work, grounded in real project evidence.
 colors:
-  canvas: "#f7f8fa"
+  canvas: "#f6f8fb"
   surface: "#ffffff"
-  surface-quiet: "#f1f4f8"
-  ink: "#172033"
-  muted: "#5d6878"
-  line: "#dfe4eb"
-  line-strong: "#c7d0dc"
-  action-blue: "#245eea"
-  action-blue-hover: "#194bc4"
-  action-blue-soft: "#eaf0ff"
+  surface-quiet: "#eef3f8"
+  ink: "#14213d"
+  brand-navy: "#173a67"
+  muted: "#526174"
+  line: "#dbe3ec"
+  line-strong: "#bdc9d8"
+  action-blue: "#2f6fed"
+  action-blue-hover: "#2458c7"
+  action-blue-soft: "#eaf2ff"
   on-action: "#ffffff"
   success: "#137a4d"
   success-soft: "#e7f6ee"
@@ -36,8 +37,8 @@ rounded:
   feature-card: "14px"
 spacing:
   shell: "min(1120px, calc(100% - 48px))"
-  section: "84px"
-  section-mobile: "64px"
+  section: "96px"
+  section-mobile: "72px"
 components:
   button:
     minHeight: "46px"
@@ -64,13 +65,14 @@ The shipped site is a straightforward professional portfolio. Its job is to expl
 
 The public site is light-only (`color-scheme: light`). The palette is intentionally quiet:
 
-- **Canvas — `#f7f8fa`:** the page background.
+- **Canvas — `#f6f8fb`:** the page background.
 - **Surface — `#ffffff`:** cards, forms, the mobile menu, and alternating section bands.
-- **Quiet surface — `#f1f4f8`:** restrained supporting surfaces.
-- **Ink — `#172033`:** headings, primary text, and dark calls to action.
-- **Muted — `#5d6878`:** explanations, captions, labels, and metadata.
-- **Line — `#dfe4eb`; strong line — `#c7d0dc`:** structure, separators, fields, and boundaries.
-- **Action blue — `#245eea`:** primary buttons, links, process numbers, project status, and active cues. Hover uses `#194bc4`; soft focus/support uses `#eaf0ff`.
+- **Quiet surface — `#eef3f8`:** restrained supporting surfaces.
+- **Ink — `#14213d`:** primary text.
+- **Brand navy — `#173a67`:** section headings and primary actions.
+- **Muted — `#526174`:** explanations, captions, labels, and metadata.
+- **Line — `#dbe3ec`; strong line — `#bdc9d8`:** structure, separators, fields, and boundaries.
+- **Action blue — `#2f6fed`:** links, process numbers, project status, focus, and active cues. Hover uses `#2458c7`; soft support uses `#eaf2ff` and `#f4f8ff`.
 - **Success — `#137a4d`; danger — `#b42318`:** reserved for truthful form state, each with a pale supporting wash.
 
 Blue communicates action or useful status. It is not a decorative wash, gradient, glow, or ambient brand effect. Success and danger colors are not category colors.
@@ -89,7 +91,7 @@ Keep language direct and familiar: “View my projects,” “Contact me,” “
 
 ### Layout and spacing
 
-The main shell is `1120px` wide with 24px gutters (`calc(100% - 48px)`). At widths below 700px, gutters become 16px (`calc(100% - 32px)`). Standard sections use 84px vertical padding and reduce to 64px below 700px.
+The main shell is `1120px` wide with 24px gutters (`calc(100% - 48px)`). At widths below 700px, gutters become 16px (`calc(100% - 32px)`). Standard sections use 96px vertical padding and reduce to 72px below 700px.
 
 The home page follows a compact sequence:
 
@@ -124,7 +126,7 @@ Below 700px, the role label is hidden and a bordered menu control appears. The c
 
 ### Buttons and links
 
-Standard buttons are at least 46px high, use 18px horizontal padding, and have an 8px radius. Primary buttons use action blue with white text; secondary buttons use a white surface and strong neutral border. The compact header action is dark ink rather than blue. Active press scales to `0.98`; disabled actions retain their label and reduce opacity. All interactive elements use a visible three-pixel blue focus outline with three-pixel offset.
+Standard buttons are at least 46px high, use 18px horizontal padding, and have an 8px radius. Primary buttons and the compact header action use brand navy with white text, moving to action blue on hover. Secondary buttons use a white surface and strong neutral border, then a soft blue wash on hover. Active press scales to `0.98`; disabled actions retain their label and reduce opacity. All interactive elements use a visible three-pixel blue focus outline with three-pixel offset.
 
 ### Hero and portrait
 
@@ -136,7 +138,7 @@ Services are presented as three ruled rows rather than promotional cards. Each r
 
 ### Selected projects
 
-The home page shows actual built and published projects in a two-column card grid. Each card includes a real project image, status, title, summary, what happened in testing, what still needs work, category, and a case-study link. Evidence and limitation remain adjacent. Below 700px, the grid and evidence pair become single-column reading sequences.
+The home page shows actual built and published projects in a two-column card grid. Each card includes a real project image, status, title, summary, what happened in testing, the next improvement Caleb would make, category, and a case-study link. The detailed case-study page still documents the current boundary beside the result and next improvement. Below 700px, the grid and evidence pair become single-column reading sequences.
 
 ### Working process
 
@@ -150,11 +152,11 @@ The About section pairs a short statement with the longer factual biography. A r
 
 Direct email, WhatsApp, and LinkedIn options sit beside a structured brief form. Beneath those methods, “What happens next” is a plain three-item ordered list with compact outlined number markers; it explains the reply, scope confirmation, and paid-pilot sequence without turning the steps into cards or promotional milestones.
 
-Within the form, related fields use a balanced two-column grid on desktop. Legends and group help span both columns, and the optional business or team field spans the full row; below 700px every field returns to one-column document order. The form validates inline and provides an error summary linked to affected fields. Before submission, the user reviews the entered details and can edit, submit securely, copy the brief, or send it through WhatsApp or email. Success and failure messages are live text, not color alone. The hidden honeypot and explicit review step are functional parts of the experience and should remain visually unobtrusive.
+The initial form asks only for a name, a reply route, and a short description of the task or process. Name and reply route share a balanced desktop row. Business or team and desired result remain available inside one clearly labelled optional disclosure. Below 700px all fields use one-column document order. The form validates inline and provides an error summary linked to affected fields. Before submission, the user reviews the entered details and can edit, submit securely, copy the message, or send it through WhatsApp or email. Success and failure messages are live text, not color alone. The hidden honeypot and explicit review step are functional parts of the experience and should remain visually unobtrusive.
 
 ### Case-study pages
 
-Each case-study page starts with a back link, factual summary, status/category/tools, optional repository or live-project links, and a real project image. The next section presents three equal desktop columns: result, current limitation, and next improvement.
+Each case-study page starts with a back link, factual summary, status/category/tools, optional repository or live-project links, and a real project image. The next section presents three equal desktop columns: result, current boundary, and next improvement.
 
 The “How information moves” rail is the signature evidence structure. It is five equal columns on full desktop when a project provides five stages. At 900px it becomes two columns, and below 700px it becomes one stacked sequence. It is never a carousel. The narrative follows in a wide reading column with a sticky contact card; below 900px both become a single column and the contact card stops sticking.
 
@@ -193,7 +195,7 @@ Use these variables for dense revision, status, checklist, filter, form, editor,
 
 ### Do
 
-- Use the light neutral palette, Segoe UI/Arial system stack, and `#245eea` action blue.
+- Use the light neutral palette, Segoe UI/Arial system stack, and `#2f6fed` action blue.
 - Lead with plain descriptions of the work and outcome.
 - Show real project images and state what testing demonstrated, what remains limited, and what should improve next.
 - Keep sections compact, grids orderly, and dividers quiet.

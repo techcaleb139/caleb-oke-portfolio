@@ -33,10 +33,10 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     const safeContact = clean(contact);
     const safeBusiness = clean(business);
     const safeWorkflow = clean(workflow);
-    const safeOutcome = clean(outcome);
+    const safeOutcome = clean(outcome) || 'Not provided yet';
 
-    if (!safeName || !safeContact || !safeWorkflow || !safeOutcome) {
-      return res.status(400).json({ error: 'Name, reply contact, workflow, and outcome are required fields.' });
+    if (!safeName || !safeContact || !safeWorkflow) {
+      return res.status(400).json({ error: 'Name, reply contact, and task description are required fields.' });
     }
 
     // 4. Length Limits to prevent oversized payloads
