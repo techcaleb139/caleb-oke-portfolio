@@ -77,7 +77,7 @@ test("keeps the project-brief handoff explicit", async () => {
   assert.match(output, /Send by email/);
   assert.match(output, /Submit message/);
   assert.match(output, /\/api\/contact/);
-  assert.match(output, /Reply email or WhatsApp/);
+  assert.match(output, /Preferred contact \(email or WhatsApp\)/);
   assert.match(output, /Nothing is stored until you submit the reviewed message/);
 });
 

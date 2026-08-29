@@ -11,7 +11,7 @@
     "build:vercel": "node scripts/sync-projects.mjs && vite build --config vite.config.vercel.ts",
     "cms:migrate": "node scripts/migrate-cms.mjs",
     "cms:credentials": "node scripts/generate-admin-credentials.mjs",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/migration-review.test.mjs tests/cms-regressions.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/migration-review.test.mjs tests/cms-regressions.test.mjs tests/contact-endpoint.test.mjs",
     "lint": "eslint . --ignore-pattern dist",
     "dev:vercel": "vercel dev"
   },

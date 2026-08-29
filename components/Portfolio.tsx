@@ -281,7 +281,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
         <section className="section contactSection shell" id="contact">
           <div className="contactIntro">
             <h2>Contact me</h2>
-            <p>Tell me what your team currently does by hand and what you want the system to do instead.</p>
+            <p>Tell me what your team does manually today, and what you&apos;d like automated instead.</p>
             <div className="contactMethods" aria-label="Direct contact options">
               <a href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry`}><span>Email</span><strong>{EMAIL}</strong></a>
               <a href={`https://wa.me/${PHONE}?text=Hi%20Caleb%2C%20I%27d%20like%20to%20discuss%20an%20automation%20project.`} target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>+234 806 575 5296</strong></a>
@@ -290,9 +290,9 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
             <div className="contactNext">
               <h3>What happens next</h3>
               <ol>
-                <li>I reply using the email or WhatsApp number you provide.</li>
-                <li>We confirm the current steps, access needed, and what a useful result should look like.</li>
-                <li>If the project is a fit, I propose a small paid pilot before a larger build.</li>
+                <li><strong>Initial Review:</strong> I reply using the email or WhatsApp you provide.</li>
+                <li><strong>Discovery & Scoping:</strong> We confirm the current steps, access needed, and what a useful result looks like.</li>
+                <li><strong>Pilot Proposal:</strong> If it&apos;s a fit, I propose a small paid pilot before a larger build.</li>
               </ol>
             </div>
           </div>
@@ -317,12 +317,12 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
                   <legend>Your details</legend>
                   <p className="groupHelp">Tell me who you are and where I should reply.</p>
                   <FormField label="Your name" name="name" value={values.name} error={touched.name ? errors.name : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="name" placeholder="John Robert" />
-                  <FormField label="Reply email or WhatsApp" name="replyContact" value={values.replyContact} error={touched.replyContact ? errors.replyContact : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="email" placeholder="john.robert@example.com or +234..." />
+                  <FormField label="Preferred contact (email or WhatsApp)" name="replyContact" value={values.replyContact} error={touched.replyContact ? errors.replyContact : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="email" placeholder="john.robert@example.com or +234..." />
                 </fieldset>
 
                 <fieldset className="workFields">
                   <legend>What would you like to automate?</legend>
-                  <p className="groupHelp">A short description is enough. You do not need to suggest the software.</p>
+                  <p className="groupHelp">A short description is enough — I&apos;ll figure out the right tools to build it.</p>
                   <FormField multiline label="Task or process" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="For example: enquiries arrive by WhatsApp, then someone copies the details into a spreadsheet and follows up manually." />
                   <details className="optionalDetails">
                     <summary>Add business and outcome details <span>Optional</span></summary>

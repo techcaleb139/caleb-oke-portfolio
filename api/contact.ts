@@ -1,12 +1,18 @@
 import { neon } from '@neondatabase/serverless';
-import { type ApiRequest, type ApiResponse, assertSameOriginMutation, parseJsonBody, sendError } from './_lib/http';
+import {
+  type ApiRequest,
+  type ApiResponse,
+  assertSameOriginMutation,
+  parseJsonBody,
+  sendError,
+  setApiHeaders,
+} from './_lib/http.js';
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
-  res.setHeader('Cache-Control', 'no-store');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
+  setApiHeaders(res);
   // 1. Enforce POST method
   if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method Not Allowed. Use POST.' });
   }
 
