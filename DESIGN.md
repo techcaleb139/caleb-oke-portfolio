@@ -1,290 +1,203 @@
 ---
 name: Caleb Oke Portfolio
-description: An evidence-first commissioning dossier for accountable automation work.
+description: A light, professional service portfolio for practical automation work, grounded in real project evidence.
 colors:
-  commissioning-blue: "#0b4db8"
-  commissioning-blue-hover: "#083d93"
-  commissioning-blue-soft: "#e7eefb"
-  mineral-canvas: "#f1f5f7"
-  white-surface: "#ffffff"
-  quiet-mineral: "#e7edf1"
-  carbon-ink: "#12202b"
-  slate-copy: "#506270"
-  mineral-line: "#c9d4dc"
-  mineral-line-strong: "#9eacb7"
-  on-commissioning-blue: "#ffffff"
-  failure-red: "#a61b16"
-  failure-wash: "#fff0ef"
-  verified-green: "#176b4b"
-  verified-wash: "#e8f5ef"
-  dark-canvas: "#0e171f"
-  dark-surface: "#15232d"
-  dark-surface-quiet: "#192934"
-  dark-ink: "#eff4f7"
-  dark-muted: "#a8b5be"
-  dark-line: "#2d3c47"
-  dark-line-strong: "#53636f"
-  dark-commissioning-blue: "#79a7ff"
-  dark-commissioning-blue-hover: "#96baff"
-  dark-commissioning-blue-soft: "#1c3358"
-  dark-on-commissioning-blue: "#0e171f"
-  dark-failure-red: "#ff938a"
-  dark-failure-wash: "#3a2020"
-  dark-verified-green: "#7bd6ad"
-  dark-verified-wash: "#15382b"
+  canvas: "#f7f8fa"
+  surface: "#ffffff"
+  surface-quiet: "#f1f4f8"
+  ink: "#172033"
+  muted: "#5d6878"
+  line: "#dfe4eb"
+  line-strong: "#c7d0dc"
+  action-blue: "#245eea"
+  action-blue-hover: "#194bc4"
+  action-blue-soft: "#eaf0ff"
+  on-action: "#ffffff"
+  success: "#137a4d"
+  success-soft: "#e7f6ee"
+  danger: "#b42318"
+  danger-soft: "#fff0ee"
 typography:
-  display:
-    fontFamily: "Archivo, Arial Narrow, sans-serif"
-    fontSize: "clamp(4rem, 5.8vw, 5.1rem)"
-    fontWeight: 700
-    lineHeight: 1.02
-    letterSpacing: "-0.035em"
-  headline:
-    fontFamily: "Archivo, Arial Narrow, sans-serif"
-    fontSize: "clamp(2.7rem, 4.9vw, 4.6rem)"
-    fontWeight: 660
-    lineHeight: 1.02
-    letterSpacing: "-0.035em"
-  title:
-    fontFamily: "Archivo, Arial Narrow, sans-serif"
-    fontSize: "clamp(2.25rem, 3.8vw, 3.7rem)"
-    fontWeight: 650
-    lineHeight: 1.02
-    letterSpacing: "-0.035em"
+  family: "Segoe UI, Arial, sans-serif"
+  hero:
+    fontSize: "clamp(3rem, 5.2vw, 4rem)"
+    lineHeight: 1.04
+    letterSpacing: "-0.03em"
+  section-title:
+    fontSize: "clamp(2rem, 3.5vw, 3rem)"
+    lineHeight: 1.06
+    letterSpacing: "-0.03em"
   body:
-    fontFamily: "Atkinson Hyperlegible Next, Segoe UI, sans-serif"
-    fontSize: "17px"
-    fontWeight: 400
-    lineHeight: 1.65
-    letterSpacing: "normal"
-  label:
-    fontFamily: "Azeret Mono, Cascadia Mono, monospace"
-    fontSize: "0.76rem"
-    fontWeight: 500
-    lineHeight: 1.5
-    letterSpacing: "normal"
+    fontSize: "1rem"
+    lineHeight: 1.7
 rounded:
-  dossier: "8px"
+  control: "8px"
+  panel: "12px"
+  feature-card: "14px"
 spacing:
-  tight: "10px"
-  control: "14px"
-  cluster: "22px"
-  panel: "28px"
-  section-min: "96px"
-  section-max: "152px"
+  shell: "min(1120px, calc(100% - 48px))"
+  section: "84px"
+  section-mobile: "64px"
 components:
-  button-primary:
-    backgroundColor: "{colors.commissioning-blue}"
-    textColor: "{colors.on-commissioning-blue}"
-    typography: "{typography.body}"
-    rounded: "{rounded.dossier}"
-    padding: "0 21px"
-    height: "50px"
-  button-primary-hover:
-    backgroundColor: "{colors.commissioning-blue-hover}"
-    textColor: "{colors.on-commissioning-blue}"
-    typography: "{typography.body}"
-    rounded: "{rounded.dossier}"
-    padding: "0 21px"
-    height: "50px"
-  button-secondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.carbon-ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.dossier}"
-    padding: "0 21px"
-    height: "50px"
-  input-default:
-    backgroundColor: "{colors.mineral-canvas}"
-    textColor: "{colors.carbon-ink}"
-    typography: "{typography.body}"
-    rounded: "{rounded.dossier}"
-    padding: "13px 14px"
-    height: "50px"
-  card-dossier:
-    backgroundColor: "{colors.white-surface}"
-    textColor: "{colors.carbon-ink}"
-    rounded: "{rounded.dossier}"
-    padding: "28px"
+  button:
+    minHeight: "46px"
+    padding: "0 18px"
+    rounded: "8px"
+  mobile-menu-control:
+    minHeight: "44px"
+  card:
+    border: "1px solid #dfe4eb"
+    rounded: "14px"
 ---
 
 # Design System: Caleb Oke Portfolio
 
-## Overview
+## Scope and intent
 
-**Creative North Star: "The Commissioning Dossier"**
+This document records the final shipped public portfolio in `components/Portfolio.tsx`, `components/ProjectDetail.tsx`, `src/index.css`, and `index.html`. It supersedes the earlier dark/mineral “commissioning dossier” direction for the public site, including its Archivo, Atkinson Hyperlegible, and Azeret Mono type roles, dark-mode palette, oversized editorial spacing, and single 8px container radius.
 
-The portfolio behaves like a concise technical dossier prepared before a system is commissioned. It is evidence-first and trust-first: strong claims sit beside the workflow image, test observation, known limit, and next human checkpoint that make each claim credible. Cool mineral surfaces create calm scrutiny, while commissioning blue marks the actions, labels, and system stages that deserve attention.
+The shipped site is a straightforward professional portfolio. Its job is to explain what Caleb builds, show honest project evidence, describe his process, and make contact easy. It uses light neutral surfaces, ordinary system typography, one blue action color, compact sections, the unchanged portrait, and real project images. Copy is plain, specific, and careful about what has actually been built or tested.
 
-The interface is spacious but not ornamental. Broad editorial fields, documentary images, ruled evidence structures, and terse mono labels make the page feel inspected and accountable. Human presence is literal in the approved portrait and procedural in every review or handover step; the system must never drift into generic AI-agency spectacle, anonymous dark-tech gloss, or inflated proof.
+## Public-site foundations
 
-**Key Characteristics:**
+### Color
 
-- Evidence and limitation are presented as a matched pair.
-- Cool mineral surfaces carry most of the page; commissioning blue stays directional.
-- Real portraits and workflow captures outrank decorative illustration.
-- One gently rounded corner language keeps the dossier coherent.
-- Dense operational detail is separated by rules, spacing, and mono evidence labels.
-- Motion is brief, interruptible, and absent when reduced motion is requested.
+The public site is light-only (`color-scheme: light`). The palette is intentionally quiet:
 
-## Colors
+- **Canvas — `#f7f8fa`:** the page background.
+- **Surface — `#ffffff`:** cards, forms, the mobile menu, and alternating section bands.
+- **Quiet surface — `#f1f4f8`:** restrained supporting surfaces.
+- **Ink — `#172033`:** headings, primary text, and dark calls to action.
+- **Muted — `#5d6878`:** explanations, captions, labels, and metadata.
+- **Line — `#dfe4eb`; strong line — `#c7d0dc`:** structure, separators, fields, and boundaries.
+- **Action blue — `#245eea`:** primary buttons, links, process numbers, project status, and active cues. Hover uses `#194bc4`; soft focus/support uses `#eaf0ff`.
+- **Success — `#137a4d`; danger — `#b42318`:** reserved for truthful form state, each with a pale supporting wash.
 
-The palette pairs cool mineral neutrals with a single commissioning-blue accent, reserving red and green for truthful system feedback; the same semantic roles switch to a darker mineral set through the user's color-scheme preference.
+Blue communicates action or useful status. It is not a decorative wash, gradient, glow, or ambient brand effect. Success and danger colors are not category colors.
 
-### Primary
+### Typography
 
-- **Commissioning Blue:** Directs primary actions, linked evidence, numbered stages, and terse operational labels.
-- **Deep Commissioning Blue:** Replaces the primary accent on hover so interaction gains certainty without glow or spectacle.
-- **Commissioning Wash:** Marks low-intensity interactive surfaces, including project-index hover and input focus support.
+All public typography uses the local system stack: `"Segoe UI", Arial, sans-serif`. There are no downloaded public-site fonts and no separate mono voice. Headings use the same family with weight, scale, tight leading, and `-0.03em` letter spacing to create hierarchy.
 
-### Neutral
+- **Hero:** `clamp(3rem, 5.2vw, 4rem)`, line-height `1.04`, held to about `14.5ch` on desktop. It becomes `clamp(2.45rem, 12vw, 3.2rem)` below 700px.
+- **Section headings:** generally `clamp(2rem, 3.5vw, 3rem)` with line-height `1.06`.
+- **Project-page title:** `clamp(2.5rem, 5vw, 4rem)` with line-height `1.03`.
+- **Body:** normal system size with line-height `1.7`; supporting copy typically ranges from `0.84rem` to `0.94rem`.
+- **Labels and metadata:** compact, usually `0.76rem` to `0.9rem`, and distinguished by weight rather than uppercase tracking or a specialist font.
 
-- **Mineral Canvas:** The default page field; cool enough to feel technical without becoming clinical.
-- **White Surface:** The clean inspection layer used for forms, capability sections, and the project index.
-- **Quiet Mineral:** A stronger tonal band for reflective or biographical content.
-- **Carbon Ink:** The high-contrast text and control color.
-- **Slate Copy:** Secondary copy, captions, and supporting metadata.
-- **Mineral Line / Strong Mineral Line:** The ruled structure for tables, rails, cards, fields, and separators.
-- **Dark Mineral Set:** A complete semantic dark-mode mapping for canvas, surfaces, ink, muted copy, rules, and the commissioning accent.
+Keep language direct and familiar: “View my projects,” “Contact me,” “What happened in testing,” and “What still needs work.” Claims must match the evidence. The restaurant voice assistant is described as an academy prototype; the job alert pipeline is described as a personal system run from Caleb’s computer.
 
-### Tertiary
+### Layout and spacing
 
-- **Failure Red / Failure Wash:** Validation and submission failure only.
-- **Verified Green / Verified Wash:** Confirmed submission success only.
+The main shell is `1120px` wide with 24px gutters (`calc(100% - 48px)`). At widths below 700px, gutters become 16px (`calc(100% - 32px)`). Standard sections use 84px vertical padding and reduce to 64px below 700px.
 
-### Named Rules
+The home page follows a compact sequence:
 
-**The Commissioning Blue Rule.** Blue points to action, evidence, state, or system sequence; it is never sprayed across passive decoration.
+1. Sticky navigation.
+2. Two-column hero with direct service copy and portrait.
+3. Automation services in an intro-and-table layout.
+4. Two-column selected-project grid.
+5. Four-step working process.
+6. About section.
+7. Contact methods and a review-before-submit brief form.
+8. Compact footer.
 
-**The Evidence State Rule.** Red and green communicate observed form or submission state only, never project category or personality.
+The visual rhythm comes from grid alignment, one-pixel rules, controlled gaps, and alternating neutral surfaces. Do not reintroduce the previous 96–152px editorial section rhythm or broad dossier-style fields.
 
-**The Mineral Continuity Rule.** Light and dark themes preserve the same semantic hierarchy rather than becoming separate visual identities.
+### Shape, borders, and depth
 
-## Typography
+The shipped interface uses a small family of practical radii:
 
-**Display Font:** Archivo (with Arial Narrow and sans-serif fallbacks)  
-**Body Font:** Atkinson Hyperlegible Next (with Segoe UI and sans-serif fallbacks)  
-**Label/Mono Font:** Azeret Mono (with Cascadia Mono and monospace fallbacks)
+- **8px:** buttons, menu control, form fields, error summaries, code blocks, and skeletons.
+- **12px:** project-page evidence panels and supporting project surfaces.
+- **14px:** portrait, home project cards, and contact form.
 
-**Character:** Archivo gives claims a compressed, engineered authority; Atkinson Hyperlegible Next keeps long explanations unusually readable; Azeret Mono makes evidence labels feel recorded rather than advertised. The trio separates proposition, explanation, and verification without decorative type effects.
+Most separation is flat: a one-pixel line or a surface change. The shared shadow, `0 16px 42px rgba(26, 39, 63, .08)`, is limited to the mobile navigation panel and contact form. The sticky header uses a nearly opaque canvas with a 12px backdrop blur.
 
-### Hierarchy
-
-- **Display** (700, fluid 4rem–5.1rem, 1.02): The single opening proposition; on small screens it resolves to a 3rem–4.5rem range.
-- **Headline** (660, fluid 2.7rem–4.6rem, 1.02): Major section statements, held to roughly 15 characters per line where the layout permits.
-- **Title** (650, fluid 2.25rem–3.7rem, 1.02): Case-study titles and other evidence-group headings.
-- **Body** (400, 17px, 1.65): Explanatory content, generally constrained near 62ch; compact metadata steps down below this base.
-- **Label** (500, 0.76rem, 1.5): Status, stage, tool, caption, and process metadata; keep it terse and use ordinary case.
-
-### Private CMS optical scale
-
-The publishing desk is a dense operator surface, so it uses a deliberately tighter optical scale than the public narrative pages. These sizes are design-system values, not arbitrary component overrides:
-
-- **Micro record:** 0.58rem, 0.64rem, 0.66rem, 0.68rem, 0.69rem, 0.7rem, and 0.72rem for revision, status, checklist, stage, and timestamp data.
-- **Compact control:** 0.8rem, 0.82rem, and 0.86rem for filters, inputs, buttons, and rail titles.
-- **Operator body:** 0.95rem, 1rem, 1.1rem, and 1.35rem for explanatory copy, section labels, and the publishing-desk mark.
-- **Operator display:** 2rem, 2.35rem, 2.6rem, 2.85rem, 3rem, and 3.2rem for login, editor, empty-state, and security-page titles across responsive breakpoints.
-
-The close increments preserve hierarchy in a data-dense interface without borrowing the public site’s oversized editorial rhythm. Do not introduce another CMS size unless it replaces an existing step.
-
-### Named Rules
-
-**The Three Voices Rule.** Archivo states the proposition, Atkinson explains it, and Azeret records evidence; do not swap these roles for novelty.
-
-**The Balanced Claim Rule.** Large headings use tight leading and balanced wrapping, while explanatory copy stays comfortably spaced and measure-limited.
-
-## Layout
-
-The primary shell is capped at 1200px with 32px side gutters on desktop, 24px at tablet widths, 20px below 760px, and 15px below 430px. Sections use a fluid vertical interval from 96px to 152px; the mobile section interval becomes 88px. The hero is a weighted two-column field with copy on the left and the approved portrait on the right, while case studies alternate between a split evidence layout and a 12-column wide layout.
-
-Evidence structures use explicit grids: five equal stages in the verification rail, a two-column observed/limit/next-test panel, three-column capability rows, and a four-cell system map. At 1024px the complex split sections collapse to one column; at 760px rails and tables become stacked reading sequences, the navigation becomes a bounded menu panel, and touch targets remain at least 44px high. At 430px dual-column utilities become single-column.
-
-**The Inspection Order Rule.** Responsive collapse preserves reading order—claim, image, system path, observed result, known limit, next test—so mobile never separates proof from context.
-
-**The Broad Field Rule.** Empty space is part of the evidence hierarchy; do not fill the 96px–152px section rhythm with decorative modules.
-
-## Elevation & Depth
-
-The system is flat by default and uses ruled boundaries plus tonal layering for most separation. One ambient dossier shadow lifts only substantial inspection surfaces: the portrait, mobile menu, contact form, and framed workflow imagery. The sticky header uses translucent canvas and a 16px backdrop blur to preserve orientation without becoming a floating glass card.
-
-### Shadow Vocabulary
-
-- **Dossier Lift** (`0 18px 48px rgba(18, 32, 43, 0.09)`; dark mode `0 18px 48px rgba(0, 0, 0, 0.28)`): Large, consequential surfaces only.
-- **Workflow Lift** (`0 18px 48px rgba(18, 32, 43, 0.08)`): The restrained frame beneath real workflow evidence.
-- **Focus Halo** (`0 0 0 3px var(--accent-soft)`): Field focus only, paired with the commissioning-blue border.
-
-### Named Rules
-
-**The Flat-by-Default Rule.** If a one-pixel rule or tonal shift explains the boundary, do not add a shadow.
-
-**The Consequence Rule.** Elevation marks surfaces where the visitor inspects identity, navigation, evidence, or their own submitted information.
-
-## Shapes
-
-The form language uses one gently curved 8px dossier radius across buttons, images, fields, status blocks, the system map, navigation panels, and substantial containers. Large compositions remain rectilinear and grid-led; fine rules, not nested pills, define structure. Workflow imagery is clipped to the same radius and set inside a dark evidence frame so source material reads as an artifact rather than decoration.
-
-**The One Radius Rule.** Use the established 8px corner wherever a contained surface needs rounding; do not introduce a second soft-card radius.
-
-**The No Pill Rule.** Labels and metadata remain typographic or rule-bound, not capsule-shaped badges.
-
-## Components
-
-### Buttons
-
-Buttons feel direct and commissioning-ready: substantial, quiet, and explicit.
-
-- **Shape:** Gently curved dossier corners (8px) with a 50px minimum height and 21px horizontal padding.
-- **Primary:** Commissioning-blue fill with white text in light mode; the dark semantic mapping reverses to dark canvas text on lighter blue.
-- **Hover / Focus:** Primary darkens on precise-pointer hover; every button inherits a visible 3px focus outline with 4px offset; active press scales to 0.98.
-- **Secondary:** Transparent with the strong mineral border; hover shifts both border and text to commissioning blue.
-- **Disabled:** Opacity falls to 0.5, the pointer becomes unavailable, and press transform is removed.
-
-### Cards / Containers
-
-Containers feel like inspected sheets or equipment plates, not interchangeable marketing cards.
-
-- **Corner Style:** One 8px dossier radius on bounded surfaces; evidence rails themselves remain straight and ruled.
-- **Background:** White or quiet-mineral surfaces over the mineral canvas; workflow evidence uses a dark capture frame.
-- **Shadow Strategy:** Flat by default; Dossier Lift only on consequential surfaces.
-- **Border:** One-pixel mineral rules, strengthened only for inputs and explicit boundaries.
-- **Internal Padding:** Compact evidence cells begin around 22px–28px; the contact form expands fluidly from 28px to 50px on larger screens.
-
-### Inputs / Fields
-
-Fields feel like part of a reviewable brief rather than a lead-capture funnel.
-
-- **Style:** Strong mineral stroke, mineral-canvas fill, 8px radius, and 13px by 14px internal padding; single-line inputs keep a 50px minimum height.
-- **Focus:** Commissioning-blue border, white surface, and a 3px commissioning wash halo.
-- **Error / Disabled:** Invalid fields use failure red and its wash; inline errors remain visible text, and the form adds a linked summary when needed.
+## Public components
 
 ### Navigation
 
-The sticky navigation uses compact body labels and a dark ink action, with a translucent mineral header and one bottom rule. On mobile, a 44px menu control reveals a white dossier panel between 20px gutters; links expand to 46px touch rows, and the project action becomes centered and full-width within the panel.
+The sticky desktop header is 70px high, with Caleb’s name and role on the left, plain section links, and a dark “Discuss a project” action. The project page uses the same shell with a “Start a project” action.
 
-### Evidence Rail
+Below 700px, the role label is hidden and a bordered menu control appears. The control and every revealed navigation row have a minimum height of 44px. The menu opens as a full-width white panel directly below the 64px header. Preserve visible focus outlines and `aria-expanded`/`aria-controls` behavior.
 
-The signature verification rail is a five-stage ordered path separated by one-pixel rules. Azeret Mono stage names use commissioning blue, while concise slate explanations make each system step inspectable. It stacks in source order on mobile and never becomes a carousel.
+### Buttons and links
 
-### Evidence Panel
+Standard buttons are at least 46px high, use 18px horizontal padding, and have an 8px radius. Primary buttons use action blue with white text; secondary buttons use a white surface and strong neutral border. The compact header action is dark ink rather than blue. Active press scales to `0.98`; disabled actions retain their label and reduce opacity. All interactive elements use a visible three-pixel blue focus outline with three-pixel offset.
 
-Observed result, known limit, and next test form one ruled unit. The observed result receives the wider field, while the limit and next test share the narrower column; mobile collapses them to a single sequence without changing their relationship.
+### Hero and portrait
 
-## Do's and Don'ts
+The desktop hero is a weighted two-column grid: service statement and actions on the left, the real 4:5 portrait on the right. Its first sentence names the outcome—reducing repetitive work—before naming tools. The portrait caption confirms Caleb’s name, Nigeria location, and remote availability. Below 700px, the hero becomes one column and keeps the portrait after the copy.
 
-### Do:
+### Services
 
-- **Do** pair every consequential claim with observed evidence, a known limit, or a next test.
-- **Do** use commissioning blue for direction and verification cues, not as ambient decoration.
-- **Do** preserve the approved portrait and real workflow imagery as the dominant visual proof.
-- **Do** maintain the 8px dossier radius, one-pixel mineral rules, and generous section rhythm.
-- **Do** preserve visible focus, 44px touch targets, reduced-motion behavior, and semantic light/dark parity.
-- **Do** keep human review, confirmation, and handover checkpoints visible in system narratives.
+Services are presented as three ruled rows rather than promotional cards. Each row names the service, explains who it fits, states the practical outcome, and lists relevant tools in blue. The structure is two columns on desktop and one column below 700px.
 
-### Don't:
+### Selected projects
 
-- **Don't** turn the portfolio into a generic AI-agency card grid, neon tech spectacle, or anonymous dark dashboard.
-- **Don't** imply client deployment, operational savings, or production readiness when the evidence only supports a prototype or personal system.
-- **Don't** hide limitations below decorative imagery or detach them from the result they qualify.
-- **Don't** add pill badges, gradient fills, ornamental glows, or competing accent colors.
-- **Don't** replace workflow captures with abstract AI illustrations when real system evidence exists.
-- **Don't** animate structural content continuously; use only brief entry and state transitions, and honor reduced-motion preferences.
+The home page shows actual built and published projects in a two-column card grid. Each card includes a real project image, status, title, summary, what happened in testing, what still needs work, category, and a case-study link. Evidence and limitation remain adjacent. Below 700px, the grid and evidence pair become single-column reading sequences.
+
+### Working process
+
+The process is a four-step ordered track: map the task, plan the rules, build a pilot, then test and hand over. It is a two-column ruled grid on larger screens and one column below 700px. Small blue counters support order without creating a separate decorative visual system.
+
+### Contact and project brief
+
+Direct email, WhatsApp, and LinkedIn options sit beside a structured brief form. The form asks about the visitor and the current work, validates inline, and provides an error summary linked to affected fields. Before submission, the user reviews the entered details and can edit, submit securely, copy the brief, or send it through WhatsApp or email. Success and failure messages are live text, not color alone. The hidden honeypot and explicit review step are functional parts of the experience and should remain visually unobtrusive.
+
+### Case-study pages
+
+Each case-study page starts with a back link, factual summary, status/category/tools, optional repository or live-project links, and a real project image. The next section presents three equal desktop columns: result, current limitation, and next improvement.
+
+The “How information moves” rail is the signature evidence structure. It is five equal columns on full desktop when a project provides five stages. At 900px it becomes two columns, and below 700px it becomes one stacked sequence. It is never a carousel. The narrative follows in a wide reading column with a sticky contact card; below 900px both become a single column and the contact card stops sticking.
+
+## Responsive behavior
+
+- **Above 900px:** retain the full desktop grids, including the five-column verification rail.
+- **900px and below:** services, process, about, contact, project hero, and project narrative collapse to one column where specified; the verification rail becomes two columns; the project contact card becomes static.
+- **700px and below:** use 16px shell gutters and 64px section padding; expose the mobile navigation; stack the hero, work grid, process, evidence structures, and project rail; keep menu rows at least 44px high.
+- **430px and below:** make hero and project action buttons full width, simplify contact-method rows, stack card footers, and reduce the project title to `2.35rem`.
+
+Responsive collapse must preserve the document order: explanation before proof, result before limitation, and system stages in sequence.
+
+## Accessibility and motion
+
+- Keep the skip link, semantic landmarks, ordered process and stage lists, useful alternative text, form labels, error summary, and live submission status.
+- Preserve visible focus treatment across links, buttons, inputs, and textareas.
+- Maintain 44px minimum mobile menu controls and navigation rows.
+- Images use explicit dimensions; the portrait has responsive sources and high loading priority, while home project images lazy-load.
+- Motion is limited to short color, border, press, menu, and loading-state transitions. When reduced motion is requested, smooth scrolling is removed and animation/transition duration is effectively disabled.
+
+## Private CMS note
+
+The private publishing interface inherits the same current color, typography, radius, and state tokens from `src/index.css`, but uses a deliberately tighter operator scale defined in `src/admin.css`. This admin guidance remains separate from the public page hierarchy:
+
+- **Micro:** `0.7rem`.
+- **Control:** `0.82rem`.
+- **Body:** `0.95rem`.
+- **Title:** `1.1rem`.
+- **Mark:** `1.35rem`.
+- **Page title:** `2.35rem`.
+- **Display:** `2.85rem`.
+
+Use these variables for dense revision, status, checklist, filter, form, editor, and security views. Do not apply the public hero scale to the publishing desk, and do not revive the obsolete Archivo/Atkinson/Azeret or dark-mineral public system in CMS documentation.
+
+## Do and do not
+
+### Do
+
+- Use the light neutral palette, Segoe UI/Arial system stack, and `#245eea` action blue.
+- Lead with plain descriptions of the work and outcome.
+- Show real project images and state what testing demonstrated, what remains limited, and what should improve next.
+- Keep sections compact, grids orderly, and dividers quiet.
+- Preserve the five-column desktop verification rail and its ordered responsive collapse.
+- Keep focus visibility, reduced-motion support, semantic structure, and minimum mobile target sizes.
+
+### Do not
+
+- Reintroduce dark mode, mineral-themed naming, Archivo display type, Atkinson body type, or mono evidence labels on the public site.
+- Present prototypes or personal systems as client deployments or production results.
+- Replace evidence with generic AI imagery, decorative dashboards, gradients, glows, or pill badges.
+- Separate a project result from the limitation that qualifies it.
+- Add ornamental animation or enlarge the section rhythm beyond the compact shipped layout.

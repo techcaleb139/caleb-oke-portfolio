@@ -9,30 +9,30 @@ const PHONE = "2348065755296";
 
 const capabilityRows = [
   {
-    service: "Workflow automation",
-    fit: "For teams moving information between forms, spreadsheets, email, and internal tools by hand.",
-    outcome: "I connect the steps, route decisions, send alerts, and keep important approvals visible.",
+    service: "Connect routine admin work",
+    fit: "For teams copying information between forms, spreadsheets, email, and internal tools.",
+    outcome: "Move submitted information to the right place, notify the right person, and keep approval steps visible.",
     tools: "n8n / Make / Zapier",
   },
   {
-    service: "Data and API workflows",
-    fit: "For businesses collecting inconsistent data from websites, APIs, documents, or several platforms.",
-    outcome: "I collect, clean, normalize, filter, and deliver the information in one dependable format.",
+    service: "Collect and clean data",
+    fit: "For businesses receiving records from websites, APIs, documents, or several platforms.",
+    outcome: "Standardize fields, remove duplicates, filter unwanted records, and deliver the useful data.",
     tools: "REST APIs / Python / JavaScript",
   },
   {
-    service: "Voice AI prototypes",
-    fit: "For structured calls such as enquiries, bookings, order capture, and first-line qualification.",
-    outcome: "I capture intent, validate required details, follow business rules, and hand uncertain calls to a person.",
+    service: "Prototype phone assistants",
+    fit: "For repeated enquiries, bookings, order capture, and first-line qualification calls.",
+    outcome: "Capture required details, check them against business rules, and send uncertain requests to a person.",
     tools: "Vapi / Webhooks / n8n",
   },
 ];
 
 const processSteps = [
-  ["Understand", "A current-process map and a clear definition of the bottleneck."],
-  ["Design", "The system rules, data fields, integrations, and likely failure paths."],
-  ["Build", "A narrow working pilot with validation, logs, alerts, and approvals."],
-  ["Test and hand over", "Normal cases, edge cases, known limits, and clear ownership."],
+  ["Map the task", "List the current steps, the people involved, and where work is repeated."],
+  ["Plan the rules", "Define the data fields, decisions, exceptions, and human approval points."],
+  ["Build a pilot", "Connect the tools and add validation, logs, and failure alerts."],
+  ["Test and hand over", "Test normal and unusual cases, record the limits, and document operation."],
 ];
 
 type FormValues = { name: string; replyContact: string; business: string; process: string; outcome: string };
@@ -176,11 +176,11 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
       <div id="content">
         <section className="hero shell" aria-labelledby="hero-title">
           <div className="heroCopy">
-            <h1 id="hero-title">Repetitive work, automated.</h1>
-            <p className="heroLead">Workflow automation, data pipelines, and voice AI systems built around your real process.</p>
+            <h1 id="hero-title">I build automations that reduce repetitive work.</h1>
+            <p className="heroLead">I connect forms, spreadsheets, APIs, and voice tools so information moves without repeated copying.</p>
             <div className="heroActions">
-              <a className="button primary" href="#contact">Discuss a project</a>
-              <a className="button secondary" href="#work">See proof</a>
+              <a className="button primary" href="#work">View my projects</a>
+              <a className="button secondary" href="#contact">Contact me</a>
             </div>
             <nav className="profileLinks" aria-label="Professional profiles">
               <a href="https://github.com/techcaleb139" target="_blank" rel="noreferrer">GitHub</a>
@@ -201,7 +201,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
             />
             <figcaption>
               <strong>Caleb Oke</strong>
-              <span>AI Automation Builder</span>
+              <span>Based in Nigeria. Available for remote work.</span>
             </figcaption>
           </figure>
         </section>
@@ -209,15 +209,13 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
         <section className="section capabilitiesSection" id="services">
           <div className="shell servicesLayout">
             <header className="sectionIntro servicesIntro">
-              <h2>What I can build for you.</h2>
-              <p>Focused automation projects for small businesses, online teams, and creators with a clear process to improve.</p>
-              <a className="textLink" href="#contact">Tell me what is slowing you down</a>
+              <h2>Automation services</h2>
+              <p>I take on small, defined projects where the current steps and the required result can be explained plainly.</p>
             </header>
 
             <div className="capabilityTable" aria-label="Automation capabilities">
-              {capabilityRows.map((row, index) => (
+              {capabilityRows.map((row) => (
                 <article className="capabilityRow" key={row.service}>
-                  <span className="serviceNumber" aria-hidden="true">0{index + 1}</span>
                   <div>
                     <h3>{row.service}</h3>
                     <p className="serviceFit">{row.fit}</p>
@@ -232,8 +230,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
         <section className="section workSection shell" id="work">
           <header className="sectionIntro workIntro">
-            <h2>Proof, not promises.</h2>
-            <p>Each build includes the result I observed and the limitation I still need to solve.</p>
+            <h2>Selected projects</h2>
+            <p>These are systems I have built and tested. Each project states what worked and what still needs improvement.</p>
           </header>
 
           <div className="workGrid">
@@ -245,8 +243,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
         <section className="section processSection shell" aria-labelledby="process-title">
           <header className="sectionIntro processIntro">
-            <h2 id="process-title">A clear path from problem to handover.</h2>
-            <p>You can inspect the rules, test results, and known limits before taking ownership.</p>
+            <h2 id="process-title">How I work</h2>
+            <p>The work starts with the current task, not with a tool.</p>
           </header>
           <ol className="processTrack">
             {processSteps.map(([title, detail]) => (
@@ -258,22 +256,22 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
         <section className="section aboutSection" id="about">
           <div className="shell aboutLayout">
             <div className="aboutStatement">
-              <h2>Clear systems. Honest limits. Human control.</h2>
-              <p>I would rather show you a known failure than hide it behind a confident demo.</p>
+              <h2>About me</h2>
+              <p>I build automation systems, test where they fail, and document how they should be used.</p>
             </div>
             <div className="aboutCopy">
-              <p>I am a Computer Science student who moved from learning Python into building practical automation workflows. I completed a three-month AI and automation program at TS Academy and kept building after graduation.</p>
-              <p>I work locally first, test the happy path and likely failure cases, then document what the system can and cannot do.</p>
-              <p>My current focus is becoming stronger at deployment, APIs, databases, maintenance, and production handover. I do not present academy work as client work, and I will say when a process is not ready to automate.</p>
-              <p className="locationLine">Based in Nigeria. Available for clearly scoped remote projects.</p>
+              <p>I am Caleb Oke, a Computer Science student and AI automation builder based in Nigeria.</p>
+              <p>I completed a three-month AI and automation programme at TS Academy. Since then, I have continued building with n8n, Vapi, Python, JavaScript, webhooks, and REST APIs.</p>
+              <p>The restaurant voice assistant shown here is an academy prototype. The job alert pipeline is a personal system that I currently run from my computer.</p>
+              <p className="locationLine">I am available for remote automation projects with a defined problem and scope.</p>
             </div>
           </div>
         </section>
 
         <section className="section contactSection shell" id="contact">
           <div className="contactIntro">
-            <h2>Tell me what is taking too much time.</h2>
-            <p>Share the current process and the result you want. I will reply with practical questions and a sensible next step.</p>
+            <h2>Contact me</h2>
+            <p>Tell me what your team currently does by hand and what you want the system to do instead.</p>
             <div className="contactMethods" aria-label="Direct contact options">
               <a href={`mailto:${EMAIL}?subject=Automation%20project%20enquiry`}><span>Email</span><strong>{EMAIL}</strong></a>
               <a href={`https://wa.me/${PHONE}?text=Hi%20Caleb%2C%20I%27d%20like%20to%20discuss%20an%20automation%20project.`} target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>+234 806 575 5296</strong></a>
@@ -283,8 +281,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
           <form className="contactForm" onSubmit={reviewBrief} noValidate>
             <div className="formHeading">
-              <h3>{brief ? "Review your project brief" : "Start with a short brief"}</h3>
-              <p>Nothing is sent until you review the details and press the secure submit button.</p>
+              <h3>{brief ? "Review your project details" : "Describe the work"}</h3>
+              <p>You will review the information before it is submitted.</p>
             </div>
             <input className="honeypot" type="text" name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" />
 
@@ -306,8 +304,8 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
                 </fieldset>
 
                 <fieldset>
-                  <legend>About the process</legend>
-                  <p className="groupHelp">Plain language is enough. You do not need to know the technical solution.</p>
+                  <legend>The work</legend>
+                  <p className="groupHelp">Describe the current steps. You do not need to suggest the software.</p>
                   <FormField multiline label="How does this process work today?" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Describe the steps, who handles them, and where delays or repeated work occur." />
                   <FormField multiline label="What would a successful result look like?" name="outcome" value={values.outcome} error={touched.outcome ? errors.outcome : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Tell me what should become faster, more accurate, easier to track, or more reliable." />
                 </fieldset>
@@ -348,7 +346,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
       <footer className="footer">
         <div className="shell footerLayout">
-          <div><strong>Caleb Oke</strong><span>Practical automation. Clear evidence. Human control.</span></div>
+          <div><strong>Caleb Oke</strong><span>AI Automation Builder</span></div>
           <nav aria-label="Footer navigation"><a href="#work">Work</a><a href="#services">Services</a><a href="#about">About</a><a href="#top">Back to top</a></nav>
         </div>
       </footer>
@@ -371,8 +369,8 @@ function CaseStudy({ project }: { project: PortfolioProject }) {
       </header>
 
       <div className="caseEvidence">
-        <div><h4>Observed result</h4><p>{project.observedResult}</p></div>
-        <div><h4>Known limit</h4><p>{project.knownLimit}</p></div>
+        <div><h4>What happened in testing</h4><p>{project.observedResult}</p></div>
+        <div><h4>What still needs work</h4><p>{project.knownLimit}</p></div>
       </div>
 
       <div className="caseFooter">

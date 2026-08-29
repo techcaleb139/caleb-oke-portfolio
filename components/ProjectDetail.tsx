@@ -72,7 +72,7 @@ export default function ProjectDetail({ slug, initialProject }: ProjectDetailPro
 
       <article id="case-study-content">
         <header className="projectHero shell">
-          <a className="projectBackLink" href="/#work">Back to documented systems</a>
+          <a className="projectBackLink" href="/#work">Back to projects</a>
           <div className="projectHeroGrid">
             <div>
               <h1>{project.title}</h1>
@@ -95,16 +95,16 @@ export default function ProjectDetail({ slug, initialProject }: ProjectDetailPro
         </header>
 
         <section className="projectEvidence shell" aria-labelledby="project-evidence-title">
-          <h2 id="project-evidence-title">Evidence and limits.</h2>
+          <h2 id="project-evidence-title">Test results and limits</h2>
           <div className="projectEvidenceGrid">
-            <div><h3>What the test showed</h3><p>{project.observedResult}</p></div>
-            <div><h3>Known limit</h3><p>{project.knownLimit}</p></div>
-            <div><h3>Next test</h3><p>{project.nextTest}</p></div>
+            <div><h3>Result</h3><p>{project.observedResult}</p></div>
+            <div><h3>Current limitation</h3><p>{project.knownLimit}</p></div>
+            <div><h3>Next improvement</h3><p>{project.nextTest}</p></div>
           </div>
         </section>
 
         <section className="projectPath shell" aria-labelledby="project-path-title">
-          <h2 id="project-path-title">System path.</h2>
+          <h2 id="project-path-title">How information moves</h2>
           <ol className="verificationRail" aria-label={`${project.title} system path`}>
             {project.stages.map((stage) => (
               <li key={stage.title}><strong>{stage.title}</strong><span>{stage.detail}</span></li>
@@ -127,16 +127,16 @@ export default function ProjectDetail({ slug, initialProject }: ProjectDetailPro
             </ReactMarkdown>
           </div>
           <aside className="projectClose">
-            <h2>Have a process like this?</h2>
-            <p>Describe the current workflow and the result you need. I will reply with questions before suggesting a build.</p>
-            <a className="button primary" href="/#contact">Start a project</a>
+            <h2>Need help with a repeated task?</h2>
+            <p>Describe the steps your team follows now and what you want to happen automatically.</p>
+            <a className="button primary" href="/#contact">Contact me</a>
           </aside>
         </section>
       </article>
 
       <footer className="footer">
         <div className="shell footerLayout">
-          <div><strong>Caleb Oke</strong><span>Practical automation. Clear evidence. Human control.</span></div>
+          <div><strong>Caleb Oke</strong><span>AI Automation Builder</span></div>
           <nav aria-label="Footer navigation"><a href="/">Portfolio</a><a href="/#contact">Contact</a></nav>
         </div>
       </footer>
