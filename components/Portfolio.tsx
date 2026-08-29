@@ -258,6 +258,17 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
             <div className="aboutStatement">
               <h2>About me</h2>
               <p>I build automation systems, test where they fail, and document how they should be used.</p>
+              <figure className="aboutPortrait">
+                <img
+                  src="/caleb-portrait-800.webp"
+                  srcSet="/caleb-portrait-480.webp 480w, /caleb-portrait-800.webp 800w, /caleb-portrait.webp 1122w"
+                  sizes="(max-width: 700px) calc(100vw - 32px), 360px"
+                  width="1122"
+                  height="1402"
+                  loading="lazy"
+                  alt="Caleb Oke, AI automation builder"
+                />
+              </figure>
             </div>
             <div className="aboutCopy">
               <p>I am Caleb Oke, a Computer Science student and AI automation builder based in Nigeria.</p>
@@ -277,6 +288,14 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
               <a href={`https://wa.me/${PHONE}?text=Hi%20Caleb%2C%20I%27d%20like%20to%20discuss%20an%20automation%20project.`} target="_blank" rel="noreferrer"><span>WhatsApp</span><strong>+234 806 575 5296</strong></a>
               <a href="https://www.linkedin.com/in/caleb-oke-6464b0216/" target="_blank" rel="noreferrer"><span>LinkedIn</span><strong>View professional profile</strong></a>
             </div>
+            <div className="contactNext">
+              <h3>What happens next</h3>
+              <ol>
+                <li>I reply using the email or WhatsApp number you provide.</li>
+                <li>We confirm the current steps, access needed, and what a useful result should look like.</li>
+                <li>If the project is a fit, I propose a small paid pilot before a larger build.</li>
+              </ol>
+            </div>
           </div>
 
           <form className="contactForm" onSubmit={reviewBrief} noValidate>
@@ -295,7 +314,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
                   </div>
                 )}
 
-                <fieldset>
+                <fieldset className="formGrid identityFields">
                   <legend>About you</legend>
                   <p className="groupHelp">Tell me how to reach you. A company name is optional.</p>
                   <FormField label="Your name" name="name" value={values.name} error={touched.name ? errors.name : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="name" placeholder="John Robert" />
@@ -303,7 +322,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
                   <FormField label="Business or team" optional name="business" value={values.business} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} autoComplete="organization" placeholder="Northstar Studio" />
                 </fieldset>
 
-                <fieldset>
+                <fieldset className="formGrid workFields">
                   <legend>The work</legend>
                   <p className="groupHelp">Describe the current steps. You do not need to suggest the software.</p>
                   <FormField multiline label="How does this process work today?" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="Describe the steps, who handles them, and where delays or repeated work occur." />

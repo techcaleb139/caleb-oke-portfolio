@@ -142,9 +142,15 @@ The home page shows actual built and published projects in a two-column card gri
 
 The process is a four-step ordered track: map the task, plan the rules, build a pilot, then test and hand over. It is a two-column ruled grid on larger screens and one column below 700px. Small blue counters support order without creating a separate decorative visual system.
 
+### About
+
+The About section pairs a short statement with the longer factual biography. A restrained 4:5 portrait sits directly below the statement rather than becoming a separate feature card: it is capped at 360px on larger screens, uses a quiet one-pixel border and 12px radius, and carries no caption or decorative treatment. The portrait may widen to 420px when the section stacks on smaller screens, while remaining subordinate to the written evidence.
+
 ### Contact and project brief
 
-Direct email, WhatsApp, and LinkedIn options sit beside a structured brief form. The form asks about the visitor and the current work, validates inline, and provides an error summary linked to affected fields. Before submission, the user reviews the entered details and can edit, submit securely, copy the brief, or send it through WhatsApp or email. Success and failure messages are live text, not color alone. The hidden honeypot and explicit review step are functional parts of the experience and should remain visually unobtrusive.
+Direct email, WhatsApp, and LinkedIn options sit beside a structured brief form. Beneath those methods, “What happens next” is a plain three-item ordered list with compact outlined number markers; it explains the reply, scope confirmation, and paid-pilot sequence without turning the steps into cards or promotional milestones.
+
+Within the form, related fields use a balanced two-column grid on desktop. Legends and group help span both columns, and the optional business or team field spans the full row; below 700px every field returns to one-column document order. The form validates inline and provides an error summary linked to affected fields. Before submission, the user reviews the entered details and can edit, submit securely, copy the brief, or send it through WhatsApp or email. Success and failure messages are live text, not color alone. The hidden honeypot and explicit review step are functional parts of the experience and should remain visually unobtrusive.
 
 ### Case-study pages
 
@@ -155,8 +161,8 @@ The “How information moves” rail is the signature evidence structure. It is 
 ## Responsive behavior
 
 - **Above 900px:** retain the full desktop grids, including the five-column verification rail.
-- **900px and below:** services, process, about, contact, project hero, and project narrative collapse to one column where specified; the verification rail becomes two columns; the project contact card becomes static.
-- **700px and below:** use 16px shell gutters and 64px section padding; expose the mobile navigation; stack the hero, work grid, process, evidence structures, and project rail; keep menu rows at least 44px high.
+- **900px and below:** services, process, about, and the outer contact layout collapse to one column where specified; the contact form keeps its internal two-column field grid; the project hero and project narrative collapse; the verification rail becomes two columns; the project contact card becomes static.
+- **700px and below:** use 16px shell gutters and 64px section padding; expose the mobile navigation; stack the hero, work grid, process, contact form fields, evidence structures, and project rail; keep menu rows at least 44px high.
 - **430px and below:** make hero and project action buttons full width, simplify contact-method rows, stack card footers, and reduce the project title to `2.35rem`.
 
 Responsive collapse must preserve the document order: explanation before proof, result before limitation, and system stages in sequence.
@@ -191,6 +197,7 @@ Use these variables for dense revision, status, checklist, filter, form, editor,
 - Lead with plain descriptions of the work and outcome.
 - Show real project images and state what testing demonstrated, what remains limited, and what should improve next.
 - Keep sections compact, grids orderly, and dividers quiet.
+- Keep the About portrait restrained beneath the statement, and keep the Contact follow-up sequence as a plain numbered list.
 - Preserve the five-column desktop verification rail and its ordered responsive collapse.
 - Keep focus visibility, reduced-motion support, semantic structure, and minimum mobile target sizes.
 
@@ -200,4 +207,5 @@ Use these variables for dense revision, status, checklist, filter, form, editor,
 - Present prototypes or personal systems as client deployments or production results.
 - Replace evidence with generic AI imagery, decorative dashboards, gradients, glows, or pill badges.
 - Separate a project result from the limitation that qualifies it.
+- Turn the About portrait or “What happens next” sequence into promotional feature cards.
 - Add ornamental animation or enlarge the section rhythm beyond the compact shipped layout.
