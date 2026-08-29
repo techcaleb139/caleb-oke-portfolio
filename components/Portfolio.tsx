@@ -322,7 +322,7 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
 
                 <fieldset className="workFields">
                   <legend>What would you like to automate?</legend>
-                  <p className="groupHelp">A short description is enough — I&apos;ll figure out the right tools to build it.</p>
+                  <p className="groupHelp">A short description is enough. I&apos;ll figure out the right tools to build it.</p>
                   <FormField multiline label="Task or process" name="process" value={values.process} error={touched.process ? errors.process : undefined} onChange={updateField} onBlur={(field) => setTouched((current) => ({ ...current, [field]: true }))} placeholder="For example: enquiries arrive by WhatsApp, then someone copies the details into a spreadsheet and follows up manually." />
                   <details className="optionalDetails">
                     <summary>Add business and outcome details <span>Optional</span></summary>

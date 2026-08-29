@@ -28,7 +28,7 @@ test("Portfolio.tsx implements finalized copy and contact field labels", () => {
   assert.match(portfolioComponent, /Tell me what your team does manually today, and what you(?:&apos;|')d like automated instead\./);
   assert.match(portfolioComponent, /Tell me who you are and where I should reply\./);
   assert.match(portfolioComponent, /Preferred contact \(email or WhatsApp\)/);
-  assert.match(portfolioComponent, /A short description is enough — I(?:&apos;|')ll figure out the right tools to build it\./);
+  assert.match(portfolioComponent, /A short description is enough\. I(?:&apos;|')ll figure out the right tools to build it\./);
   assert.match(portfolioComponent, /<strong>Initial Review:<\/strong> I reply using the email or WhatsApp you provide\./);
   assert.match(portfolioComponent, /<strong>Discovery & Scoping:<\/strong> We confirm the current steps, access needed, and what a useful result looks like\./);
   assert.match(portfolioComponent, /<strong>Pilot Proposal:<\/strong> If it(?:&apos;|')s a fit, I propose a small paid pilot before a larger build\./);
