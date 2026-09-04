@@ -1,0 +1,80 @@
+/* Design tokens. Every value here is read from
+   design-reference/homepage-full.html, not invented. */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Palette. These five are the entire palette. ----
+     Nothing else in this codebase may declare a colour value.
+     Contrast against --bg: --text 16.6:1, --accent 7.8:1, --muted 5.1:1.
+     All pass WCAG AA for normal text. */
+  --bg: #FAF8F4;
+  --text: #1A1917;
+  --muted: #6B6A64;
+  --border: #E5E2DA;
+  --accent: #14584A;
+
+  /* ---- Families ---- */
+  --font-display: "Instrument Serif", "Iowan Old Style", "Times New Roman", Times, serif;
+  --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  /* ---- Type scale, desktop. Mobile values in base.css. ---- */
+  --step-hero: 60px;      /* h1 */
+  --step-section: 40px;   /* h2 */
+  --step-project: 34px;   /* h3, project title */
+  --step-figure: 44px;    /* funnel counts */
+  --step-card: 24px;      /* h3, offer card title */
+  --step-sub: 22px;       /* h4, project sub-heading */
+  --step-brand: 20px;     /* wordmark in header */
+  --step-body: 17px;      /* body copy */
+  --step-card-body: 16px; /* offer card copy */
+  --step-ui: 15px;        /* links, buttons */
+  --step-label: 14px;     /* form labels */
+  --step-meta: 13px;      /* captions, muted metadata */
+  --step-badge: 12px;     /* status badge */
+
+  --leading-hero: 1.08;
+  --leading-heading: 1.15;
+  --leading-body: 1.6;
+  --leading-meta: 1.5;
+  --leading-flat: 1;
+  --tracking-hero: -0.01em;
+  --tracking-eyebrow: 0.06em;
+
+  /* ---- Layout ---- */
+  --measure: 66ch;        /* prose cap, per the reference */
+  --measure-hero: 62ch;   /* hero lead paragraph */
+  --col: 900px;           /* main content column */
+  --col-narrow: 640px;    /* contact column */
+  --col-hero: 920px;      /* hero headline */
+  --page: 1120px;         /* full page width */
+
+  --gutter: 64px;         /* horizontal page padding, desktop */
+  --section-y: 80px;      /* vertical section padding, desktop */
+  --card-pad: 40px;       /* project card padding */
+  --card-pad-sm: 26px;    /* offer card padding */
+
+  /* ---- Aspect ratios for image slots ---- */
+  --ratio-wide: 16 / 9;        /* n8n canvases, video thumbnail */
+  --ratio-sheet: 1917 / 937;   /* sheet-orders, its native ratio */
+  --ratio-transcript: 3 / 4;   /* vapi transcript */
+  --ratio-phone: 9 / 16;       /* telegram alert */
+  --ratio-portrait: 4 / 5;     /* portrait */
+}
+
+@media (max-width: 720px) {
+  :root {
+    --step-hero: 38px;
+    --step-section: 30px;
+    --step-project: 24px;
+    --step-figure: 32px;
+    --step-card: 20px;
+    --step-sub: 19px;
+    --step-brand: 18px;
+
+    --gutter: 20px;
+    --section-y: 40px;
+    --card-pad: 20px;
+    --card-pad-sm: 20px;
+  }
+}

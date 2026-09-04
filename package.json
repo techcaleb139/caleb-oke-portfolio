@@ -7,17 +7,15 @@
   },
   "scripts": {
     "dev": "vite --config vite.config.vercel.ts",
-    "build": "node scripts/sync-projects.mjs && vite build --config vite.config.vercel.ts",
-    "build:vercel": "node scripts/sync-projects.mjs && vite build --config vite.config.vercel.ts",
+    "build": "vite build --config vite.config.vercel.ts",
+    "build:vercel": "vite build --config vite.config.vercel.ts",
     "cms:migrate": "node scripts/migrate-cms.mjs",
-    "cms:credentials": "node scripts/generate-admin-credentials.mjs",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/migration-review.test.mjs tests/cms-regressions.test.mjs tests/contact-endpoint.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/migration-review.test.mjs tests/contact-endpoint.test.mjs",
     "lint": "eslint . --ignore-pattern dist",
     "dev:vercel": "vercel dev"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
-    "@vercel/blob": "^2.0.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-markdown": "^10.1.0",
@@ -34,6 +32,7 @@
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "16.4.0",
+    "sharp": "^0.35.4",
     "typescript": "5.9.3",
     "typescript-eslint": "8.59.3",
     "vite": "^8.2.1"

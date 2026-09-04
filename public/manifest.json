@@ -1,11 +1,11 @@
 {
-  "name": "Caleb Oke — AI Automation Engineer",
+  "name": "Caleb Oke — AI automation builder",
   "short_name": "Caleb Oke",
-  "description": "Production voice AI agents, intelligent workflows, and data pipelines.",
+  "description": "Small systems that connect forms, spreadsheets, APIs and voice tools, each documented with what worked and what is not yet proven.",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#05080d",
-  "background_color": "#05080d",
+  "theme_color": "#FAF8F4",
+  "background_color": "#FAF8F4",
   "icons": [
     {
       "src": "/favicon.svg",

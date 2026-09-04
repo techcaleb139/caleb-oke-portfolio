@@ -1,8 +1,7 @@
-﻿import { StrictMode } from 'react';
+import { StrictMode } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import './admin.css';
 
 const container = document.getElementById('root')!;
 const app = (

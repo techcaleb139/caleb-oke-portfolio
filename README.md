@@ -1,35 +1,86 @@
-# Caleb Oke — AI Automation Portfolio
+# Caleb Oke — AI automation portfolio
 
-An evidence-first portfolio and private publishing system for Caleb Oke. The public site presents practical automation work with observed results, known limits, and next tests. The private CMS manages project cards and full Markdown case studies.
+An evidence-first portfolio. Each project is documented with what worked, what
+the numbers were, and what is not yet proven.
 
-## Public site
+- Production: `https://caleb-oke-portfolio.vercel.app/`
+- Case studies: `/projects/<slug>`
 
-- Production homepage: `https://caleb-oke-portfolio.vercel.app/`
-- Case studies: `/projects/<project-slug>`
-- Project data API: `/api/projects`
-- Contact form submissions continue to use the existing Neon `contact_submissions` table.
+## Stack
 
-## Private publishing desk
+Vite 8 + React 19 + TypeScript. **Not Next.js** — there is no `next` dependency
+and never has been, so `next/image`, `next/font` and the App Router do not
+apply here.
 
-Open `/admin` on the deployed Vercel site. The admin area supports:
+A custom Vite plugin in `vite.config.vercel.ts` server-renders the homepage and
+every case study to static HTML at build time and inlines the CSS. The site
+therefore works with JavaScript disabled for everything except form submission.
 
-- private drafts, publishing, unpublishing, archiving, and confirmed permanent deletion;
-- all homepage card fields and full Markdown case-study content;
-- project image uploads through Vercel Blob, with an HTTPS URL fallback;
-- search metadata, display order, and homepage visibility;
-- a publish checklist, optimistic version checks, and an audit trail;
-- password rotation and eight-hour secure sessions.
+One serverless function, `api/contact.ts`, handles the contact form.
 
-When published content changes, existing public pages read the update from Neon immediately. A Vercel Deploy Hook is still required to automatically rebuild crawler-ready HTML, the sitemap, and a route for a brand-new project slug. Until that hook is configured, run a production Vercel deployment after publishing a new project.
+## Projects are content files
 
-### Using the CMS
+Projects live in `src/content/projects/`, one TypeScript file per project.
+There is no CMS and no database read at runtime.
 
-1. Open `https://caleb-oke-portfolio.vercel.app/admin` and sign in with the private access details generated in `.cms-private/CMS_ADMIN_ACCESS.txt`.
-2. Select an existing project or choose **New project**.
-3. Save incomplete work as a private draft. Drafts never appear on the public portfolio.
-4. Complete the publish checklist, review the Markdown preview, and choose **Publish project**.
-5. Use **Move back to draft** to hide a published project or **Move to archive** before permanent deletion.
-6. Change the temporary administrator password from the **Security** page after the first sign-in.
+### Adding a project
+
+1. Copy an existing file in `src/content/projects/` and rename it to your slug.
+2. Edit the fields. `slug` must match the filename and is the URL.
+3. Drop images into `public/images/`.
+4. Add the file to the array in `src/content/projects/index.ts`.
+5. If an image needs resized webp, add it to `imageRecipes` in
+   `lib/image-sizes.ts` with the width ladder for its slot.
+6. `npm run build` to check, then commit.
+
+The homepage maps over the directory, so the layout works with two projects or
+six without touching layout code. The case study route, sitemap entry and
+social metadata are generated from the same file.
+
+Offer cards work the same way, in `src/content/offers.ts`.
+
+## Images
+
+Source images are committed to `public/images/`. Resized webp variants are
+**generated at build time** by `scripts/generate-images.ts` using sharp, and
+written to `public/images/generated/`.
+
+**`public/images/generated/` is gitignored and must not be committed.** It is
+rebuilt on every deploy. Encoding is skipped when a variant is already newer
+than its source, so warm rebuilds cost nothing.
+
+sharp is a devDependency and is imported only by the Vite config, so it never
+reaches the client bundle. Two consequences worth knowing:
+
+- Every Vercel build regenerates the variants and so depends on sharp
+  installing its native binaries. **If a production build fails, check the
+  install step for sharp before looking at application code.**
+- Because sharp is a devDependency, this relies on Vercel installing
+  devDependencies. It does by default, but setting `NODE_ENV=production` in the
+  Vercel environment would skip them and break the build at config import.
+
+Width ladders and the layout maths behind them are documented in
+`lib/image-sizes.ts` and in `DESIGN.md`.
+
+## Contact form
+
+Three fields: name, contact (email or WhatsApp), and a description of the work.
+
+`api/contact.ts` was deliberately left unmodified during the redesign. It
+already treated `business` and `outcome` as optional, so the three-field form
+needed no route change and the shape of what reaches Neon is unchanged.
+
+The reply contact is **not** a column. It is prefixed into the `workflow`
+column as `Reply contact: <value>\n\n<description>`, which is what the n8n
+workflow parses. Do not change that format without checking n8n first.
+
+Spam protection is a `website` honeypot field plus a same-origin check on the
+request. Submissions land in the Neon `contact_submissions` table with
+`status = 'pending'`; n8n watches the table and sends the Telegram alert. No
+application code calls Telegram.
+
+Three tests in `tests/contact-endpoint.test.mjs` guard the route's field names,
+insert columns and honeypot behaviour.
 
 ## Local development
 
@@ -38,41 +89,36 @@ npm install
 npm run dev
 ```
 
-Use `vercel dev` when testing the API routes locally.
-
-## Required Vercel environment variables
-
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | Neon connection string used by the CMS and contact form |
-| `CMS_ADMIN_EMAIL` | Lowercase administrator email |
-| `CMS_ADMIN_PASSWORD_HASH` | Scrypt password hash; never store a plain password here |
-| `CMS_DUMMY_PASSWORD_HASH` | Hash used to keep failed-login timing consistent |
-| `CMS_RATE_LIMIT_SECRET` | Random secret used to hash login identities |
-| `BLOB_READ_WRITE_TOKEN` | Vercel Blob token for project image uploads |
-| `VERCEL_DEPLOY_HOOK_URL` | Vercel Deploy Hook used after publishing changes |
-
-Generate the CMS secrets locally with `npm run cms:credentials`. The output directory is ignored by Git. Move the generated environment values into Vercel, keep the temporary password private, and delete the local access file after changing the password in `/admin`.
-
-## Database migration
-
-`migrations/001_create_projects.sql` is the historical, incomplete migration Antigravity applied before the requested review pause. It is preserved exactly for traceability and must not be run again.
-
-`migrations/002_upgrade_projects_cms.sql` is the reviewed corrective migration. It renames the incomplete table to `projects_legacy_001`, creates the complete project, administrator, session, rate-limit, and audit schema, and imports any legacy rows as private drafts for manual review. It runs inside one transaction through `scripts/migrate-cms.mjs`, so a failed step rolls the whole upgrade back. The normal website and `/admin` never create or alter database tables.
-
-The corrective migration was approved and applied to the configured Neon database on 28 August 2026. The legacy table was empty and remains preserved as `projects_legacy_001`. The reviewed schema, one administrator account, and two published project records were verified after migration.
-
-The migration runner is idempotent for the reviewed schema: it inspects the current columns before doing anything and skips schema changes when the upgrade is already present.
+Use `vercel dev` to exercise the API route locally.
 
 ## Quality checks
 
 ```bash
 npm run lint
-npm test
+npm test          # builds, then runs 35 tests
+npx tsc --noEmit
 ```
 
-The build generates static HTML for the homepage and every published case study, then creates the current sitemap. Admin pages are marked `noindex`.
+## Required Vercel environment variables
+
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | Neon connection string, used by the contact form |
+
+That is the only one still in use. `CMS_ADMIN_EMAIL`,
+`CMS_ADMIN_PASSWORD_HASH`, `CMS_DUMMY_PASSWORD_HASH`, `CMS_RATE_LIMIT_SECRET`,
+`BLOB_READ_WRITE_TOKEN` and `VERCEL_DEPLOY_HOOK_URL` belonged to the removed
+CMS and can be deleted from the Vercel project.
+
+## Database
+
+The contact form writes to the existing Neon `contact_submissions` table. Its
+schema is not in this repository and is not managed here.
+
+`migrations/` and `scripts/migrate-cms.mjs` are retained for history only. They
+document how the `projects` and `projects_legacy_001` tables reached their
+current shape. **Do not run them.** The site no longer reads either table.
 
 ## Hosting
 
-This repository is configured only for the existing Vercel project. It contains no ChatGPT, OpenAI Sites, Cloudflare Worker, or Next.js hosting scaffold.
+Configured only for the existing Vercel project.

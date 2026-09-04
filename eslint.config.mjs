@@ -13,6 +13,8 @@ const eslintConfig = defineConfig([
     "build/**",
     "work/**",
     "outputs/**",
+    "design/**",
+    "design-reference/**",
   ]),
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
