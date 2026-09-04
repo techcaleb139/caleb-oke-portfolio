@@ -14,20 +14,23 @@ export const profile = {
   handle: "@tech_caleb_",
 };
 
+/* Anchors are root-relative. The header and footer render on case study
+   pages too, where a bare "#work" resolves against a page that has no such
+   id and the link silently does nothing. */
 export const nav = [
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
-  { label: "About", href: "#about" },
+  { label: "Work", href: "/#work" },
+  { label: "Services", href: "/#services" },
+  { label: "About", href: "/#about" },
 ];
 
-export const navAction = { label: "Start a conversation", href: "#contact" };
+export const navAction = { label: "Start a conversation", href: "/#contact" };
 
 export const hero = {
   eyebrow: "Nigeria. Available for remote work.",
-  title: "I build the small systems that stop work falling through the cracks.",
+  title: "I build the systems that stop work falling through the cracks.",
   lead: "Forms, spreadsheets, APIs and voice tools, connected so information reaches the right place without anyone retyping it. Every project below shows what I built, what it measured, and what it still cannot do.",
-  primary: { label: "See what I have built", href: "#work" },
-  secondary: { label: "Book a workflow audit", href: "#contact" },
+  primary: { label: "See what I have built", href: "/#work" },
+  secondary: { label: "Book a workflow audit", href: "/#contact" },
   stats: [
     "Every build documented, including what failed",
     "124 job listings filtered to 5 alerts in one recorded run",
@@ -98,7 +101,7 @@ export const contact = {
 };
 
 export const footerLinks = [
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#services" },
-  { label: "About", href: "#about" },
+  { label: "Work", href: "/#work" },
+  { label: "Services", href: "/#services" },
+  { label: "About", href: "/#about" },
 ];

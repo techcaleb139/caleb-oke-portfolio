@@ -16,7 +16,7 @@ async function renderedBody(file) {
 
 test("ships crawlable content before JavaScript runs", async () => {
   const html = await homepage();
-  assert.match(html, /<h1[^>]*>I build the small systems that stop work falling through the cracks\.<\/h1>/);
+  assert.match(html, /<h1[^>]*>I build the systems that stop work falling through the cracks\.<\/h1>/);
   assert.match(html, /Voice AI restaurant ordering prototype/);
   assert.match(html, /Automated job search and alert pipeline/);
   assert.match(html, /What you can hire me for/);
@@ -320,4 +320,22 @@ test("image captions are capped to the prose measure", async () => {
   const widths = [...rule[1].matchAll(/max-width:\s*([^;]+)/g)].map((m) => m[1].trim());
   assert.ok(widths.length > 0, "captions declare a max-width");
   assert.equal(widths.at(-1), "var(--measure)", "the winning max-width caps captions to the prose measure");
+});
+
+/* The header and footer render on case study pages as well as the homepage,
+   so a bare "#work" resolves against a page with no such id and the link
+   silently does nothing. Four of them shipped that way. */
+test("no page links to an anchor it does not contain", async () => {
+  const pages = [path.join(distDir, "index.html")];
+  for (const slug of await readdir(path.join(distDir, "projects"))) {
+    pages.push(path.join(distDir, "projects", slug, "index.html"));
+  }
+
+  for (const page of pages) {
+    const html = await readFile(page, "utf8");
+    const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    const anchors = [...new Set([...html.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]))];
+    const dead = anchors.filter((a) => !ids.has(a));
+    assert.deepEqual(dead, [], `${path.relative(distDir, page)} links to missing anchors: ${dead.join(", ")}`);
+  }
 });
