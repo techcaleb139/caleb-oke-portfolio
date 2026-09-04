@@ -6,6 +6,7 @@ import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
 import App from './src/App.tsx';
 import { allProjects } from './src/content/projects/index.ts';
+import { generateImagesPlugin } from './scripts/generate-images.ts';
 
 const siteUrl = 'https://caleb-oke-portfolio.vercel.app';
 const NL = String.fromCharCode(10);
@@ -132,5 +133,5 @@ function preparePageHtml(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), preparePageHtml()],
+  plugins: [generateImagesPlugin(), react(), preparePageHtml()],
 });

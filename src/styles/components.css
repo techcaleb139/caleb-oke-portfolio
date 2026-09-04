@@ -200,3 +200,11 @@
 /* A <picture> is an inline wrapper, so the absolutely positioned img needs
    the picture itself to fill the frame. */
 .mediaFrame picture { display: contents; }
+
+/* The transcript slot is a zoomed background rather than an <img>. The
+   original file is the declared value; the webp image-set() only replaces it
+   where the browser supports image-set, so there is always a fallback. */
+.mediaFrame[data-background] { background-image: var(--bg-fallback); }
+@supports (background-image: image-set(url("a.webp") 1x)) {
+  .mediaFrame[data-background] { background-image: var(--bg-set); }
+}

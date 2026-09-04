@@ -43,3 +43,6 @@ scripts/capture-*.mjs
 # design source of truth, kept locally only (6MB bundle)
 /design-reference/
 /design/
+
+# webp variants generated at build time by scripts/generate-images.ts
+/public/images/generated/
