@@ -170,3 +170,43 @@ test("the inlined stylesheet uses only the five palette colours", async () => {
   const functional = css.match(/\b(rgba?|hsla?)\([^)]*\)/g) ?? [];
   assert.deepEqual(functional, [], `functional colour values in the stylesheet: ${functional.join(", ")}`);
 });
+
+// The stylesheet is not the only place a colour reaches a screen.
+// manifest.json paints Android browser chrome and the installed splash
+// screen, and it is JSON, so the stylesheet check above cannot see it.
+// This caught #05080d, the dark navy left behind by the previous design.
+test("manifest.json uses only the five palette colours", async () => {
+  const manifest = JSON.parse(await readFile(new URL("../public/manifest.json", import.meta.url), "utf8"));
+
+  const palette = new Set(["#faf8f4", "#1a1917", "#6b6a64", "#e5e2da", "#14584a"]);
+  const colourKeys = ["theme_color", "background_color"];
+
+  for (const key of colourKeys) {
+    const value = manifest[key];
+    assert.ok(value, `manifest.json is missing ${key}`);
+    assert.ok(
+      palette.has(String(value).toLowerCase()),
+      `manifest.json ${key} is ${value}, which is not one of the five palette colours`,
+    );
+  }
+
+  // Catch a colour added under a key this test does not yet know about.
+  const strays = Object.entries(manifest)
+    .filter(([key, value]) => typeof value === "string" && /^#[0-9a-fA-F]{3,8}$/.test(value) && !colourKeys.includes(key))
+    .map(([key, value]) => `${key}: ${value}`);
+  assert.deepEqual(strays, [], `unchecked colour values in manifest.json: ${strays.join(", ")}`);
+});
+
+// The manifest is also user-visible copy, and drifted from the site once
+// already: it described an "AI Automation Engineer" long after the site
+// settled on "builder".
+test("manifest.json copy matches the site", async () => {
+  const manifest = JSON.parse(await readFile(new URL("../public/manifest.json", import.meta.url), "utf8"));
+
+  assert.match(manifest.name, /AI automation builder/, "manifest name should use the site's own role wording");
+  assert.doesNotMatch(
+    `${manifest.name} ${manifest.description}`,
+    /Engineer|Production|intelligent/i,
+    "manifest still carries pre-redesign marketing copy",
+  );
+});
