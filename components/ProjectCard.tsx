@@ -53,7 +53,7 @@ export function ProseSectionBlock({ section, level }: { section: ProseSection; l
   );
 }
 
-/* Counts in Instrument Serif, labels in muted Public Sans. No bars, no
+/* Counts in the display weight, labels in muted Public Sans. No bars, no
    chart library, no icons. Horizontal on desktop, stacked on mobile. */
 export function FunnelDiagram({ funnel }: { funnel: Funnel }) {
   return (

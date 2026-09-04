@@ -198,8 +198,13 @@
 }
 .funnelCount {
   font-family: var(--font-display);
+  /* The counts are the point of the diagram, so they take the hero weight
+     rather than the heading weight. */
+  font-weight: var(--weight-hero);
+  letter-spacing: var(--tracking-hero);
   font-size: var(--step-figure);
   line-height: var(--leading-flat);
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 720px) {

@@ -23,7 +23,7 @@
   padding-block: 18px;
 }
 .brand { display: flex; flex-direction: column; text-decoration: none; color: var(--text); }
-.brandName { font-family: var(--font-display); font-size: var(--step-brand); }
+.brandName { font-family: var(--font-display); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); font-size: var(--step-brand); }
 .brandRole { font-size: var(--step-badge); color: var(--muted); }
 
 .navDesktop { display: flex; align-items: center; gap: 28px; font-size: var(--step-ui); }
@@ -100,18 +100,27 @@
 
 /* ---- Hero ---- */
 .hero { padding-block: 96px 76px; }
-.heroInner { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+
+/* Item 13: the hero is left-aligned to the same gutter as the header and
+   every section below it, so it reads as this page's opening rather than a
+   different page element. It was the only centred block on the site.
+
+   Item 12: the gaps were a flat 26px, which made five elements read as five
+   peers. The rhythm is now 12 / 20 / 44 / 40 - eyebrow tight to the
+   headline, headline bound to the paragraph that explains it, then a clear
+   break before the actions. Gaps are set per element rather than by a single
+   flex gap, so the grouping is explicit. */
+.heroInner { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
 .eyebrow { font-size: var(--step-meta); color: var(--muted); letter-spacing: var(--tracking-eyebrow); }
-.hero h1 { max-width: var(--col-hero); text-align: center; }
-.heroLead { max-width: var(--measure-hero); text-align: center; }
+.hero h1 { max-width: var(--col-hero); margin-top: 12px; }
+.heroLead { max-width: var(--measure-hero); margin-top: 20px; }
 
 .heroActions {
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-top: 6px;
+  margin-top: 44px;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .buttonPrimary {
   background: var(--accent);
@@ -137,9 +146,8 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  margin-top: 20px;
+  margin-top: 40px;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .heroStats li { font-size: var(--step-meta); color: var(--muted); }
 .heroStats li + li { border-left: 1px solid var(--border); padding-left: 18px; }
@@ -246,7 +254,7 @@
   gap: 10px;
   margin-top: 8px;
 }
-.successHeading { font-family: var(--font-display); font-size: var(--step-card); max-width: none; }
+.successHeading { font-family: var(--font-display); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); font-size: var(--step-card); max-width: none; }
 .successLinks { display: flex; gap: 20px; font-size: var(--step-ui); padding-top: 6px; }
 .successLinks a { text-decoration: none; border-bottom: 1px solid var(--accent); }
 
@@ -294,9 +302,13 @@
   .headerBar { padding-block: 14px; position: relative; }
 
   .hero { padding-block: 44px 40px; }
-  .heroInner { align-items: stretch; gap: 20px; }
-  .hero h1, .heroLead { text-align: left; }
-  .heroActions { flex-direction: column; align-items: stretch; gap: 16px; }
+  /* Same rhythm as desktop, compressed: 8 / 14 / 28 / 24. Alignment no
+     longer needs an override here, since the desktop hero is left-aligned
+     too - the two breakpoints used to disagree. */
+  .heroInner { align-items: stretch; gap: 0; }
+  .hero h1 { margin-top: 8px; }
+  .heroLead { margin-top: 14px; }
+  .heroActions { flex-direction: column; align-items: stretch; gap: 16px; margin-top: 28px; }
   .buttonPrimary { text-align: center; padding: 14px 22px; }
   .buttonText { align-self: flex-start; }
   .heroStats {
@@ -305,7 +317,7 @@
     gap: 8px;
     border-top: 1px solid var(--border);
     padding-top: 18px;
-    margin-top: 6px;
+    margin-top: 24px;
   }
   .heroStats li + li { border-left: 0; padding-left: 0; }
   .heroSocial { margin-top: 6px; }

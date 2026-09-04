@@ -146,12 +146,29 @@ test("publishes complete search and social metadata", async () => {
   assert.match(html, /"@type": "ProfilePage"/);
 });
 
-test("self-hosts both fonts and preloads the latin subsets", async () => {
+test("self-hosts one font family and preloads the subset that paints the hero", async () => {
   const html = await homepage();
-  assert.match(html, /rel="preload" as="font"[^>]*instrument-serif-latin\.woff2/);
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
+
   assert.match(html, /rel="preload" as="font"[^>]*public-sans-latin\.woff2/);
   assert.doesNotMatch(html, /fonts\.googleapis\.com/);
   assert.doesNotMatch(html, /fonts\.gstatic\.com/);
+
+  // The h1 is the LCP element, so the preloaded file must be the one that
+  // paints it. A preload for a face no longer used is wasted bandwidth on
+  // the critical path.
+  const preloads = [...html.matchAll(/rel="preload" as="font"[^>]*href="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(preloads, ["/fonts/public-sans-latin.woff2"], "exactly one font is preloaded");
+  assert.doesNotMatch(css, /Instrument Serif/, "the display face is no longer Instrument Serif");
+
+  // base.css sets font-synthesis: none, so a face declared at a single
+  // weight would make the 700 and 800 headings render at the nearest
+  // declared weight instead - silently, with no error and no fallback.
+  const faces = css.split("@font-face").slice(1);
+  assert.ok(faces.length > 0, "fonts are declared with @font-face");
+  for (const face of faces) {
+    assert.match(face, /font-weight:\s*100 900/, "each face exposes the full variable weight axis");
+  }
 });
 
 test("the inlined stylesheet uses only the five palette colours", async () => {

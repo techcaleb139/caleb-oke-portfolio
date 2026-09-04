@@ -1,6 +1,6 @@
 ---
 name: Caleb Oke Portfolio
-description: A quiet, evidence-first portfolio for practical automation work. Five colours, two typefaces, no ornament.
+description: A quiet, evidence-first portfolio for practical automation work. Five colours, one typeface, no ornament.
 colors:
   bg: "#FAF8F4"
   text: "#1A1917"
@@ -8,8 +8,8 @@ colors:
   border: "#E5E2DA"
   accent: "#14584A"
 fonts:
-  display: Instrument Serif
-  body: Public Sans
+  display: Public Sans 800 / 700
+  body: Public Sans 400 / 500
 ---
 
 # Design system: Caleb Oke portfolio
@@ -65,19 +65,66 @@ and it is used at 13px where AA still only requires 4.5:1.
 
 ## Typography
 
-**Instrument Serif** for headings, **Public Sans** for body and UI. Both are
-self-hosted from `public/fonts/` as woff2 subsets.
+**Public Sans sets everything** — hero, every heading, body, UI and captions.
+Self-hosted from `public/fonts/` as woff2 subsets. There is no second family.
 
-Self-hosting is not a preference here, it is a requirement: `vercel.json` sets
-a Content Security Policy of `font-src 'self' data:`, so Google Fonts is
-blocked at the browser level. A `<link>` to `fonts.googleapis.com` would fail
-silently in production.
+This replaced Instrument Serif in September 2026. The reasoning is worth
+keeping, because it is the kind of decision that gets quietly reverted:
 
-Both latin subsets are preloaded in `index.html` and declared
-`font-display: swap`.
+- Instrument Serif reads editorial. The site documents systems, and the brief
+  became *direct and technical*, which a heavy grotesque answers and a
+  high-contrast display serif does not.
+- Instrument Serif ships in **one weight**, so the hero could only be made
+  larger, never heavier.
+- Public Sans is a **100–900 variable font that the site already shipped**, so
+  the display weights cost zero additional bytes and dropping Instrument
+  Serif removed 31.9 KB.
+
+**Weights are the hierarchy now, alongside size:**
+
+| Token | Value | Used by |
+| --- | --- | --- |
+| `--weight-hero` | 800 | `h1`, funnel counts |
+| `--weight-heading` | 700 | `h2`, `h3`, `h4`, brand wordmark, success heading |
+| — | 500 | UI emphasis |
+| — | 400 | body copy, captions |
+
+Tracking tightens as size grows: `--tracking-hero` is `-0.035em`,
+`--tracking-heading` is `-0.025em`. A heavy grotesque at 64px needs negative
+tracking or it reads loose and soft.
+
+### Two traps
+
+**`font-weight: 100 900` on every `@font-face` is load-bearing.** `base.css`
+sets `font-synthesis: none`. If a face is declared at a single weight, the
+browser will not synthesise the missing ones and will not fall back — it
+renders the nearest declared weight instead, silently. Declaring the full
+axis is what makes 700 and 800 real. A test asserts this.
+
+**The preload must be the file that paints the LCP element.** The `h1` is the
+largest contentful paint, so `index.html` preloads
+`public-sans-latin.woff2` and nothing else. A preload left pointing at a
+retired face is wasted bandwidth on the critical path. A test asserts there is
+exactly one font preload.
+
+Self-hosting is not a preference, it is a requirement: `vercel.json` sets a
+Content Security Policy of `font-src 'self' data:`, so Google Fonts is blocked
+at the browser level. A `<link>` to `fonts.googleapis.com` would fail silently
+in production.
+
+The latin subset is preloaded and every face is declared `font-display: swap`.
 
 Base body text is **17px / 1.6**, with prose capped at **66ch** (`--measure`).
 The 66ch cap comes from the reference; the original brief said roughly 68.
+
+### One known weak pair
+
+`h2` at 40px and a project `h3` at 34px are only a 1.18 ratio apart on
+desktop, at the same weight and in the same family. Every other adjacent pair
+is 1.5 or wider. Context carries it — a project title sits inside a bordered
+card under a status badge — but if the two ever need separating, drop
+`--step-project` to 30px for a 1.33 ratio. At 390px the pair is already fine
+at 1.25.
 
 The full scale lives in `src/styles/tokens.css` with a mobile override at
 `max-width: 720px`. Headings run `60 / 40 / 34 / 22` on desktop and
@@ -161,7 +208,7 @@ underneath, and explicit `width`/`height` so nothing shifts as it loads.
 
 - Reach for a hairline `--border` rule before reaching for a container.
 - Let whitespace do the separating.
-- Set numbers in Instrument Serif and their labels in muted Public Sans.
+- Set numbers at `--weight-hero` and their labels in muted 400.
 - Keep the accent rare. It should read as a signal, not as decoration.
 
 ## Accessibility
