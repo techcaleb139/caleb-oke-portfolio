@@ -67,10 +67,6 @@ const project: Project = {
   seoDescription:
     "An n8n pipeline that collects remote job listings from three sources, filters and deduplicates them, and sends the survivors to Telegram.",
 
-  caseStudy: `## Overview
-
-Full write-up to follow.
-`,
 };
 
 export default project;

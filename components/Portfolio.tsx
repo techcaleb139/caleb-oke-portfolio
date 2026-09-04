@@ -1,12 +1,12 @@
 import ContactForm from "./ContactForm.tsx";
 import ProjectCard from "./ProjectCard.tsx";
-import SiteHeader, { SocialLinks } from "./SiteHeader.tsx";
+import SiteFooter from "./SiteFooter.tsx";
+import SiteHeader from "./SiteHeader.tsx";
 import { allProjects } from "../src/content/projects/index.ts";
 import { offers, offersClosing, offersHeading, offersIntro } from "../src/content/offers.ts";
 import {
   about,
   contact,
-  footerLinks,
   hero,
   profile,
   projectsClosing,
@@ -33,11 +33,7 @@ export default function Portfolio() {
               <a className="buttonText" href={hero.secondary.href}>{hero.secondary.label}</a>
             </div>
 
-            <ul className="heroStats">
-              {hero.stats.map((stat) => <li key={stat}>{stat}</li>)}
-            </ul>
-
-            <SocialLinks className="heroSocial" />
+            <p className="heroProof">{hero.proof}</p>
           </div>
         </section>
 
@@ -139,21 +135,7 @@ export default function Portfolio() {
         </section>
       </main>
 
-      <footer className="siteFooter">
-        <div className="shell footerBar">
-          <div className="brand">
-            <span className="brandName">{profile.name}</span>
-            <span className="brandRole">{profile.role}</span>
-          </div>
-          <nav className="footerNav" aria-label="Footer">
-            {footerLinks.map((item) => (
-              <a key={item.href} href={item.href}>{item.label}</a>
-            ))}
-            <a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a className="backToTop" href="#top">Back to top</a>
-          </nav>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

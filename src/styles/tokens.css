@@ -15,11 +15,13 @@
   --accent: #14584A;
 
   /* ---- Families ---- */
-  --font-display: "Instrument Serif", "Iowan Old Style", "Times New Roman", Times, serif;
+  /* One family sets everything. Public Sans ships as a 100-900 variable
+     font, so the display weights cost no extra bytes. */
   --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-display: var(--font-body);
 
   /* ---- Type scale, desktop. Mobile values in base.css. ---- */
-  --step-hero: 60px;      /* h1 */
+  --step-hero: 64px;      /* h1 */
   --step-section: 40px;   /* h2 */
   --step-project: 34px;   /* h3, project title */
   --step-figure: 44px;    /* funnel counts */
@@ -38,8 +40,13 @@
   --leading-body: 1.6;
   --leading-meta: 1.5;
   --leading-flat: 1;
-  --tracking-hero: -0.01em;
+  --tracking-hero: -0.035em;
   --tracking-eyebrow: 0.06em;
+  /* Display weights. The hero carries more weight and tighter tracking
+     than the headings below it. */
+  --weight-hero: 800;
+  --weight-heading: 700;
+  --tracking-heading: -0.025em;
 
   /* ---- Layout ---- */
   --measure: 66ch;        /* prose cap, per the reference */

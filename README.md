@@ -115,9 +115,8 @@ CMS and can be deleted from the Vercel project.
 The contact form writes to the existing Neon `contact_submissions` table. Its
 schema is not in this repository and is not managed here.
 
-`migrations/` and `scripts/migrate-cms.mjs` are retained for history only. They
-document how the `projects` and `projects_legacy_001` tables reached their
-current shape. **Do not run them.** The site no longer reads either table.
+There is no other database use. The `projects` tables and their migration
+scripts were removed in 07f98e5; projects are TypeScript content files.
 
 ## Hosting
 

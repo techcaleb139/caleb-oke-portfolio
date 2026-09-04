@@ -16,7 +16,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         <ProjectMedia key={slot.src} slot={slot} />
       ))}
 
-      <Section section={project.findings} />
+      <ProseSectionBlock section={project.findings} level={4} />
 
       {project.funnel ? <FunnelDiagram funnel={project.funnel} /> : null}
 
@@ -28,8 +28,8 @@ export default function ProjectCard({ project }: { project: Project }) {
         </div>
       ) : null}
 
-      <Section section={project.notProven} />
-      <Section section={project.nextStep} />
+      <ProseSectionBlock section={project.notProven} level={4} />
+      <ProseSectionBlock section={project.nextStep} level={4} />
 
       <div className="projectFoot">
         <span className="toolList">{project.tools.join(" \u00b7 ")}</span>
@@ -39,18 +39,23 @@ export default function ProjectCard({ project }: { project: Project }) {
   );
 }
 
-function Section({ section }: { section: ProseSection }) {
+/* Shared with the case study template, which renders the same sections one
+   heading level up: h4 inside a card on the homepage, h2 on a page whose h1
+   is the project title. Keeping the level a prop is what stops either page
+   skipping a level. */
+export function ProseSectionBlock({ section, level }: { section: ProseSection; level: 2 | 4 }) {
+  const Heading = level === 2 ? "h2" : "h4";
   return (
     <div className="projectSection">
-      <h4>{section.heading}</h4>
+      <Heading>{section.heading}</Heading>
       <p>{section.body}</p>
     </div>
   );
 }
 
-/* Counts in Instrument Serif, labels in muted Public Sans. No bars, no
+/* Counts in the display weight, labels in muted Public Sans. No bars, no
    chart library, no icons. Horizontal on desktop, stacked on mobile. */
-function FunnelDiagram({ funnel }: { funnel: Funnel }) {
+export function FunnelDiagram({ funnel }: { funnel: Funnel }) {
   return (
     <div className="funnelBlock">
       <ol className="funnel" style={{ "--stages": funnel.stages.length } as CSSProperties}>

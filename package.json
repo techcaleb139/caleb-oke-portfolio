@@ -10,7 +10,7 @@
     "build": "vite build --config vite.config.vercel.ts",
     "build:vercel": "vite build --config vite.config.vercel.ts",
     "cms:migrate": "node scripts/migrate-cms.mjs",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/migration-review.test.mjs tests/contact-endpoint.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/contact-endpoint.test.mjs",
     "lint": "eslint . --ignore-pattern dist",
     "dev:vercel": "vercel dev"
   },

@@ -23,24 +23,28 @@
   padding-block: 18px;
 }
 .brand { display: flex; flex-direction: column; text-decoration: none; color: var(--text); }
-.brandName { font-family: var(--font-display); font-size: var(--step-brand); }
+.brandName { font-family: var(--font-display); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); font-size: var(--step-brand); }
 .brandRole { font-size: var(--step-badge); color: var(--muted); }
 
 .navDesktop { display: flex; align-items: center; gap: 28px; font-size: var(--step-ui); }
-.navDesktop > a {
+/* :not(.navAction) matters. Without it this rule is (0,1,1) against the
+   button's own (0,1,0) and wins on the bottom edge, painting it transparent:
+   the button rendered with three accent sides and a missing fourth. */
+.navDesktop > a:not(.navAction) {
   color: var(--text);
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
-.navDesktop > a:hover { border-bottom-color: var(--text); }
+.navDesktop > a:not(.navAction):hover { border-bottom-color: var(--text); }
 
 .navAction {
+  background: var(--accent);
   border: 1px solid var(--accent);
-  color: var(--accent);
+  color: var(--bg);
   padding: 9px 16px;
   text-decoration: none;
 }
-.navAction:hover { background: var(--accent); color: var(--bg); }
+.navAction:hover { background: var(--text); border-color: var(--text); }
 
 /* Mobile menu is a details element, so it opens and closes without JavaScript. */
 .navMobile { display: none; }
@@ -69,6 +73,10 @@
 
 .navPanel {
   position: absolute;
+  /* Without this the panel resolves to its static position, which is below
+     the summary rather than below the header, and its opaque background
+     covers the bottom of the brand block. */
+  top: 100%;
   left: 0;
   right: 0;
   background: var(--bg);
@@ -86,21 +94,33 @@
 .navPanelAction { padding: 24px 20px; }
 .navPanelAction .navAction { display: block; text-align: center; padding: 14px 20px; }
 .navPanelSocial { padding: 0 20px 24px; }
+/* Standalone link rows carry padding so each target clears 24px.
+   Row gaps are trimmed by the same amount so the rhythm is unchanged. */
+.navPanelSocial a { padding-block: 6px; }
 
 /* ---- Hero ---- */
 .hero { padding-block: 96px 76px; }
-.heroInner { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+
+/* Item 13: the hero is left-aligned to the same gutter as the header and
+   every section below it, so it reads as this page's opening rather than a
+   different page element. It was the only centred block on the site.
+
+   Item 12: the gaps were a flat 26px, which made five elements read as five
+   peers. The rhythm is now 12 / 20 / 44 / 40 - eyebrow tight to the
+   headline, headline bound to the paragraph that explains it, then a clear
+   break before the actions. Gaps are set per element rather than by a single
+   flex gap, so the grouping is explicit. */
+.heroInner { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
 .eyebrow { font-size: var(--step-meta); color: var(--muted); letter-spacing: var(--tracking-eyebrow); }
-.hero h1 { max-width: var(--col-hero); text-align: center; }
-.heroLead { max-width: var(--measure-hero); text-align: center; }
+.hero h1 { max-width: var(--col-hero); margin-top: 12px; }
+.heroLead { max-width: var(--measure-hero); margin-top: 20px; }
 
 .heroActions {
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-top: 6px;
+  margin-top: 44px;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .buttonPrimary {
   background: var(--accent);
@@ -120,23 +140,14 @@
 }
 .buttonText:hover { color: var(--text); border-bottom-color: var(--text); }
 
-.heroStats {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.heroStats li { font-size: var(--step-meta); color: var(--muted); }
-.heroStats li + li { border-left: 1px solid var(--border); padding-left: 18px; }
+/* One muted line under the actions, not a strip. The hairline dividers went
+   with the other two stats: they were structure for content that no longer
+   needs structuring. */
+.heroProof { font-size: var(--step-meta); color: var(--muted); margin-top: 40px; }
 
 .socialLinks { display: flex; gap: 20px; font-size: var(--step-meta); }
 .socialLinks a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
 .socialLinks a:hover { color: var(--text); border-bottom-color: var(--text); }
-.heroSocial { margin-top: 28px; }
 
 /* ---- About ---- */
 .aboutGrid {
@@ -163,7 +174,8 @@
   flex-direction: column;
   gap: 14px;
 }
-.contactDirect { display: flex; gap: 22px; font-size: var(--step-ui); padding: 6px 0 4px; flex-wrap: wrap; }
+.contactDirect { display: flex; gap: 22px; font-size: var(--step-ui); padding: 0; flex-wrap: wrap; }
+.contactDirect a { padding-block: 5px; }
 .contactDirect a { text-decoration: none; border-bottom: 1px solid var(--accent); }
 .contactDirect a:hover { color: var(--text); border-bottom-color: var(--text); }
 
@@ -221,6 +233,9 @@
   cursor: pointer;
 }
 .formActions button:hover:not(:disabled) { background: var(--text); border-color: var(--text); }
+/* Feedback: the one moment a visitor commits to something. */
+.formActions button { transition: transform 140ms ease-out; }
+.formActions button:active:not(:disabled) { transform: scale(0.98); }
 .formActions button:disabled { cursor: not-allowed; opacity: 0.65; }
 .formNote, .formStatus { font-size: var(--step-meta); color: var(--muted); max-width: none; }
 .formStatus:empty { display: none; }
@@ -232,8 +247,21 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 8px;
+
+  /* Preventing a jarring change: the form is replaced by this block with no
+     bridge. @starting-style animates the entry with no JavaScript, and a
+     browser without it simply renders the resting state. */
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity 240ms ease-out, translate 240ms ease-out;
 }
-.successHeading { font-family: var(--font-display); font-size: var(--step-card); max-width: none; }
+@starting-style {
+  .formSuccess {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+.successHeading { font-family: var(--font-display); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); font-size: var(--step-card); max-width: none; }
 .successLinks { display: flex; gap: 20px; font-size: var(--step-ui); padding-top: 6px; }
 .successLinks a { text-decoration: none; border-bottom: 1px solid var(--accent); }
 
@@ -250,7 +278,7 @@
 .siteFooter .brandName { font-size: 18px; }
 .siteFooter .brand { flex-direction: row; align-items: baseline; gap: 12px; }
 .footerNav { display: flex; align-items: center; gap: 22px; font-size: var(--step-label); flex-wrap: wrap; }
-.footerNav a { color: var(--muted); text-decoration: none; }
+.footerNav a { color: var(--muted); text-decoration: none; padding-block: 5px; }
 .footerNav a:hover { color: var(--text); }
 .footerNav .backToTop { color: var(--accent); border-bottom: 1px solid var(--accent); }
 .footerNav .backToTop:hover { color: var(--text); border-bottom-color: var(--text); }
@@ -266,7 +294,9 @@
 .caseStudyBody {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  /* Same base gap as a project card, so the shared spacing modifiers in
+     components.css produce the same rhythm on both pages. */
+  gap: 18px;
   padding-bottom: var(--section-y);
   max-width: calc(var(--col) + var(--gutter) * 2);
 }
@@ -279,21 +309,17 @@
   .headerBar { padding-block: 14px; position: relative; }
 
   .hero { padding-block: 44px 40px; }
-  .heroInner { align-items: stretch; gap: 20px; }
-  .hero h1, .heroLead { text-align: left; }
-  .heroActions { flex-direction: column; align-items: stretch; gap: 16px; }
+  /* Same rhythm as desktop, compressed: 8 / 14 / 28 / 24. Alignment no
+     longer needs an override here, since the desktop hero is left-aligned
+     too - the two breakpoints used to disagree. */
+  .heroInner { align-items: stretch; gap: 0; }
+  .hero h1 { margin-top: 8px; }
+  .heroLead { margin-top: 14px; }
+  .heroActions { flex-direction: column; align-items: stretch; gap: 16px; margin-top: 28px; }
   .buttonPrimary { text-align: center; padding: 14px 22px; }
   .buttonText { align-self: flex-start; }
-  .heroStats {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    border-top: 1px solid var(--border);
-    padding-top: 18px;
-    margin-top: 6px;
-  }
-  .heroStats li + li { border-left: 0; padding-left: 0; }
-  .heroSocial { margin-top: 6px; }
+  /* The rule above it does the separating a strip used to need. */
+  .heroProof { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 24px; }
 
   .aboutGrid { grid-template-columns: 1fr; gap: 24px; }
   .formActions button { width: 100%; padding: 14px 28px; }

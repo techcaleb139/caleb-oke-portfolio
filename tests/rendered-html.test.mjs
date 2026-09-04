@@ -16,7 +16,7 @@ async function renderedBody(file) {
 
 test("ships crawlable content before JavaScript runs", async () => {
   const html = await homepage();
-  assert.match(html, /<h1[^>]*>I build the small systems that stop work falling through the cracks\.<\/h1>/);
+  assert.match(html, /<h1[^>]*>I build the systems that stop work falling through the cracks\.<\/h1>/);
   assert.match(html, /Voice AI restaurant ordering prototype/);
   assert.match(html, /Automated job search and alert pipeline/);
   assert.match(html, /What you can hire me for/);
@@ -146,12 +146,29 @@ test("publishes complete search and social metadata", async () => {
   assert.match(html, /"@type": "ProfilePage"/);
 });
 
-test("self-hosts both fonts and preloads the latin subsets", async () => {
+test("self-hosts one font family and preloads the subset that paints the hero", async () => {
   const html = await homepage();
-  assert.match(html, /rel="preload" as="font"[^>]*instrument-serif-latin\.woff2/);
+  const css = html.match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
+
   assert.match(html, /rel="preload" as="font"[^>]*public-sans-latin\.woff2/);
   assert.doesNotMatch(html, /fonts\.googleapis\.com/);
   assert.doesNotMatch(html, /fonts\.gstatic\.com/);
+
+  // The h1 is the LCP element, so the preloaded file must be the one that
+  // paints it. A preload for a face no longer used is wasted bandwidth on
+  // the critical path.
+  const preloads = [...html.matchAll(/rel="preload" as="font"[^>]*href="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(preloads, ["/fonts/public-sans-latin.woff2"], "exactly one font is preloaded");
+  assert.doesNotMatch(css, /Instrument Serif/, "the display face is no longer Instrument Serif");
+
+  // base.css sets font-synthesis: none, so a face declared at a single
+  // weight would make the 700 and 800 headings render at the nearest
+  // declared weight instead - silently, with no error and no fallback.
+  const faces = css.split("@font-face").slice(1);
+  assert.ok(faces.length > 0, "fonts are declared with @font-face");
+  for (const face of faces) {
+    assert.match(face, /font-weight:\s*100 900/, "each face exposes the full variable weight axis");
+  }
 });
 
 test("the inlined stylesheet uses only the five palette colours", async () => {
@@ -209,4 +226,117 @@ test("manifest.json copy matches the site", async () => {
     /Engineer|Production|intelligent/i,
     "manifest still carries pre-redesign marketing copy",
   );
+});
+
+/* A visitor arriving on a case study from search has not seen the homepage.
+   These four guarantees are what make that page stand on its own. */
+test("case study pages carry the site header, footer and status badge", async () => {
+  const dirs = await readdir(path.join(distDir, "projects"));
+  assert.ok(dirs.length > 0, "there is at least one generated case study");
+
+  for (const slug of dirs) {
+    const body = await renderedBody(path.join(distDir, "projects", slug, "index.html"));
+    assert.match(body, /class="siteHeader"/, `${slug} has the site header`);
+    assert.match(body, /class="siteFooter"/, `${slug} has the site footer`);
+    assert.match(body, /class="navAction"/, `${slug} offers the contact route`);
+
+    const badge = body.match(/class="badge">([^<]+)</);
+    assert.ok(badge && badge[1].trim(), `${slug} states its status above the title`);
+  }
+});
+
+test("a case study shows at least the evidence its homepage card shows", async () => {
+  const home = await renderedBody(path.join(distDir, "index.html"));
+  // Each chunk must stop at the end of its card, or the last one runs on
+  // into the about section and picks up the portrait.
+  const cards = home
+    .split('<article class="project"')
+    .slice(1)
+    .map((chunk) => chunk.split("Read the full case study")[0]);
+  const dirs = await readdir(path.join(distDir, "projects"));
+  assert.equal(cards.length, dirs.length);
+
+  const images = (markup) =>
+    new Set([
+      ...[...markup.matchAll(/<img[^>]*src="(\/images\/[^"]*)"/g)].map((m) => m[1]),
+      ...[...markup.matchAll(/--bg-fallback:url\(&quot;([^&]*)/g)].map((m) => m[1]),
+    ]);
+
+  for (const card of cards) {
+    const slug = card.match(/\/projects\/([a-z0-9-]+)"/)?.[1];
+    assert.ok(slug, "card links to its case study");
+    const page = await renderedBody(path.join(distDir, "projects", slug, "index.html"));
+
+    for (const src of images(card)) {
+      assert.ok(images(page).has(src), `${slug} case study is missing ${src}, which its card shows`);
+    }
+    if (/class="funnel"/.test(card)) {
+      assert.match(page, /class="funnel"/, `${slug} case study is missing the funnel its card shows`);
+    }
+  }
+});
+
+test("no page ships a heading with no content behind it", async () => {
+  const dirs = await readdir(path.join(distDir, "projects"));
+  for (const slug of dirs) {
+    const body = await renderedBody(path.join(distDir, "projects", slug, "index.html"));
+    assert.doesNotMatch(body, /Full write-up to follow/, `${slug} promises a write-up that does not exist`);
+  }
+});
+
+/* Standalone link rows are not inline-in-a-sentence, so they do not get the
+   inline exception to WCAG 2.5.8. Each was 17-19px tall before this padding. */
+test("standalone link rows clear the 24px target size", async () => {
+  const css = (await homepage()).match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
+  // .heroSocial went with the hero thinning; the row no longer exists.
+  const rows = [".navPanelSocial a", ".contactDirect a", ".footerNav a", ".projectFoot a"];
+
+  // Split into rules rather than building a regex per selector, so the
+  // selector strings stay literal and need no escaping.
+  const rules = css.split("}").map((chunk) => {
+    const [selector, body = ""] = chunk.split("{");
+    return { selector: selector.trim(), body };
+  });
+
+  for (const selector of rows) {
+    const rule = rules.find(
+      (r) => r.selector.split(",").some((part) => part.trim() === selector) && /padding-block:/.test(r.body),
+    );
+    assert.ok(rule, `${selector} declares padding-block so its target clears 24px`);
+    const px = Number(rule.body.match(/padding-block:\s*(\d+)px/)[1]);
+    assert.ok(px >= 4, `${selector} padding-block is ${px}px, too small to reach 24px`);
+  }
+});
+
+/* This one was briefly shipped as a no-op: the cap was declared above an
+   existing `max-width: none` in the same rule and lost to it. */
+test("image captions are capped to the prose measure", async () => {
+  const css = (await homepage()).match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
+  const rule = css
+    .split("}")
+    .map((chunk) => chunk.split("{"))
+    .find(([selector]) => selector.trim().endsWith(".mediaCaption") && !selector.includes("data-align"));
+
+  assert.ok(rule, "the .mediaCaption rule exists");
+  const widths = [...rule[1].matchAll(/max-width:\s*([^;]+)/g)].map((m) => m[1].trim());
+  assert.ok(widths.length > 0, "captions declare a max-width");
+  assert.equal(widths.at(-1), "var(--measure)", "the winning max-width caps captions to the prose measure");
+});
+
+/* The header and footer render on case study pages as well as the homepage,
+   so a bare "#work" resolves against a page with no such id and the link
+   silently does nothing. Four of them shipped that way. */
+test("no page links to an anchor it does not contain", async () => {
+  const pages = [path.join(distDir, "index.html")];
+  for (const slug of await readdir(path.join(distDir, "projects"))) {
+    pages.push(path.join(distDir, "projects", slug, "index.html"));
+  }
+
+  for (const page of pages) {
+    const html = await readFile(page, "utf8");
+    const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+    const anchors = [...new Set([...html.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]))];
+    const dead = anchors.filter((a) => !ids.has(a));
+    assert.deepEqual(dead, [], `${path.relative(distDir, page)} links to missing anchors: ${dead.join(", ")}`);
+  }
 });

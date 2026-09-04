@@ -2,7 +2,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* In-page nav links jumped. The reduced-motion block below already resets
+     this to auto. */
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -33,13 +38,15 @@ a { color: var(--accent); }
 :where(h1, h2, h3, h4, h5, h6) {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: var(--weight-heading);
+  letter-spacing: var(--tracking-heading);
   line-height: var(--leading-heading);
   text-wrap: balance;
 }
 
 h1 {
   font-size: var(--step-hero);
+  font-weight: var(--weight-hero);
   line-height: var(--leading-hero);
   letter-spacing: var(--tracking-hero);
 }
