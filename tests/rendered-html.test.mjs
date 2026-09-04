@@ -210,3 +210,97 @@ test("manifest.json copy matches the site", async () => {
     "manifest still carries pre-redesign marketing copy",
   );
 });
+
+/* A visitor arriving on a case study from search has not seen the homepage.
+   These four guarantees are what make that page stand on its own. */
+test("case study pages carry the site header, footer and status badge", async () => {
+  const dirs = await readdir(path.join(distDir, "projects"));
+  assert.ok(dirs.length > 0, "there is at least one generated case study");
+
+  for (const slug of dirs) {
+    const body = await renderedBody(path.join(distDir, "projects", slug, "index.html"));
+    assert.match(body, /class="siteHeader"/, `${slug} has the site header`);
+    assert.match(body, /class="siteFooter"/, `${slug} has the site footer`);
+    assert.match(body, /class="navAction"/, `${slug} offers the contact route`);
+
+    const badge = body.match(/class="badge">([^<]+)</);
+    assert.ok(badge && badge[1].trim(), `${slug} states its status above the title`);
+  }
+});
+
+test("a case study shows at least the evidence its homepage card shows", async () => {
+  const home = await renderedBody(path.join(distDir, "index.html"));
+  // Each chunk must stop at the end of its card, or the last one runs on
+  // into the about section and picks up the portrait.
+  const cards = home
+    .split('<article class="project"')
+    .slice(1)
+    .map((chunk) => chunk.split("Read the full case study")[0]);
+  const dirs = await readdir(path.join(distDir, "projects"));
+  assert.equal(cards.length, dirs.length);
+
+  const images = (markup) =>
+    new Set([
+      ...[...markup.matchAll(/<img[^>]*src="(\/images\/[^"]*)"/g)].map((m) => m[1]),
+      ...[...markup.matchAll(/--bg-fallback:url\(&quot;([^&]*)/g)].map((m) => m[1]),
+    ]);
+
+  for (const card of cards) {
+    const slug = card.match(/\/projects\/([a-z0-9-]+)"/)?.[1];
+    assert.ok(slug, "card links to its case study");
+    const page = await renderedBody(path.join(distDir, "projects", slug, "index.html"));
+
+    for (const src of images(card)) {
+      assert.ok(images(page).has(src), `${slug} case study is missing ${src}, which its card shows`);
+    }
+    if (/class="funnel"/.test(card)) {
+      assert.match(page, /class="funnel"/, `${slug} case study is missing the funnel its card shows`);
+    }
+  }
+});
+
+test("no page ships a heading with no content behind it", async () => {
+  const dirs = await readdir(path.join(distDir, "projects"));
+  for (const slug of dirs) {
+    const body = await renderedBody(path.join(distDir, "projects", slug, "index.html"));
+    assert.doesNotMatch(body, /Full write-up to follow/, `${slug} promises a write-up that does not exist`);
+  }
+});
+
+/* Standalone link rows are not inline-in-a-sentence, so they do not get the
+   inline exception to WCAG 2.5.8. Each was 17-19px tall before this padding. */
+test("standalone link rows clear the 24px target size", async () => {
+  const css = (await homepage()).match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
+  const rows = [".navPanelSocial a", ".heroSocial a", ".contactDirect a", ".footerNav a", ".projectFoot a"];
+
+  // Split into rules rather than building a regex per selector, so the
+  // selector strings stay literal and need no escaping.
+  const rules = css.split("}").map((chunk) => {
+    const [selector, body = ""] = chunk.split("{");
+    return { selector: selector.trim(), body };
+  });
+
+  for (const selector of rows) {
+    const rule = rules.find(
+      (r) => r.selector.split(",").some((part) => part.trim() === selector) && /padding-block:/.test(r.body),
+    );
+    assert.ok(rule, `${selector} declares padding-block so its target clears 24px`);
+    const px = Number(rule.body.match(/padding-block:\s*(\d+)px/)[1]);
+    assert.ok(px >= 4, `${selector} padding-block is ${px}px, too small to reach 24px`);
+  }
+});
+
+/* This one was briefly shipped as a no-op: the cap was declared above an
+   existing `max-width: none` in the same rule and lost to it. */
+test("image captions are capped to the prose measure", async () => {
+  const css = (await homepage()).match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
+  const rule = css
+    .split("}")
+    .map((chunk) => chunk.split("{"))
+    .find(([selector]) => selector.trim().endsWith(".mediaCaption") && !selector.includes("data-align"));
+
+  assert.ok(rule, "the .mediaCaption rule exists");
+  const widths = [...rule[1].matchAll(/max-width:\s*([^;]+)/g)].map((m) => m[1].trim());
+  assert.ok(widths.length > 0, "captions declare a max-width");
+  assert.equal(widths.at(-1), "var(--measure)", "the winning max-width caps captions to the prose measure");
+});

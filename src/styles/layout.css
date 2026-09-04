@@ -27,20 +27,24 @@
 .brandRole { font-size: var(--step-badge); color: var(--muted); }
 
 .navDesktop { display: flex; align-items: center; gap: 28px; font-size: var(--step-ui); }
-.navDesktop > a {
+/* :not(.navAction) matters. Without it this rule is (0,1,1) against the
+   button's own (0,1,0) and wins on the bottom edge, painting it transparent:
+   the button rendered with three accent sides and a missing fourth. */
+.navDesktop > a:not(.navAction) {
   color: var(--text);
   text-decoration: none;
   border-bottom: 1px solid transparent;
 }
-.navDesktop > a:hover { border-bottom-color: var(--text); }
+.navDesktop > a:not(.navAction):hover { border-bottom-color: var(--text); }
 
 .navAction {
+  background: var(--accent);
   border: 1px solid var(--accent);
-  color: var(--accent);
+  color: var(--bg);
   padding: 9px 16px;
   text-decoration: none;
 }
-.navAction:hover { background: var(--accent); color: var(--bg); }
+.navAction:hover { background: var(--text); border-color: var(--text); }
 
 /* Mobile menu is a details element, so it opens and closes without JavaScript. */
 .navMobile { display: none; }
@@ -69,6 +73,10 @@
 
 .navPanel {
   position: absolute;
+  /* Without this the panel resolves to its static position, which is below
+     the summary rather than below the header, and its opaque background
+     covers the bottom of the brand block. */
+  top: 100%;
   left: 0;
   right: 0;
   background: var(--bg);
@@ -86,6 +94,9 @@
 .navPanelAction { padding: 24px 20px; }
 .navPanelAction .navAction { display: block; text-align: center; padding: 14px 20px; }
 .navPanelSocial { padding: 0 20px 24px; }
+/* Standalone link rows carry padding so each target clears 24px.
+   Row gaps are trimmed by the same amount so the rhythm is unchanged. */
+.navPanelSocial a { padding-block: 6px; }
 
 /* ---- Hero ---- */
 .hero { padding-block: 96px 76px; }
@@ -136,7 +147,8 @@
 .socialLinks { display: flex; gap: 20px; font-size: var(--step-meta); }
 .socialLinks a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
 .socialLinks a:hover { color: var(--text); border-bottom-color: var(--text); }
-.heroSocial { margin-top: 28px; }
+.heroSocial { margin-top: 22px; }
+.heroSocial a { padding-block: 6px; }
 
 /* ---- About ---- */
 .aboutGrid {
@@ -163,7 +175,8 @@
   flex-direction: column;
   gap: 14px;
 }
-.contactDirect { display: flex; gap: 22px; font-size: var(--step-ui); padding: 6px 0 4px; flex-wrap: wrap; }
+.contactDirect { display: flex; gap: 22px; font-size: var(--step-ui); padding: 0; flex-wrap: wrap; }
+.contactDirect a { padding-block: 5px; }
 .contactDirect a { text-decoration: none; border-bottom: 1px solid var(--accent); }
 .contactDirect a:hover { color: var(--text); border-bottom-color: var(--text); }
 
@@ -250,7 +263,7 @@
 .siteFooter .brandName { font-size: 18px; }
 .siteFooter .brand { flex-direction: row; align-items: baseline; gap: 12px; }
 .footerNav { display: flex; align-items: center; gap: 22px; font-size: var(--step-label); flex-wrap: wrap; }
-.footerNav a { color: var(--muted); text-decoration: none; }
+.footerNav a { color: var(--muted); text-decoration: none; padding-block: 5px; }
 .footerNav a:hover { color: var(--text); }
 .footerNav .backToTop { color: var(--accent); border-bottom: 1px solid var(--accent); }
 .footerNav .backToTop:hover { color: var(--text); border-bottom-color: var(--text); }
@@ -266,7 +279,9 @@
 .caseStudyBody {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  /* Same base gap as a project card, so the shared spacing modifiers in
+     components.css produce the same rhythm on both pages. */
+  gap: 18px;
   padding-bottom: var(--section-y);
   max-width: calc(var(--col) + var(--gutter) * 2);
 }

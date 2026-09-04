@@ -76,7 +76,9 @@ export type Project = {
   nextStep: ProseSection;
   tools: string[];
   /** Long-form case study body for /projects/<slug>. Markdown. */
-  caseStudy: string;
+  /* Long-form write-up. Omit until there is one: the case study page
+     renders nothing rather than an empty "Overview" heading. */
+  caseStudy?: string;
   seoTitle: string;
   seoDescription: string;
   /** Lower sorts first. */

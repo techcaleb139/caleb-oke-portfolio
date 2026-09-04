@@ -77,10 +77,6 @@ const project: Project = {
   seoDescription:
     "A voice AI ordering prototype built with Vapi, n8n and Google Sheets, documented with what the test calls showed and what is not yet proven.",
 
-  caseStudy: `## Overview
-
-Full write-up to follow.
-`,
 };
 
 export default project;
