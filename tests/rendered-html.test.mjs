@@ -31,12 +31,25 @@ test("renders the projects section from the content directory", async () => {
   assert.ok(cards.length >= 2, "at least the two documented projects render");
 });
 
-test("renders the three offer cards from content", async () => {
+test("renders every offer card from content, in order", async () => {
+  const { offers } = await import("../src/content/offers.ts");
   const body = await renderedBody(path.join(distDir, "index.html"));
-  assert.equal((body.match(/<article class="offer"/g) ?? []).length, 3);
-  assert.match(body, /Workflow audit/);
-  assert.match(body, /Automation quick win/);
-  assert.match(body, /Care plan/);
+
+  assert.equal((body.match(/<article class="offer"/g) ?? []).length, offers.length);
+
+  // Titles appear in the order the content file lists them, because the
+  // order is the sequence a client moves through: talk, diagnose, build,
+  // maintain.
+  let cursor = 0;
+  for (const offer of offers) {
+    const at = body.indexOf(offer.title, cursor);
+    assert.ok(at > -1, `${offer.title} is rendered`);
+    cursor = at;
+  }
+
+  // A card without a limit line renders no empty rule.
+  const withoutLimit = offers.filter((o) => !o.limit).length;
+  assert.equal((body.match(/class="offerLimit"/g) ?? []).length, offers.length - withoutLimit);
 });
 
 test("the video thumbnail opens Loom in a new tab with rel=noopener", async () => {
@@ -138,7 +151,7 @@ test("the honeypot stays hidden from assistive technology and the tab order", as
 
 test("publishes complete search and social metadata", async () => {
   const html = await homepage();
-  assert.match(html, /rel="canonical" href="https:\/\/caleb-oke-portfolio\.vercel\.app\/"/);
+  assert.match(html, /rel="canonical" href="https:\/\/caleboke\.com\/"/);
   assert.match(html, /name="robots" content="index, follow/);
   assert.match(html, /property="og:title"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
@@ -338,5 +351,27 @@ test("no page links to an anchor it does not contain", async () => {
     const anchors = [...new Set([...html.matchAll(/href="#([^"]+)"/g)].map((m) => m[1]))];
     const dead = anchors.filter((a) => !ids.has(a));
     assert.deepEqual(dead, [], `${path.relative(distDir, page)} links to missing anchors: ${dead.join(", ")}`);
+  }
+});
+
+/* The canonical host is the product, not the deploy target. Declaring the
+   vercel.app URL as canonical tells search engines that caleboke.com is the
+   copy. This walks every built page and the sitemap. */
+test("no built page points search engines at the vercel.app host", async () => {
+  const files = [
+    path.join(distDir, "index.html"),
+    path.join(distDir, "sitemap.xml"),
+    path.join(distDir, "robots.txt"),
+  ];
+  for (const slug of await readdir(path.join(distDir, "projects"))) {
+    files.push(path.join(distDir, "projects", slug, "index.html"));
+  }
+
+  for (const file of files) {
+    const text = await readFile(file, "utf8");
+    assert.doesNotMatch(text, /vercel\.app/, `${path.relative(distDir, file)} still references the vercel.app host`);
+    if (file.endsWith(".html")) {
+      assert.match(text, /rel="canonical" href="https:\/\/caleboke\.com/, `${path.relative(distDir, file)} declares a caleboke.com canonical`);
+    }
   }
 });

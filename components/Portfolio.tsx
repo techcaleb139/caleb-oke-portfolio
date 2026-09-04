@@ -3,7 +3,7 @@ import ProjectCard from "./ProjectCard.tsx";
 import SiteFooter from "./SiteFooter.tsx";
 import SiteHeader from "./SiteHeader.tsx";
 import { allProjects } from "../src/content/projects/index.ts";
-import { offers, offersClosing, offersHeading, offersIntro } from "../src/content/offers.ts";
+import { offers, offersClosing, offersHeading, offersIntro, offersToolCosts } from "../src/content/offers.ts";
 import {
   about,
   contact,
@@ -51,12 +51,13 @@ export default function Portfolio() {
                   <h3>{offer.title}</h3>
                   <p className="offerPrice">{offer.price}</p>
                   <p className="offerBody">{offer.body}</p>
-                  <p className="offerLimit">{offer.limit}</p>
+                  {offer.limit ? <p className="offerLimit">{offer.limit}</p> : null}
                 </article>
               ))}
             </div>
 
             <p className="offersClosing">{offersClosing}</p>
+            <p className="offersToolCosts">{offersToolCosts}</p>
           </div>
         </section>
 

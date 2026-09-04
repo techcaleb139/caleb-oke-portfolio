@@ -16,11 +16,15 @@
 }
 
 /* ---- Offers ---- */
+/* Two by two, not four across. At --col with a 20px gap, four columns leave
+   each card 158px of content, which wraps the longest body to 15 lines at 19
+   characters a line. Two columns give 388px and 47 characters. The order is a
+   sequence, so it reads left to right, top to bottom. */
 .offerGrid {
   max-width: var(--col);
   margin: 40px auto 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   align-items: stretch;
 }
@@ -43,6 +47,13 @@
   color: var(--muted);
 }
 .offersClosing { max-width: var(--col); margin: 32px auto 0; }
+.offersToolCosts {
+  max-width: var(--col);
+  margin: 16px auto 0;
+  font-size: var(--step-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted);
+}
 
 /* ---- Projects ---- */
 .projectList { display: flex; flex-direction: column; gap: 28px; margin-top: 44px; }

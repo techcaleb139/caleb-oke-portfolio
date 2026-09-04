@@ -8,7 +8,7 @@ import App from './src/App.tsx';
 import { allProjects } from './src/content/projects/index.ts';
 import { generateImagesPlugin } from './scripts/generate-images.ts';
 
-const siteUrl = 'https://caleb-oke-portfolio.vercel.app';
+const siteUrl = 'https://caleboke.com';
 const NL = String.fromCharCode(10);
 
 function sitemapXml(): string {
