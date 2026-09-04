@@ -46,7 +46,13 @@ export const projectsClosing =
 export const about = {
   heading: "About me",
   portrait: {
+    /* The PNG stays the fallback. The webp files are the same 4:5 portrait
+       re-encoded at 480, 800 and 1122 wide, already in the repo. The slot is
+       320px on desktop, so a browser fetches roughly 13-29KB instead of the
+       PNG's 2MB. */
     src: "/images/caleb-portrait.png",
+    webpSrcSet: "/caleb-portrait-480.webp 480w, /caleb-portrait-800.webp 800w, /caleb-portrait.webp 1122w",
+    sizes: "(max-width: 720px) calc(100vw - 40px), 320px",
     alt: "Caleb Oke, photographed from the shoulders up against a plain background",
     width: 1122,
     height: 1402,
@@ -73,6 +79,10 @@ export const contact = {
   submit: "Send",
   sending: "Sending...",
   note: "I reply within two working days.",
+  /* Shown only when JavaScript is off, in place of the form. Without it the
+     form would GET the page back with the message in the URL, which looks
+     like it sent and does not. */
+  noScript: "Sending this form needs JavaScript. Use the email or WhatsApp links above and it reaches me the same way.",
   /* Only the contact message appears in the reference design. The other two
      are written to match its register: say what to add, and why. */
   errors: {

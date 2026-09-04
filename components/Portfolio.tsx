@@ -86,14 +86,17 @@ export default function Portfolio() {
         <section className="section" id="about">
           <div className="shell aboutGrid">
             <div className="mediaFrame" data-ratio="portrait">
-              <img
-                src={about.portrait.src}
-                alt={about.portrait.alt}
-                width={about.portrait.width}
-                height={about.portrait.height}
-                loading="lazy"
-                decoding="async"
-              />
+              <picture>
+                <source type="image/webp" srcSet={about.portrait.webpSrcSet} sizes={about.portrait.sizes} />
+                <img
+                  src={about.portrait.src}
+                  alt={about.portrait.alt}
+                  width={about.portrait.width}
+                  height={about.portrait.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
             </div>
 
             <div className="aboutBody">
@@ -122,6 +125,14 @@ export default function Portfolio() {
               <a href={`https://wa.me/${profile.whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
               <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
             </div>
+
+            {/* With JavaScript off the form cannot submit, and leaving it on
+                screen would let someone fill it in and lose the message to a
+                GET reload. Hide it and point at the direct links instead. */}
+            <noscript>
+              <style>{".contactForm{display:none}"}</style>
+              <p className="noScriptNote">{contact.noScript}</p>
+            </noscript>
 
             <ContactForm />
           </div>

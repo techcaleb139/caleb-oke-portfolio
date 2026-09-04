@@ -196,3 +196,7 @@
   .funnelStage:first-child { border-top: 0; }
   .funnelLabel { min-height: 0; }
 }
+
+/* A <picture> is an inline wrapper, so the absolutely positioned img needs
+   the picture itself to fill the frame. */
+.mediaFrame picture { display: contents; }

@@ -298,3 +298,11 @@
   .aboutGrid { grid-template-columns: 1fr; gap: 24px; }
   .formActions button { width: 100%; padding: 14px 28px; }
 }
+
+.noScriptNote {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+  margin-top: 8px;
+  font-size: var(--step-ui);
+  color: var(--muted);
+}
