@@ -191,6 +191,26 @@
 }
 .field textarea { resize: vertical; line-height: var(--leading-body); }
 
+/* Error state, from the reference: the field boundary darkens to --text and
+   the message sits under the field behind a 3px rule. No red, because the
+   palette has five colours and none of them is red. */
+.field [data-invalid] { border-color: var(--text); }
+.fieldError {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--step-meta);
+  line-height: var(--leading-meta);
+  color: var(--text);
+}
+.fieldError::before {
+  content: "";
+  width: 3px;
+  align-self: stretch;
+  background: var(--text);
+  flex: none;
+}
+
 .formActions { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
 .formActions button {
   background: var(--accent);

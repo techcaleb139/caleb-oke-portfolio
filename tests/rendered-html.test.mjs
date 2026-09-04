@@ -114,6 +114,28 @@ test("every label points at a field that exists", async () => {
   }
 });
 
+test("the contact form uses visible labels, not placeholder-only labels", async () => {
+  const body = await renderedBody(path.join(distDir, "index.html"));
+  const form = body.match(/<form class="contactForm"[\s\S]*?<\/form>/)?.[0] ?? "";
+  assert.ok(form, "the contact form renders server-side");
+
+  const labels = [...form.matchAll(/<label for="([^"]+)">([^<]+)<\/label>/g)];
+  assert.equal(labels.length, 3, "three visible labels");
+  for (const [, , text] of labels) assert.ok(text.trim().length > 0, "the label has visible text");
+
+  // A placeholder is not a label.
+  const visible = form.replace(/<input class="honeypot"[^>]*>/, "");
+  assert.doesNotMatch(visible, /\bplaceholder=/);
+});
+
+test("the honeypot stays hidden from assistive technology and the tab order", async () => {
+  const body = await renderedBody(path.join(distDir, "index.html"));
+  const honeypot = body.match(/<input class="honeypot"[^>]*>/)?.[0] ?? "";
+  assert.ok(honeypot, "the honeypot renders");
+  assert.match(honeypot, /aria-hidden="true"/);
+  assert.match(honeypot, /tabindex="-1"/i);
+});
+
 test("publishes complete search and social metadata", async () => {
   const html = await homepage();
   assert.match(html, /rel="canonical" href="https:\/\/caleb-oke-portfolio\.vercel\.app\/"/);

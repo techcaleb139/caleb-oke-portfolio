@@ -80,7 +80,8 @@ test("the form posts to the unchanged route path", () => {
 
 test("the honeypot field is still rendered and still short-circuits submit", () => {
   assert.match(contactForm, /name="website"/);
-  assert.match(contactForm, /data\.get\("website"\)/);
+  // A filled decoy returns before anything is posted.
+  assert.match(contactForm, /get\("website"\)\) return;/);
 });
 
 test("the form uses the three finalized visible labels", () => {
@@ -88,3 +89,31 @@ test("the form uses the three finalized visible labels", () => {
   assert.match(contactForm, /contact\.labels\.contact/);
   assert.match(contactForm, /contact\.labels\.workflow/);
 });
+
+test("submit is disabled while a request is in flight", () => {
+  // Guards against a double tap creating two rows.
+  assert.match(contactForm, /disabled=\{state === "submitting"\}/);
+  assert.match(contactForm, /if \(state === "submitting" \|\| state === "success"\) return;/);
+});
+
+test("each error is linked to its field with aria-describedby", () => {
+  assert.match(contactForm, /"aria-describedby": error \? errorId : undefined/);
+  assert.match(contactForm, /"aria-invalid": error \? true : undefined/);
+  assert.match(contactForm, /const errorId = `\$\{id\}-error`/);
+  assert.match(contactForm, /<span className="fieldError" id=\{errorId\}>/);
+});
+
+test("success replaces the form instead of showing a toast", () => {
+  assert.match(contactForm, /if \(state === "success"\) \{[\s\S]*?return \([\s\S]*?formSuccess/);
+  assert.doesNotMatch(contactForm, /toast/i);
+});
+
+test("all three fields are validated before anything is posted", () => {
+  const validate = contactForm.match(/function validate\([\s\S]*?\n\}/);
+  assert.ok(validate, "a validate function exists");
+  for (const field of ["name", "contact", "workflow"]) {
+    assert.match(validate[0], new RegExp(`errors\\.${field}`), `${field} is validated`);
+  }
+  assert.match(contactForm, /if \(firstInvalid\) \{[\s\S]*?focus\(\);\s*return;/);
+});
+

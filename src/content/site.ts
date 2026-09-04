@@ -29,7 +29,7 @@ export const hero = {
   primary: { label: "See what I have built", href: "#work" },
   secondary: { label: "Book a workflow audit", href: "#contact" },
   stats: [
-    "2 systems built and tested",
+    "Every build documented, including what failed",
     "124 job listings filtered to 5 alerts in one recorded run",
     "Computer Science student",
   ],
@@ -71,7 +71,16 @@ export const contact = {
     workflow: "What would you like to automate?",
   },
   submit: "Send",
+  sending: "Sending...",
   note: "I reply within two working days.",
+  /* Only the contact message appears in the reference design. The other two
+     are written to match its register: say what to add, and why. */
+  errors: {
+    name: "Add your name so I know who I am replying to.",
+    contact: "Add an email address or a WhatsApp number so I can reply.",
+    workflow: "Describe the task you would like automated.",
+    failed: "That did not send. Try again, or use WhatsApp or email above.",
+  },
   success: {
     heading: "Thanks, that has reached me.",
     body: "I reply within two working days. If it is urgent, WhatsApp is faster.",

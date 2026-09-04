@@ -1,52 +1,100 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { contact, profile } from "../src/content/site.ts";
 
+type Field = "name" | "contact" | "workflow";
+type Errors = Partial<Record<Field, string>>;
 type State = "idle" | "submitting" | "success" | "error";
 
-/* Phase 3 builds the visible form. Phase 4 hardens it: inline errors wired
-   with aria-describedby, the success replacement, and the payload spec. */
+/* The three fields the visitor fills in. The DOM ids differ from the field
+   names because the page already has a section with id="contact". */
+const fieldIds: Record<Field, string> = {
+  name: "name",
+  contact: "reply-contact",
+  workflow: "workflow",
+};
+
+const looksLikeEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
+const looksLikePhone = (value: string) => (value.match(/\d/g) ?? []).length >= 7;
+
+function validate(values: Record<Field, string>): Errors {
+  const errors: Errors = {};
+  if (!values.name.trim()) errors.name = contact.errors.name;
+
+  const reply = values.contact.trim();
+  if (!reply || !(looksLikeEmail(reply) || looksLikePhone(reply))) {
+    errors.contact = contact.errors.contact;
+  }
+
+  if (!values.workflow.trim()) errors.workflow = contact.errors.workflow;
+  return errors;
+}
+
 export default function ContactForm() {
+  const [values, setValues] = useState<Record<Field, string>>({ name: "", contact: "", workflow: "" });
+  const [errors, setErrors] = useState<Errors>({});
+  const [submitted, setSubmitted] = useState(false);
   const [state, setState] = useState<State>("idle");
-  const [message, setMessage] = useState("");
+  const successRef = useRef<HTMLParagraphElement>(null);
+
+  // Move focus to the confirmation so the change is announced rather than
+  // silently swapping the form out from under a screen reader.
+  useEffect(() => {
+    if (state === "success") successRef.current?.focus();
+  }, [state]);
+
+  function update(field: Field, value: string) {
+    const next = { ...values, [field]: value };
+    setValues(next);
+    // Only re-validate live once the visitor has tried to send, so errors
+    // do not appear while they are still typing the first time.
+    if (submitted) setErrors(validate(next));
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (state === "submitting" || state === "success") return;
 
-    const data = new FormData(event.currentTarget);
-    if (data.get("website")) return;
+    const form = event.currentTarget;
+    if (new FormData(form).get("website")) return;
+
+    setSubmitted(true);
+    const found = validate(values);
+    setErrors(found);
+
+    const firstInvalid = (Object.keys(fieldIds) as Field[]).find((field) => found[field]);
+    if (firstInvalid) {
+      form.ownerDocument.getElementById(fieldIds[firstInvalid])?.focus();
+      return;
+    }
 
     setState("submitting");
-    setMessage("");
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: String(data.get("name") ?? "").trim(),
-          contact: String(data.get("contact") ?? "").trim(),
+          name: values.name.trim(),
+          contact: values.contact.trim(),
           business: "",
-          workflow: String(data.get("workflow") ?? "").trim(),
+          workflow: values.workflow.trim(),
           outcome: "",
           website: "",
         }),
       });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(typeof result.error === "string" ? result.error : "The message could not be sent.");
-      }
+      if (!response.ok) throw new Error("request failed");
       setState("success");
-    } catch (error) {
+    } catch {
       setState("error");
-      setMessage(error instanceof Error ? error.message : "The message could not be sent.");
     }
   }
 
   if (state === "success") {
     return (
       <div className="formSuccess">
-        <p className="successHeading">{contact.success.heading}</p>
+        <p className="successHeading" tabIndex={-1} ref={successRef}>
+          {contact.success.heading}
+        </p>
         <p>{contact.success.body}</p>
         <div className="successLinks">
           <a href={`https://wa.me/${profile.whatsapp}`} target="_blank" rel="noopener noreferrer">WhatsApp</a>
@@ -58,31 +106,59 @@ export default function ContactForm() {
 
   return (
     <form className="contactForm" onSubmit={onSubmit} noValidate>
+      {/* Spam protection, unchanged: this decoy pairs with the same-origin
+          check in api/contact.ts. A bot that fills it gets a silent 200. */}
       <input className="honeypot" type="text" name="website" autoComplete="off" tabIndex={-1} aria-hidden="true" />
 
-      <p className="field">
-        <label htmlFor="name">{contact.labels.name}</label>
-        <input id="name" name="name" type="text" autoComplete="name" required />
-      </p>
-
-      <p className="field">
-        <label htmlFor="reply-contact">{contact.labels.contact}</label>
-        <input id="reply-contact" name="contact" type="text" autoComplete="email" required />
-      </p>
-
-      <p className="field">
-        <label htmlFor="workflow">{contact.labels.workflow}</label>
-        <textarea id="workflow" name="workflow" rows={4} required />
-      </p>
+      <TextField field="name" label={contact.labels.name} value={values.name} error={errors.name} onChange={update} autoComplete="name" />
+      <TextField field="contact" label={contact.labels.contact} value={values.contact} error={errors.contact} onChange={update} autoComplete="email" />
+      <TextField field="workflow" label={contact.labels.workflow} value={values.workflow} error={errors.workflow} onChange={update} multiline />
 
       <div className="formActions">
         <button type="submit" disabled={state === "submitting"}>
-          {state === "submitting" ? "Sending..." : contact.submit}
+          {state === "submitting" ? contact.sending : contact.submit}
         </button>
         <span className="formNote">{contact.note}</span>
       </div>
 
-      <p className="formStatus" role="status">{message}</p>
+      <p className="formStatus" role="status">
+        {state === "error" ? contact.errors.failed : ""}
+      </p>
     </form>
+  );
+}
+
+type TextFieldProps = {
+  field: Field;
+  label: string;
+  value: string;
+  error?: string;
+  onChange: (field: Field, value: string) => void;
+  multiline?: boolean;
+  autoComplete?: string;
+};
+
+function TextField({ field, label, value, error, onChange, multiline, autoComplete }: TextFieldProps) {
+  const id = fieldIds[field];
+  const errorId = `${id}-error`;
+
+  const shared = {
+    id,
+    name: field,
+    value,
+    autoComplete,
+    "aria-invalid": error ? true : undefined,
+    "aria-describedby": error ? errorId : undefined,
+    onChange: (event: { target: { value: string } }) => onChange(field, event.target.value),
+  };
+
+  return (
+    <p className="field">
+      <label htmlFor={id}>{label}</label>
+      {multiline
+        ? <textarea {...shared} rows={4} data-invalid={error ? "" : undefined} />
+        : <input {...shared} type="text" data-invalid={error ? "" : undefined} />}
+      {error ? <span className="fieldError" id={errorId}>{error}</span> : null}
+    </p>
   );
 }
