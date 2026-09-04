@@ -140,23 +140,14 @@
 }
 .buttonText:hover { color: var(--text); border-bottom-color: var(--text); }
 
-.heroStats {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-.heroStats li { font-size: var(--step-meta); color: var(--muted); }
-.heroStats li + li { border-left: 1px solid var(--border); padding-left: 18px; }
+/* One muted line under the actions, not a strip. The hairline dividers went
+   with the other two stats: they were structure for content that no longer
+   needs structuring. */
+.heroProof { font-size: var(--step-meta); color: var(--muted); margin-top: 40px; }
 
 .socialLinks { display: flex; gap: 20px; font-size: var(--step-meta); }
 .socialLinks a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
 .socialLinks a:hover { color: var(--text); border-bottom-color: var(--text); }
-.heroSocial { margin-top: 22px; }
-.heroSocial a { padding-block: 6px; }
 
 /* ---- About ---- */
 .aboutGrid {
@@ -242,6 +233,9 @@
   cursor: pointer;
 }
 .formActions button:hover:not(:disabled) { background: var(--text); border-color: var(--text); }
+/* Feedback: the one moment a visitor commits to something. */
+.formActions button { transition: transform 140ms ease-out; }
+.formActions button:active:not(:disabled) { transform: scale(0.98); }
 .formActions button:disabled { cursor: not-allowed; opacity: 0.65; }
 .formNote, .formStatus { font-size: var(--step-meta); color: var(--muted); max-width: none; }
 .formStatus:empty { display: none; }
@@ -253,6 +247,19 @@
   flex-direction: column;
   gap: 10px;
   margin-top: 8px;
+
+  /* Preventing a jarring change: the form is replaced by this block with no
+     bridge. @starting-style animates the entry with no JavaScript, and a
+     browser without it simply renders the resting state. */
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity 240ms ease-out, translate 240ms ease-out;
+}
+@starting-style {
+  .formSuccess {
+    opacity: 0;
+    translate: 0 8px;
+  }
 }
 .successHeading { font-family: var(--font-display); font-weight: var(--weight-heading); letter-spacing: var(--tracking-heading); font-size: var(--step-card); max-width: none; }
 .successLinks { display: flex; gap: 20px; font-size: var(--step-ui); padding-top: 6px; }
@@ -311,16 +318,8 @@
   .heroActions { flex-direction: column; align-items: stretch; gap: 16px; margin-top: 28px; }
   .buttonPrimary { text-align: center; padding: 14px 22px; }
   .buttonText { align-self: flex-start; }
-  .heroStats {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-    border-top: 1px solid var(--border);
-    padding-top: 18px;
-    margin-top: 24px;
-  }
-  .heroStats li + li { border-left: 0; padding-left: 0; }
-  .heroSocial { margin-top: 6px; }
+  /* The rule above it does the separating a strip used to need. */
+  .heroProof { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 24px; }
 
   .aboutGrid { grid-template-columns: 1fr; gap: 24px; }
   .formActions button { width: 100%; padding: 14px 28px; }

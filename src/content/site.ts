@@ -31,11 +31,11 @@ export const hero = {
   lead: "Forms, spreadsheets, APIs and voice tools, connected so information reaches the right place without anyone retyping it. Every project below shows what I built, what it measured, and what it still cannot do.",
   primary: { label: "See what I have built", href: "/#work" },
   secondary: { label: "Book a workflow audit", href: "/#contact" },
-  stats: [
-    "Every build documented, including what failed",
-    "124 job listings filtered to 5 alerts in one recorded run",
-    "Computer Science student",
-  ],
+  /* One line, not a strip. "Every build documented" restated the lead
+     paragraph two lines above it; "Computer Science student" is a credential
+     sitting beside a measured result, and About already says it. What is left
+     is the only measured result on the page. */
+  proof: "124 job listings filtered to 5 alerts in one recorded run",
 };
 
 export const projectsHeading = "What I have built";

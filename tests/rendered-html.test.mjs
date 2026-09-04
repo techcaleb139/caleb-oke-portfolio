@@ -288,7 +288,8 @@ test("no page ships a heading with no content behind it", async () => {
    inline exception to WCAG 2.5.8. Each was 17-19px tall before this padding. */
 test("standalone link rows clear the 24px target size", async () => {
   const css = (await homepage()).match(/<style>([\s\S]*?)<\/style>/)?.[1] ?? "";
-  const rows = [".navPanelSocial a", ".heroSocial a", ".contactDirect a", ".footerNav a", ".projectFoot a"];
+  // .heroSocial went with the hero thinning; the row no longer exists.
+  const rows = [".navPanelSocial a", ".contactDirect a", ".footerNav a", ".projectFoot a"];
 
   // Split into rules rather than building a regex per selector, so the
   // selector strings stay literal and need no escaping.

@@ -1,7 +1,7 @@
 import ContactForm from "./ContactForm.tsx";
 import ProjectCard from "./ProjectCard.tsx";
 import SiteFooter from "./SiteFooter.tsx";
-import SiteHeader, { SocialLinks } from "./SiteHeader.tsx";
+import SiteHeader from "./SiteHeader.tsx";
 import { allProjects } from "../src/content/projects/index.ts";
 import { offers, offersClosing, offersHeading, offersIntro } from "../src/content/offers.ts";
 import {
@@ -33,11 +33,7 @@ export default function Portfolio() {
               <a className="buttonText" href={hero.secondary.href}>{hero.secondary.label}</a>
             </div>
 
-            <ul className="heroStats">
-              {hero.stats.map((stat) => <li key={stat}>{stat}</li>)}
-            </ul>
-
-            <SocialLinks className="heroSocial" />
+            <p className="heroProof">{hero.proof}</p>
           </div>
         </section>
 

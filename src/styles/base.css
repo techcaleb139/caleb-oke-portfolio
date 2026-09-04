@@ -2,7 +2,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* In-page nav links jumped. The reduced-motion block below already resets
+     this to auto. */
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
