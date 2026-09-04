@@ -117,29 +117,39 @@ The latin subset is preloaded and every face is declared `font-display: swap`.
 Base body text is **17px / 1.6**, with prose capped at **66ch** (`--measure`).
 The 66ch cap comes from the reference; the original brief said roughly 68.
 
-### One known weak pair
+### The h2 / h3 pair
 
-`h2` at 40px and a project `h3` at 34px are only a 1.18 ratio apart on
-desktop, at the same weight and in the same family. Every other adjacent pair
-is 1.5 or wider. Context carries it — a project title sits inside a bordered
-card under a status badge — but if the two ever need separating, drop
-`--step-project` to 30px for a 1.33 ratio. At 390px the pair is already fine
-at 1.25.
-
-The full scale lives in `src/styles/tokens.css` with a mobile override at
-`max-width: 720px`. Headings run `60 / 40 / 34 / 22` on desktop and
-`38 / 30 / 24 / 19` on mobile.
+`--step-project` was 34px against a 40px `h2`, a 1.18 ratio at the same weight
+in the same family, while every other adjacent pair was 1.5 or wider. Under
+Instrument Serif the stroke contrast did some of the separating; a single
+grotesque does not. It is now **30px**, a 1.33 ratio. At 390px the pair was
+already fine at 1.25 and is unchanged.
 
 ## Layout
 
+Width varies by content type. **Prose is capped by `--measure`, not by a
+container**, so widening a section never widens a line of text. That is the
+whole point of the scale: the page stops being a ribbon on a wide screen
+because the grids and screenshots grow, not because the reading does.
+
+| Token | Value | Holds |
+| --- | --- | --- |
+| `--measure` | 66ch | every paragraph, everywhere |
+| `--w-prose` | 640px | contact form column |
+| `--w-column` | 900px | about: a 320px portrait beside prose |
+| `--w-wide` | 1240px | section intros, offer grid, project cards, case study body |
+| `--w-page` | 1440px | `.shell`, so header and footer bars sit at the page edges |
+| `--col-hero` | 920px | hero headline only |
+
 | Token | Desktop | ≤720px |
 | --- | --- | --- |
-| `--page` | 1120px | — |
-| `--col` | 900px | — |
-| `--col-narrow` | 640px | — |
 | `--gutter` | 64px | 20px |
 | `--section-y` | 80px | 40px |
 | `--card-pad` | 40px | 20px |
+
+`.shell` is `width: min(var(--w-page), 100%)` with `padding-inline:
+var(--gutter)` and `box-sizing: border-box`, so the usable width inside it is
+1312px. A project card caps at 1240 within that, leaving a 36px inset.
 
 ## Image slots and the width maths
 
@@ -151,25 +161,31 @@ still render, they will just be the wrong size, and nothing will fail.
 The derivation, with `box-sizing: border-box` throughout:
 
 ```
-card inner width  = --col − 2 × --card-pad   = 900 − 80  = 820px   (desktop, capped)
-                  = viewport − 2×64 − 2×40   = vw − 208            (720–1028px band)
-                  = viewport − 2×20 − 2×20   = vw − 80             (≤720px)
+card inner width  = --w-wide − 2 × --card-pad = 1240 − 80 = 1160px  (desktop, capped)
+                  = viewport − 2×64 − 2×40    = vw − 208            (720–1368px band)
+                  = viewport − 2×20 − 2×20    = vw − 80             (≤720px)
 ```
 
-**820px is the widest any full-width slot ever renders.** Every ladder is built
-from that number.
+**1160px is the widest any full-width slot ever renders**, and a card reaches
+that cap at a 1368px viewport. Every ladder is built from that number.
+
+This has already rotted once. When `--col` 900 became `--w-wide` 1240 the
+ladders were silently wrong — the images still rendered, just at the wrong
+size, and nothing failed. Changing `--w-wide`, `--gutter` or `--card-pad`
+means recomputing this table.
 
 | Slot | Rendered width | Widths generated |
 | --- | --- | --- |
-| Video thumbnail, order sheet, job pipeline canvas | 820px | 400, 820, 1232, 1640 |
-| Restaurant canvas (`2.37fr` of the evidence grid) | 560px desktop, 640px mobile | 320, 640, 960, 1280 |
+| Video thumbnail, order sheet, job pipeline canvas | 1160px | 580, 1160, 1740, native |
+| Restaurant canvas (`2.37fr` of the evidence grid) | 799px desktop, 640px mobile | 400, 800, 1200, 1600 |
 | Telegram alert (pinned by `maxWidth: 270px`) | 270px | 270, 591 |
-| Vapi transcript | 236px slot × 3.7 zoom = 874px drawn | 960, 1919 |
+| Vapi transcript | 337px slot × 3.7 zoom = 1247px drawn | 1280, 1919 |
 
 Two notes on the last two rows:
 
-- The **restaurant canvas gets wider on mobile**, not narrower: the evidence
-  grid collapses to one column below 720px, so 640 is the worst case, not 560.
+- The **restaurant canvas** no longer gets wider on mobile. At `--col` 900 the
+  desktop column was 560px and the collapsed mobile column 640px, so mobile
+  was the worst case. At 1240 the desktop column is 799px and desktop wins.
 - The **transcript** renders as a zoomed CSS background, which cannot use
   `sizes`. It uses `image-set()` at 1x and 2x behind an `@supports` guard, with
   the original PNG as the declared fallback. It is the only image where mobile
@@ -287,8 +303,11 @@ the footnote.
   the honest-limitation line pins to the bottom of every card and the three
   form one line regardless of body length
 
-Three across on desktop, one column below 720px. The grid takes `--col`, so
-the cards are the widest thing in the section.
+Four across on desktop at `--w-wide`, one column below 720px. At the old
+`--col` of 900px four columns left each card 158px of content and wrapped the
+longest body to fifteen lines at nineteen characters; at 1240px it is 243px
+and ten lines. The order is a sequence — talk, diagnose, build, maintain — so
+it reads left to right.
 
 ## Constraints
 

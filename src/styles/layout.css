@@ -151,7 +151,7 @@
 
 /* ---- About ---- */
 .aboutGrid {
-  max-width: calc(var(--col) + var(--gutter) * 2);
+  max-width: calc(var(--w-column) + var(--gutter) * 2);
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 48px;
@@ -169,7 +169,7 @@
 
 /* ---- Contact ---- */
 .contactInner {
-  max-width: calc(var(--col-narrow) + var(--gutter) * 2);
+  max-width: calc(var(--w-prose) + var(--gutter) * 2);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -285,6 +285,7 @@
 
 /* ---- Case study page ---- */
 .caseStudyHeader {
+  max-width: calc(var(--w-wide) + var(--gutter) * 2);
   padding-block: 48px 32px;
   display: flex;
   flex-direction: column;
@@ -298,7 +299,7 @@
      components.css produce the same rhythm on both pages. */
   gap: 18px;
   padding-bottom: var(--section-y);
-  max-width: calc(var(--col) + var(--gutter) * 2);
+  max-width: calc(var(--w-wide) + var(--gutter) * 2);
 }
 .caseProse { display: flex; flex-direction: column; gap: 16px; }
 .caseProse h2 { font-size: var(--step-sub); }

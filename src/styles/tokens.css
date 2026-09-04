@@ -23,7 +23,7 @@
   /* ---- Type scale, desktop. Mobile values in base.css. ---- */
   --step-hero: 64px;      /* h1 */
   --step-section: 40px;   /* h2 */
-  --step-project: 34px;   /* h3, project title */
+  --step-project: 30px;   /* h3, project title */
   --step-figure: 44px;    /* funnel counts */
   --step-card: 24px;      /* h3, offer card title */
   --step-sub: 22px;       /* h4, project sub-heading */
@@ -49,12 +49,19 @@
   --tracking-heading: -0.025em;
 
   /* ---- Layout ---- */
+  /* Prose is capped by measure, not by a container, so widening a section
+     never widens a line of text. These two do not change. */
   --measure: 66ch;        /* prose cap, per the reference */
   --measure-hero: 62ch;   /* hero lead paragraph */
-  --col: 900px;           /* main content column */
-  --col-narrow: 640px;    /* contact column */
   --col-hero: 920px;      /* hero headline */
-  --page: 1120px;         /* full page width */
+
+  /* Width varies by content type. Reading measure stays put; grids and
+     screenshots are what grow, so the page stops being a ribbon on a wide
+     screen without a single line of prose getting longer. */
+  --w-prose: 640px;       /* contact form column */
+  --w-column: 900px;      /* about: portrait plus prose */
+  --w-wide: 1240px;       /* section intros, offer grid, project cards */
+  --w-page: 1440px;       /* header and footer bars */
 
   --gutter: 64px;         /* horizontal page padding, desktop */
   --section-y: 80px;      /* vertical section padding, desktop */

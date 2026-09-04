@@ -10,14 +10,15 @@
 
      page gutter   64px desktop, 20px at <=720px      (--gutter)
      card padding  40px desktop, 20px at <=720px      (--card-pad)
-     card cap      900px                              (--col)
+     card cap      1240px                             (--w-wide)
 
    A project card's inner content width is therefore:
-     desktop, capped   900 - 2*40                    = 820px
-     720-1028px band   viewport - 2*64 - 2*40        = vw - 208
+     desktop, capped   1240 - 2*40                   = 1160px
+     720-1368px band   viewport - 2*64 - 2*40        = vw - 208
      <=720px           viewport - 2*20 - 2*20        = vw - 80
 
-   820px is the widest any full-width slot ever renders. */
+   1160px is the widest any full-width slot ever renders, and the card
+   reaches that cap at a 1368px viewport. */
 
 export type ImageRecipe = {
   widths: number[];
@@ -30,13 +31,12 @@ export type ImageRecipe = {
   background?: boolean;
 };
 
-/* Full-width slot inside a project card: 820px at the desktop cap.
-   0.5x / 1x / 1.5x / 2x of that. The 400 covers phones at 1x, 820 covers
-   both a large phone at 1x and the desktop slot, 1232 and 1640 cover
-   high-density screens. */
+/* Full-width slot inside a project card: 1160px at the desktop cap.
+   0.5x / 1x / 1.5x / 2x of that, with the top rung clamped to the source's
+   native width by the build step rather than upscaled. */
 const FULL_WIDTH: ImageRecipe = {
-  widths: [400, 820, 1232, 1640],
-  sizes: "(max-width: 720px) calc(100vw - 80px), (max-width: 1028px) calc(100vw - 208px), 820px",
+  widths: [580, 1160, 1740, 2320],
+  sizes: "(max-width: 720px) calc(100vw - 80px), (max-width: 1368px) calc(100vw - 208px), 1160px",
 };
 
 export const imageRecipes: Record<string, ImageRecipe> = {
@@ -49,13 +49,12 @@ export const imageRecipes: Record<string, ImageRecipe> = {
   /* Sole evidence slot on the job pipeline, so it fills the card width. */
   "n8n-job-pipeline-canvas.png": FULL_WIDTH,
 
-  /* Left column of the two-slot evidence grid: (820 - 24 gap) * 2.37/3.37
-     = 560px on desktop. Below 720px the grid collapses to one column and it
-     grows to the full inner width, up to 640px. 640 is the worst case, so
-     the ladder is 0.5x / 1x / 1.5x / 2x of that. */
+  /* Left column of the two-slot evidence grid: (1160 - 24 gap) * 2.37/3.37
+     = 799px on desktop. Below 720px the grid collapses to one column, where
+     it reaches at most 640px, so desktop is now the worst case. */
   "n8n-restaurant-canvas.png": {
-    widths: [320, 640, 960, 1280],
-    sizes: "(max-width: 720px) calc(100vw - 80px), 560px",
+    widths: [400, 800, 1200, 1600],
+    sizes: "(max-width: 720px) calc(100vw - 80px), 800px",
   },
 
   /* Telegram alert. Pinned to 270px by maxWidth on the slot itself, so it
@@ -68,11 +67,12 @@ export const imageRecipes: Record<string, ImageRecipe> = {
   },
 
   /* Vapi transcript. Rendered as a background at background-size: 370%, so
-     the drawn image is 3.7x the slot width: 236px slot * 3.7 = 874px on
-     desktop. A CSS background cannot use sizes, so these two widths are
-     offered to image-set() as 1x and 2x and picked by pixel ratio. */
+     the drawn image is 3.7x the slot width: a 337px slot draws at 1247px on
+     desktop, and a 295px slot on a 375px phone draws at 1092px. A CSS
+     background cannot use sizes, so these two widths go to image-set() as 1x
+     and 2x and are picked by pixel ratio. */
   "vapi-transcript.png": {
-    widths: [960, 1919],
+    widths: [1280, 1919],
     sizes: "",
     background: true,
   },

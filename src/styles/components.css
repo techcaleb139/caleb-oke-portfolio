@@ -1,10 +1,10 @@
 /* Sections rendered from the content layer.
    Values come from design-reference/homepage-full.html. */
 
-.shell { width: min(var(--page), 100%); margin-inline: auto; padding-inline: var(--gutter); }
+.shell { width: min(var(--w-page), 100%); margin-inline: auto; padding-inline: var(--gutter); }
 .section { padding-block: var(--section-y); border-top: 1px solid var(--border); }
 
-.sectionIntro { max-width: var(--col); margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
+.sectionIntro { max-width: var(--w-wide); margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
 
 /* ---- Status badge. One of the four places --accent is allowed. ---- */
 .badge {
@@ -16,15 +16,15 @@
 }
 
 /* ---- Offers ---- */
-/* Two by two, not four across. At --col with a 20px gap, four columns leave
-   each card 158px of content, which wraps the longest body to 15 lines at 19
-   characters a line. Two columns give 388px and 47 characters. The order is a
-   sequence, so it reads left to right, top to bottom. */
+/* Four across at --w-wide. At the old --col of 900px this left each card
+   158px of content and wrapped the longest body to fifteen lines; at 1240px
+   it is 243px and ten lines. The order is a sequence: talk, diagnose, build,
+   maintain. */
 .offerGrid {
-  max-width: var(--col);
+  max-width: var(--w-wide);
   margin: 40px auto 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   align-items: stretch;
 }
@@ -46,9 +46,9 @@
   line-height: var(--leading-meta);
   color: var(--muted);
 }
-.offersClosing { max-width: var(--col); margin: 32px auto 0; }
+.offersClosing { max-width: var(--w-wide); margin: 32px auto 0; }
 .offersToolCosts {
-  max-width: var(--col);
+  max-width: var(--w-wide);
   margin: 16px auto 0;
   font-size: var(--step-meta);
   line-height: var(--leading-meta);
@@ -58,7 +58,7 @@
 /* ---- Projects ---- */
 .projectList { display: flex; flex-direction: column; gap: 28px; margin-top: 44px; }
 .project {
-  max-width: var(--col);
+  max-width: var(--w-wide);
   width: 100%;
   margin-inline: auto;
   border: 1px solid var(--border);
@@ -106,7 +106,7 @@
 .toolList { font-size: var(--step-meta); color: var(--muted); }
 .projectFoot a, .backLink { font-size: var(--step-ui); text-decoration: none; border-bottom: 1px solid var(--accent); padding-block: 4px; }
 .projectFoot a:hover, .backLink:hover { color: var(--text); border-bottom-color: var(--text); }
-.projectsClosing { max-width: var(--col); margin: 28px auto 0; font-size: var(--step-ui); color: var(--muted); }
+.projectsClosing { max-width: var(--w-wide); margin: 28px auto 0; font-size: var(--step-ui); color: var(--muted); }
 
 /* ---- Image slots ---- */
 .mediaSlot { display: block; }
