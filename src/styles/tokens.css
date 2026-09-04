@@ -64,7 +64,7 @@
 
 @media (max-width: 720px) {
   :root {
-    --step-hero: 32px;
+    --step-hero: 38px;
     --step-section: 30px;
     --step-project: 24px;
     --step-figure: 32px;

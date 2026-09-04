@@ -36,7 +36,7 @@ const project: Project = {
       { label: "After removing duplicates", count: "5" },
       { label: "Sent to Telegram", count: "5" },
     ],
-    caption: "One recorded run. The workflow canvas above shows the same counts.",
+    caption: "One recorded run. The workflow canvas below shows the same counts.",
   },
 
   evidence: [

@@ -1,0 +1,280 @@
+/* Header, hero, about, contact and footer.
+   Values from design-reference/homepage-full.html. */
+
+.skipLink {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--text);
+  color: var(--bg);
+  transform: translateY(-200%);
+}
+.skipLink:focus { transform: none; }
+
+/* ---- Header ---- */
+.siteHeader { border-bottom: 1px solid var(--border); }
+.headerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-block: 18px;
+}
+.brand { display: flex; flex-direction: column; text-decoration: none; color: var(--text); }
+.brandName { font-family: var(--font-display); font-size: var(--step-brand); }
+.brandRole { font-size: var(--step-badge); color: var(--muted); }
+
+.navDesktop { display: flex; align-items: center; gap: 28px; font-size: var(--step-ui); }
+.navDesktop > a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.navDesktop > a:hover { border-bottom-color: var(--text); }
+
+.navAction {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 9px 16px;
+  text-decoration: none;
+}
+.navAction:hover { background: var(--accent); color: var(--bg); }
+
+/* Mobile menu is a details element, so it opens and closes without JavaScript. */
+.navMobile { display: none; }
+.navMobile > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  display: flex;
+  align-items: center;
+}
+.navMobile > summary::marker { content: ""; }
+.menuIcon { display: block; width: 22px; height: 11px; position: relative; }
+.menuIcon::before,
+.menuIcon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 1px;
+  background: var(--text);
+}
+.menuIcon::before { top: 2px; }
+.menuIcon::after { top: 8px; }
+.navMobile[open] .menuIcon::before { top: 5px; transform: rotate(45deg); }
+.navMobile[open] .menuIcon::after { top: 5px; transform: rotate(-45deg); }
+
+.navPanel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  z-index: 30;
+}
+.navPanel > a {
+  display: block;
+  font-size: 19px;
+  color: var(--text);
+  text-decoration: none;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.navPanelAction { padding: 24px 20px; }
+.navPanelAction .navAction { display: block; text-align: center; padding: 14px 20px; }
+.navPanelSocial { padding: 0 20px 24px; }
+
+/* ---- Hero ---- */
+.hero { padding-block: 96px 76px; }
+.heroInner { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.eyebrow { font-size: var(--step-meta); color: var(--muted); letter-spacing: var(--tracking-eyebrow); }
+.hero h1 { max-width: var(--col-hero); text-align: center; }
+.heroLead { max-width: var(--measure-hero); text-align: center; }
+
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.buttonPrimary {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 13px 22px;
+  font-size: var(--step-ui);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.buttonPrimary:hover { background: var(--text); }
+.buttonText {
+  font-size: var(--step-ui);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+  white-space: nowrap;
+}
+.buttonText:hover { color: var(--text); border-bottom-color: var(--text); }
+
+.heroStats {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.heroStats li { font-size: var(--step-meta); color: var(--muted); }
+.heroStats li + li { border-left: 1px solid var(--border); padding-left: 18px; }
+
+.socialLinks { display: flex; gap: 20px; font-size: var(--step-meta); }
+.socialLinks a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
+.socialLinks a:hover { color: var(--text); border-bottom-color: var(--text); }
+.heroSocial { margin-top: 28px; }
+
+/* ---- About ---- */
+.aboutGrid {
+  max-width: calc(var(--col) + var(--gutter) * 2);
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.aboutBody { display: flex; flex-direction: column; gap: 16px; }
+.aboutFootnote {
+  font-size: var(--step-ui);
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 6px;
+  max-width: none;
+}
+
+/* ---- Contact ---- */
+.contactInner {
+  max-width: calc(var(--col-narrow) + var(--gutter) * 2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.contactDirect { display: flex; gap: 22px; font-size: var(--step-ui); padding: 6px 0 4px; flex-wrap: wrap; }
+.contactDirect a { text-decoration: none; border-bottom: 1px solid var(--accent); }
+.contactDirect a:hover { color: var(--text); border-bottom-color: var(--text); }
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+  margin-top: 8px;
+}
+.honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+
+.field { display: flex; flex-direction: column; gap: 7px; max-width: none; }
+.field label { font-size: var(--step-label); }
+.field input,
+.field textarea {
+  font-size: var(--step-body);
+  background: var(--bg);
+  /* --muted rather than --border: an input boundary is a UI component under
+     WCAG 1.4.11, and --border on --bg is only 1.22 to 1. */
+  border: 1px solid var(--muted);
+  padding: 12px 14px;
+  width: 100%;
+}
+.field textarea { resize: vertical; line-height: var(--leading-body); }
+
+.formActions { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.formActions button {
+  background: var(--accent);
+  color: var(--bg);
+  border: 1px solid var(--accent);
+  font-size: var(--step-ui);
+  padding: 13px 28px;
+  cursor: pointer;
+}
+.formActions button:hover:not(:disabled) { background: var(--text); border-color: var(--text); }
+.formActions button:disabled { cursor: not-allowed; opacity: 0.65; }
+.formNote, .formStatus { font-size: var(--step-meta); color: var(--muted); max-width: none; }
+.formStatus:empty { display: none; }
+
+.formSuccess {
+  border: 1px solid var(--accent);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
+}
+.successHeading { font-family: var(--font-display); font-size: var(--step-card); max-width: none; }
+.successLinks { display: flex; gap: 20px; font-size: var(--step-ui); padding-top: 6px; }
+.successLinks a { text-decoration: none; border-bottom: 1px solid var(--accent); }
+
+/* ---- Footer ---- */
+.siteFooter { border-top: 1px solid var(--border); }
+.footerBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding-block: 28px;
+  flex-wrap: wrap;
+}
+.siteFooter .brandName { font-size: 18px; }
+.siteFooter .brand { flex-direction: row; align-items: baseline; gap: 12px; }
+.footerNav { display: flex; align-items: center; gap: 22px; font-size: var(--step-label); flex-wrap: wrap; }
+.footerNav a { color: var(--muted); text-decoration: none; }
+.footerNav a:hover { color: var(--text); }
+.footerNav .backToTop { color: var(--accent); border-bottom: 1px solid var(--accent); }
+.footerNav .backToTop:hover { color: var(--text); border-bottom-color: var(--text); }
+
+/* ---- Case study page ---- */
+.caseStudyHeader {
+  padding-block: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+.caseStudyBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: var(--section-y);
+  max-width: calc(var(--col) + var(--gutter) * 2);
+}
+.caseProse { display: flex; flex-direction: column; gap: 16px; }
+.caseProse h2 { font-size: var(--step-sub); }
+
+@media (max-width: 720px) {
+  .navDesktop { display: none; }
+  .navMobile { display: block; }
+  .headerBar { padding-block: 14px; position: relative; }
+
+  .hero { padding-block: 44px 40px; }
+  .heroInner { align-items: stretch; gap: 20px; }
+  .hero h1, .heroLead { text-align: left; }
+  .heroActions { flex-direction: column; align-items: stretch; gap: 16px; }
+  .buttonPrimary { text-align: center; padding: 14px 22px; }
+  .buttonText { align-self: flex-start; }
+  .heroStats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    margin-top: 6px;
+  }
+  .heroStats li + li { border-left: 0; padding-left: 0; }
+  .heroSocial { margin-top: 6px; }
+
+  .aboutGrid { grid-template-columns: 1fr; gap: 24px; }
+  .formActions button { width: 100%; padding: 14px 28px; }
+}
