@@ -5,19 +5,32 @@ import path from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
 import App from './src/App.tsx';
-import { builtProjects, publishedProjects } from './src/content/project-data.ts';
+import { allProjects } from './src/content/projects/index.ts';
 
 const siteUrl = 'https://caleb-oke-portfolio.vercel.app';
+const NL = String.fromCharCode(10);
 
 function sitemapXml(): string {
+  const entry = (loc: string, priority: string) => [
+    '  <url>',
+    `    <loc>${loc}</loc>`,
+    '    <changefreq>monthly</changefreq>',
+    `    <priority>${priority}</priority>`,
+    '  </url>',
+  ].join(NL);
+
   const entries = [
-    `  <url>\n    <loc>${siteUrl}/</loc>\n    <changefreq>monthly</changefreq>\n    <priority>1.0</priority>\n  </url>`,
-    ...publishedProjects(builtProjects).map((project) => {
-      const lastModified = project.updatedAt ? `\n    <lastmod>${project.updatedAt.slice(0, 10)}</lastmod>` : '';
-      return `  <url>\n    <loc>${siteUrl}/projects/${project.slug}</loc>${lastModified}\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
-    }),
+    entry(`${siteUrl}/`, '1.0'),
+    ...allProjects.map((project) => entry(`${siteUrl}/projects/${project.slug}`, '0.8')),
   ];
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.join('\n')}\n</urlset>\n`;
+
+  return [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    ...entries,
+    '</urlset>',
+    '',
+  ].join(NL);
 }
 
 function escapeHtml(value: string): string {
@@ -29,23 +42,24 @@ function escapeHtml(value: string): string {
 }
 
 function setMeta(html: string, selector: RegExp, replacement: string): string {
-  return selector.test(html) ? html.replace(selector, replacement) : html.replace('</head>', `    ${replacement}\n  </head>`);
+  return selector.test(html)
+    ? html.replace(selector, replacement)
+    : html.replace('</head>', `    ${replacement}${NL}  </head>`);
 }
 
-function pageMetadata(html: string, path: string): string {
-  if (path === '/') return html;
-  const canonical = `${siteUrl}${path}`;
-  const project = builtProjects.find((item) => `/projects/${item.slug}` === path);
-  const title = project ? (project.seoTitle || `${project.title} | Caleb Oke`) : 'Portfolio publishing desk | Caleb Oke';
-  const description = project ? (project.seoDescription || project.summary) : 'Private portfolio publishing access.';
-  const image = project?.imageUrl
-    ? (project.imageUrl.startsWith('http') ? project.imageUrl : `${siteUrl}${project.imageUrl}`)
-    : `${siteUrl}/og.png`;
-  const robots = project ? 'index, follow, max-image-preview:large' : 'noindex, nofollow, noarchive';
+function pageMetadata(html: string, pagePath: string): string {
+  if (pagePath === '/') return html;
+
+  const canonical = `${siteUrl}${pagePath}`;
+  const project = allProjects.find((item) => `/projects/${item.slug}` === pagePath);
+  if (!project) return html;
+
+  const title = project.seoTitle || `${project.title} | Caleb Oke`;
+  const description = project.seoDescription || project.opening;
+  const image = `${siteUrl}/og.png`;
 
   let output = html.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`);
   output = setMeta(output, /<meta name="description"[^>]*>/, `<meta name="description" content="${escapeHtml(description)}" />`);
-  output = setMeta(output, /<meta name="robots"[^>]*>/, `<meta name="robots" content="${robots}" />`);
   output = setMeta(output, /<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${canonical}" />`);
   output = setMeta(output, /<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${escapeHtml(title)}" />`);
   output = setMeta(output, /<meta property="og:description"[^>]*>/, `<meta property="og:description" content="${escapeHtml(description)}" />`);
@@ -55,21 +69,18 @@ function pageMetadata(html: string, path: string): string {
   output = setMeta(output, /<meta name="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${escapeHtml(description)}" />`);
   output = setMeta(output, /<meta name="twitter:image"[^>]*>/, `<meta name="twitter:image" content="${escapeHtml(image)}" />`);
 
-  if (project) {
-    const structuredData = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'CreativeWork',
-      name: project.title,
-      description,
-      url: canonical,
-      image,
-      author: { '@type': 'Person', name: 'Caleb Oke', url: siteUrl },
-      keywords: project.tools.join(', '),
-      dateModified: project.updatedAt || undefined,
-    }).replaceAll('<', '\\u003c');
-    output = output.replace('</head>', `    <script type="application/ld+json">${structuredData}</script>\n  </head>`);
-  }
-  return output;
+  const structuredData = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description,
+    url: canonical,
+    image,
+    author: { '@type': 'Person', name: 'Caleb Oke', url: siteUrl },
+    keywords: project.tools.join(', '),
+  }).replaceAll('<', String.fromCharCode(92) + 'u003c');
+
+  return output.replace('</head>', `    <script type="application/ld+json">${structuredData}</script>${NL}  </head>`);
 }
 
 function preparePageHtml(): Plugin {
@@ -92,17 +103,21 @@ function preparePageHtml(): Plugin {
         }
       }
 
-      const renderPage = (path: string) => {
-        if (path === '/admin') return pageMetadata(template, path);
-        const appMarkup = renderToString(createElement(StrictMode, null, createElement(App, { initialPath: path, initialProjects: builtProjects })));
-        return pageMetadata(template.replace('<div id="root"></div>', `<div id="root">${appMarkup}</div>`), path);
+      const renderPage = (pagePath: string) => {
+        const appMarkup = renderToString(
+          createElement(StrictMode, null, createElement(App, { initialPath: pagePath })),
+        );
+        return pageMetadata(template.replace('<div id="root"></div>', `<div id="root">${appMarkup}</div>`), pagePath);
       };
 
       html.source = renderPage('/');
-      for (const project of publishedProjects(builtProjects)) {
-        this.emitFile({ type: 'asset', fileName: `projects/${project.slug}/index.html`, source: renderPage(`/projects/${project.slug}`) });
+      for (const project of allProjects) {
+        this.emitFile({
+          type: 'asset',
+          fileName: `projects/${project.slug}/index.html`,
+          source: renderPage(`/projects/${project.slug}`),
+        });
       }
-      this.emitFile({ type: 'asset', fileName: 'admin/index.html', source: renderPage('/admin') });
 
       const sitemap = bundle['sitemap.xml'];
       if (sitemap?.type === 'asset') {

@@ -1,3 +1,4 @@
+// Retained for migration history only. The admin CMS this belonged to was removed; see migrations/ for how the projects tables reached their current shape.
 import { neon } from "@neondatabase/serverless";
 import { readFile } from "node:fs/promises";
 import path from "node:path";

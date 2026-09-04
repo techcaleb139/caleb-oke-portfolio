@@ -1,0 +1,198 @@
+/* Sections rendered from the content layer.
+   Values come from design-reference/homepage-full.html. */
+
+.shell { width: min(var(--page), 100%); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section-y); border-top: 1px solid var(--border); }
+
+.sectionIntro { max-width: var(--col); margin-inline: auto; display: flex; flex-direction: column; gap: 14px; }
+
+/* ---- Status badge. One of the four places --accent is allowed. ---- */
+.badge {
+  align-self: flex-start;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: var(--step-badge);
+  padding: 4px 10px;
+}
+
+/* ---- Offers ---- */
+.offerGrid {
+  max-width: var(--col);
+  margin: 40px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.offer {
+  border: 1px solid var(--border);
+  padding: var(--card-pad-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.offer h3 { font-size: var(--step-card); }
+.offerPrice { font-size: var(--step-meta); color: var(--muted); }
+.offerBody { margin-top: 6px; font-size: var(--step-card-body); }
+.offerLimit {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: var(--step-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted);
+}
+.offersClosing { max-width: var(--col); margin: 32px auto 0; }
+
+/* ---- Projects ---- */
+.projectList { display: flex; flex-direction: column; gap: 28px; margin-top: 44px; }
+.project {
+  max-width: var(--col);
+  width: 100%;
+  margin-inline: auto;
+  border: 1px solid var(--border);
+  padding: var(--card-pad);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.project > h3 { font-size: var(--step-project); }
+.projectSection { display: flex; flex-direction: column; gap: 6px; }
+.projectSection h2 { font-size: var(--step-sub); }
+.projectSection h4 { font-size: var(--step-sub); }
+
+.projectFoot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--border);
+  margin-top: 10px;
+  padding-top: 16px;
+}
+.toolList { font-size: var(--step-meta); color: var(--muted); }
+.projectFoot a, .backLink { font-size: var(--step-ui); text-decoration: none; border-bottom: 1px solid var(--accent); }
+.projectFoot a:hover, .backLink:hover { color: var(--text); border-bottom-color: var(--text); }
+.projectsClosing { max-width: var(--col); margin: 28px auto 0; font-size: var(--step-ui); color: var(--muted); }
+
+/* ---- Image slots ---- */
+.mediaSlot { display: block; }
+.mediaSlot[data-align="center"] { margin-inline: auto; }
+.mediaSlot[data-align="center"] .mediaCaption { text-align: center; }
+
+.mediaFrame {
+  border: 1px solid var(--border);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+.mediaFrame[data-ratio="wide"] { aspect-ratio: var(--ratio-wide); }
+.mediaFrame[data-ratio="sheet"] { aspect-ratio: var(--ratio-sheet); }
+.mediaFrame[data-ratio="transcript"] { aspect-ratio: var(--ratio-transcript); }
+.mediaFrame[data-ratio="phone"] { aspect-ratio: var(--ratio-phone); }
+.mediaFrame[data-ratio="portrait"] { aspect-ratio: var(--ratio-portrait); }
+
+.mediaFrame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mediaCaption {
+  padding-top: 8px;
+  font-size: var(--step-meta);
+  line-height: var(--leading-meta);
+  color: var(--muted);
+  max-width: none;
+}
+
+/* Two evidence slots sit side by side, one fills the width. */
+.evidence { display: grid; gap: 24px; align-items: start; }
+.evidence[data-count="2"] { grid-template-columns: 2.37fr 1fr; }
+
+/* ---- Video thumbnail ---- */
+.videoSlot { text-decoration: none; --dim: 1; --veil: 0.9; }
+.videoSlot:hover { --dim: 0.92; --veil: 1; }
+.videoSlot img { transition: opacity 150ms; opacity: var(--dim); }
+.playBadge {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.playBadge::before {
+  content: "";
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  transition: background 150ms;
+  background: color-mix(in srgb, var(--bg) calc(var(--veil) * 100%), transparent);
+}
+.playTriangle {
+  position: relative;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  border-left: 20px solid var(--text);
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+}
+.videoMeta { display: flex; align-items: baseline; gap: 10px; padding-top: 10px; }
+.videoLabel { font-size: var(--step-ui); color: var(--accent); border-bottom: 1px solid var(--accent); }
+.videoNote { font-size: var(--step-meta); color: var(--muted); }
+.videoSlot:hover .videoLabel { color: var(--text); border-bottom-color: var(--text); }
+
+/* ---- Funnel. No bars, no chart library, no icons. ---- */
+.funnelBlock { margin-top: 10px; }
+.funnel {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--stages), 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.funnelStage {
+  padding: 24px;
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.funnelStage:first-child { padding: 24px 24px 22px 0; border-left: 0; }
+.funnelStage:last-child { padding: 24px 0 22px 24px; }
+.funnelLabel {
+  font-size: var(--step-meta);
+  line-height: 1.4;
+  color: var(--muted);
+  min-height: 36px;
+}
+.funnelCount {
+  font-family: var(--font-display);
+  font-size: var(--step-figure);
+  line-height: var(--leading-flat);
+}
+
+@media (max-width: 720px) {
+  .offerGrid { grid-template-columns: 1fr; margin-top: 24px; }
+  .evidence[data-count="2"] { grid-template-columns: 1fr; }
+  .funnel { grid-template-columns: 1fr; }
+  .funnelStage,
+  .funnelStage:first-child,
+  .funnelStage:last-child {
+    padding: 16px 0;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .funnelStage:first-child { border-top: 0; }
+  .funnelLabel { min-height: 0; }
+}

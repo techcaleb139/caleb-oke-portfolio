@@ -1,32 +1,14 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
-import type { PortfolioProject } from "../lib/project-types.ts";
-import { builtProjects, publishedProjects } from "../src/content/project-data.ts";
+import { FormEvent, useMemo, useRef, useState } from "react";
+import ProjectCard from "./ProjectCard.tsx";
+import { allProjects } from "../src/content/projects/index.ts";
+import { offers, offersClosing, offersHeading, offersIntro } from "../src/content/offers.ts";
+import { projectsClosing, projectsHeading, projectsIntro } from "../src/content/site.ts";
 
 const EMAIL = "okecaleb139@gmail.com";
 const PHONE = "2348065755296";
 
-const capabilityRows = [
-  {
-    service: "Connect routine admin work",
-    fit: "For teams copying information between forms, spreadsheets, email, and internal tools.",
-    outcome: "Move submitted information to the right place, notify the right person, and keep approval steps visible.",
-    tools: "n8n / Make / Zapier",
-  },
-  {
-    service: "Collect and clean data",
-    fit: "For businesses receiving records from websites, APIs, documents, or several platforms.",
-    outcome: "Standardize fields, remove duplicates, filter unwanted records, and deliver the useful data.",
-    tools: "REST APIs / Python / JavaScript",
-  },
-  {
-    service: "Prototype phone assistants",
-    fit: "For repeated enquiries, bookings, order capture, and first-line qualification calls.",
-    outcome: "Capture required details, check them against business rules, and send uncertain requests to a person.",
-    tools: "Vapi / Webhooks / n8n",
-  },
-];
 
 const processSteps = [
   ["Map the task", "List the current steps, the people involved, and where work is repeated."],
@@ -48,41 +30,16 @@ function validate(values: FormValues): FormErrors {
   return errors;
 }
 
-type PortfolioProps = { initialProjects?: PortfolioProject[] };
-
-function projectAnchor(project: PortfolioProject): string {
-  if (project.slug === "voice-ai-restaurant-ordering-prototype") return "voice-ai";
-  if (project.slug === "automated-job-search-alert-pipeline") return "job-pipeline";
-  return project.slug;
-}
-
-export default function Portfolio({ initialProjects = builtProjects }: PortfolioProps) {
+export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [values, setValues] = useState<FormValues>(emptyForm);
   const [touched, setTouched] = useState<Partial<Record<keyof FormValues, boolean>>>({});
   const [brief, setBrief] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
-  const [projects, setProjects] = useState<PortfolioProject[]>(initialProjects);
   const errorSummaryRef = useRef<HTMLDivElement>(null);
   const errors = useMemo(() => validate(values), [values]);
   const visibleErrors = (Object.keys(errors) as Array<keyof FormValues>).filter((field) => touched[field]);
-  const visibleProjects = useMemo(() => publishedProjects(projects), [projects]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetch("/api/projects", { signal: controller.signal, headers: { Accept: "application/json" } })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Project request failed")))
-      .then((result: { projects?: PortfolioProject[] }) => {
-        if (Array.isArray(result.projects) && result.projects.length) setProjects(result.projects);
-      })
-      .catch((error: unknown) => {
-        if (!(error instanceof DOMException && error.name === "AbortError")) {
-          console.info("Using the built project snapshot.");
-        }
-      });
-    return () => controller.abort();
-  }, []);
 
   function updateField(field: keyof FormValues, value: string) {
     setValues((current) => ({ ...current, [field]: value }));
@@ -205,39 +162,41 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
           </figure>
         </section>
 
-        <section className="section capabilitiesSection" id="services">
-          <div className="shell servicesLayout">
-            <header className="sectionIntro servicesIntro">
-              <h2>Automation services</h2>
-              <p>I take on small, defined projects where the current steps and the required result can be explained plainly.</p>
+        <section className="section offersSection" id="services">
+          <div className="shell">
+            <header className="sectionIntro">
+              <h2>{offersHeading}</h2>
+              <p>{offersIntro}</p>
             </header>
 
-            <div className="capabilityTable" aria-label="Automation capabilities">
-              {capabilityRows.map((row) => (
-                <article className="capabilityRow" key={row.service}>
-                  <div>
-                    <h3>{row.service}</h3>
-                    <p className="serviceFit">{row.fit}</p>
-                  </div>
-                  <p>{row.outcome}</p>
-                  <span className="serviceTools">{row.tools}</span>
+            <div className="offerGrid">
+              {offers.map((offer) => (
+                <article className="offer" key={offer.title}>
+                  <h3>{offer.title}</h3>
+                  <p className="offerPrice">{offer.price}</p>
+                  <p className="offerBody">{offer.body}</p>
+                  <p className="offerLimit">{offer.limit}</p>
                 </article>
               ))}
             </div>
+
+            <p className="offersClosing">{offersClosing}</p>
           </div>
         </section>
 
-        <section className="section workSection shell" id="work">
-          <header className="sectionIntro workIntro">
-            <h2>Selected projects</h2>
-            <p>These are systems I have built and tested. Each project shows an observed result and the next improvement I would make.</p>
+        <section className="section projectsSection shell" id="work">
+          <header className="sectionIntro">
+            <h2>{projectsHeading}</h2>
+            <p>{projectsIntro}</p>
           </header>
 
-          <div className="workGrid">
-            {visibleProjects.map((project) => (
-              <CaseStudy project={project} key={project.id || project.slug} />
+          <div className="projectList">
+            {allProjects.map((project) => (
+              <ProjectCard project={project} key={project.slug} />
             ))}
           </div>
+
+          <p className="projectsClosing">{projectsClosing}</p>
         </section>
 
         <section className="section processSection shell" aria-labelledby="process-title">
@@ -374,33 +333,6 @@ export default function Portfolio({ initialProjects = builtProjects }: Portfolio
         </div>
       </footer>
     </main>
-  );
-}
-
-function CaseStudy({ project }: { project: PortfolioProject }) {
-  const id = projectAnchor(project);
-  return (
-    <article className="caseStudy" id={id}>
-      <figure className="caseVisual">
-        <img src={project.imageUrl} alt={project.imageAlt} width="800" height="450" loading="lazy" />
-      </figure>
-
-      <header className="caseHeader">
-        <p className="caseStatus">{project.statusLabel}</p>
-        <h3>{project.title}</h3>
-        <p>{project.summary}</p>
-      </header>
-
-      <div className="caseEvidence">
-        <div><h4>What happened in testing</h4><p>{project.observedResult}</p></div>
-        <div><h4>Next improvement</h4><p>{project.nextTest}</p></div>
-      </div>
-
-      <div className="caseFooter">
-        <span>{project.category}</span>
-        <a className="textLink" href={`/projects/${project.slug}`}>View case study</a>
-      </div>
-    </article>
   );
 }
 

@@ -39,3 +39,6 @@ yarn-error.log*
 .cms-private/
 *.log
 scripts/capture-*.mjs
+
+# design source of truth, kept locally only (6MB bundle)
+/design-reference/
