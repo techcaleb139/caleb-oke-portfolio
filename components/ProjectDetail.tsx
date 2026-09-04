@@ -1,5 +1,3 @@
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import type { Project } from "../lib/project-types.ts";
 import { FunnelDiagram, ProseSectionBlock } from "./ProjectCard.tsx";
 import { ProjectMedia } from "./ProjectMedia.tsx";
@@ -13,8 +11,6 @@ import SiteHeader from "./SiteHeader.tsx";
    homepage: they need the navigation, the contact route, and the badge that
    says what kind of thing they are reading before they read any claim. */
 export default function ProjectDetail({ project }: { project: Project }) {
-  const caseStudy = project.caseStudy?.trim();
-
   return (
     <div id="top">
       <a className="skipLink" href="#main">Skip to main content</a>
@@ -48,14 +44,6 @@ export default function ProjectDetail({ project }: { project: Project }) {
 
           <ProseSectionBlock section={project.notProven} level={2} />
           <ProseSectionBlock section={project.nextStep} level={2} />
-
-          {/* Rendered only when there is a write-up behind it. An empty
-              "Overview" heading promises content that does not exist. */}
-          {caseStudy ? (
-            <article className="caseProse">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{caseStudy}</ReactMarkdown>
-            </article>
-          ) : null}
         </div>
       </main>
 

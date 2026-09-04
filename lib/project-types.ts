@@ -76,8 +76,17 @@ export type Project = {
   nextStep: ProseSection;
   tools: string[];
   /** Long-form case study body for /projects/<slug>. Markdown. */
-  /* Long-form write-up. Omit until there is one: the case study page
-     renders nothing rather than an empty "Overview" heading. */
+  /* Long-form write-up, authored as Markdown.
+
+     NOTHING RENDERS THIS TODAY. react-markdown and remark-gfm were removed
+     because both case studies were empty, so the libraries shipped to every
+     visitor to render nothing. Writing a value here will not make it appear.
+
+     When the first case study is written, convert it to HTML at build time -
+     in the Vite plugin, with a build-only dependency such as `marked` - and
+     inject the result. Do not add a Markdown renderer back to the client
+     bundle: the case study pages are pre-rendered and must stay fully
+     functional with JavaScript disabled. */
   caseStudy?: string;
   seoTitle: string;
   seoDescription: string;

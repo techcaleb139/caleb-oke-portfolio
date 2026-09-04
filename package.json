@@ -10,16 +10,14 @@
     "build": "vite build --config vite.config.vercel.ts",
     "build:vercel": "vite build --config vite.config.vercel.ts",
     "cms:migrate": "node scripts/migrate-cms.mjs",
-    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/contact-endpoint.test.mjs",
+    "test": "npm run build && node --test tests/rendered-html.test.mjs tests/image-ladders.test.mjs tests/contact-endpoint.test.mjs",
     "lint": "eslint . --ignore-pattern dist",
     "dev:vercel": "vercel dev"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
     "react": "19.2.6",
-    "react-dom": "19.2.6",
-    "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1"
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
     "@eslint/js": "9.39.4",

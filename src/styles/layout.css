@@ -304,8 +304,6 @@
   padding-bottom: var(--section-y);
   max-width: calc(var(--w-wide) + var(--gutter) * 2);
 }
-.caseProse { display: flex; flex-direction: column; gap: 16px; }
-.caseProse h2 { font-size: var(--step-sub); }
 
 @media (max-width: 720px) {
   .navDesktop { display: none; }

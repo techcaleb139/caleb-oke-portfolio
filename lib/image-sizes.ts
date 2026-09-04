@@ -1,81 +1,118 @@
 /* Width ladders for the build-time webp generation.
-   Single source of truth: the Vite plugin encodes exactly these widths, and
-   ProjectMedia builds its srcset from the same table, so the two can never
-   drift apart.
 
-   Widths come from the real CSS slots, not the source dimensions.
+   Single source of truth in two directions:
 
-   Layout maths behind the numbers, from src/styles/tokens.css and
-   components.css, with box-sizing: border-box throughout:
+   1. The Vite plugin encodes exactly these widths and ProjectMedia builds its
+      srcset from the same table, so the encoder and the markup cannot drift.
+   2. Every width and every sizes string below is COMPUTED from the layout
+      constants, never typed out. Changing --w-wide moves the ladders, the
+      breakpoints and the sizes attributes together.
 
-     page gutter   64px desktop, 20px at <=720px      (--gutter)
-     card padding  40px desktop, 20px at <=720px      (--card-pad)
-     card cap      1240px                             (--w-wide)
+   The one thing that cannot be shared is the CSS itself: TypeScript cannot
+   read a custom property. LAYOUT mirrors src/styles/tokens.css and
+   components.css by hand, and tests/image-ladders.test.mjs parses those files
+   and fails if any value here disagrees.
 
-   A project card's inner content width is therefore:
-     desktop, capped   1240 - 2*40                   = 1160px
-     720-1368px band   viewport - 2*64 - 2*40        = vw - 208
-     <=720px           viewport - 2*20 - 2*20        = vw - 80
+   That link broke once already. When --col 900 became --w-wide 1240 the
+   ladders silently kept their old numbers: the images still rendered, just at
+   the wrong size, and nothing failed. */
 
-   1160px is the widest any full-width slot ever renders, and the card
-   reaches that cap at a 1368px viewport. */
+/* ---- Mirrored from CSS. Guarded by tests/image-ladders.test.mjs. ---- */
+export const LAYOUT = {
+  /** --w-wide, the project card cap. */
+  wide: 1240,
+  /** --gutter, desktop and at most 720px. */
+  gutter: 64,
+  gutterSmall: 20,
+  /** --card-pad, desktop and at most 720px. */
+  cardPad: 40,
+  cardPadSmall: 20,
+  /** The one breakpoint in the stylesheet. */
+  mobileBreakpoint: 720,
+  /** .evidence gap, and the first column of .evidence[data-count="2"]. */
+  evidenceGap: 24,
+  evidenceMajor: 2.37,
+  /** maxWidth on the Telegram slot in its content file. */
+  telegramSlot: 270,
+  /** background-size on the transcript slot, as a multiplier of its box. */
+  transcriptZoom: 3.7,
+} as const;
+
+/* ---- Derived. Nothing below is a typed-in number. ---- */
+
+/** Widest a full-width slot ever renders: the card at its cap, less padding. */
+export const cardInner = LAYOUT.wide - 2 * LAYOUT.cardPad;
+
+/** Viewport at which the card stops growing and the slot hits cardInner. */
+export const cardCapViewport = LAYOUT.wide + 2 * LAYOUT.gutter;
+
+/** Chrome either side of a slot: page gutter plus card padding. */
+const mobileInset = 2 * (LAYOUT.gutterSmall + LAYOUT.cardPadSmall);
+const midInset = 2 * (LAYOUT.gutter + LAYOUT.cardPad);
+
+/** The two columns of the evidence grid, once the gap is taken out. */
+const evidenceTrack = cardInner - LAYOUT.evidenceGap;
+export const evidenceMajor = Math.round(evidenceTrack * (LAYOUT.evidenceMajor / (LAYOUT.evidenceMajor + 1)));
+export const evidenceMinor = Math.round(evidenceTrack / (LAYOUT.evidenceMajor + 1));
+
+/** 0.5x / 1x / 1.5x / 2x of a slot. The build clamps the top rung to the
+    source's native width rather than upscaling. */
+function ladder(slot: number, multipliers: number[] = [0.5, 1, 1.5, 2]): number[] {
+  return multipliers.map((m) => Math.round(slot * m));
+}
 
 export type ImageRecipe = {
   widths: number[];
-  /* The sizes attribute. Tells the browser the slot width before layout, so
-     it can pick from the ladder on the first pass. */
+  /** Tells the browser the slot width before layout, so it can pick from the
+      ladder on the first pass. Empty for a background, which has no sizes. */
   sizes: string;
-  /* True for the transcript, which renders as a zoomed CSS background rather
-     than an <img>, and so is selected by device pixel ratio via image-set()
-     instead of by width via sizes. */
+  /** Rendered as a zoomed CSS background rather than an <img>, so it is
+      selected by device pixel ratio via image-set() instead of by width. */
   background?: boolean;
 };
 
-/* Full-width slot inside a project card: 1160px at the desktop cap.
-   0.5x / 1x / 1.5x / 2x of that, with the top rung clamped to the source's
-   native width by the build step rather than upscaled. */
-const FULL_WIDTH: ImageRecipe = {
-  widths: [580, 1160, 1740, 2320],
-  sizes: "(max-width: 720px) calc(100vw - 80px), (max-width: 1368px) calc(100vw - 208px), 1160px",
-};
+/** A slot that fills the card: shrinks with the viewport, then caps. */
+function fullWidth(): ImageRecipe {
+  return {
+    widths: ladder(cardInner),
+    sizes:
+      `(max-width: ${LAYOUT.mobileBreakpoint}px) calc(100vw - ${mobileInset}px), ` +
+      `(max-width: ${cardCapViewport}px) calc(100vw - ${midInset}px), ` +
+      `${cardInner}px`,
+  };
+}
+
+/** A slot in the evidence grid, which collapses to full width on mobile. */
+function evidenceSlot(desktop: number): ImageRecipe {
+  const worstCase = Math.max(desktop, LAYOUT.mobileBreakpoint - mobileInset);
+  return {
+    widths: ladder(worstCase),
+    sizes: `(max-width: ${LAYOUT.mobileBreakpoint}px) calc(100vw - ${mobileInset}px), ${desktop}px`,
+  };
+}
+
+/** A slot pinned by maxWidth, which only shrinks on a very narrow phone. */
+function pinnedSlot(width: number): ImageRecipe {
+  return {
+    widths: ladder(width, [1, 2]),
+    sizes: `(max-width: ${width + mobileInset}px) calc(100vw - ${mobileInset}px), ${width}px`,
+  };
+}
+
+/** A zoomed background: drawn at a multiple of its box, picked by pixel
+    ratio, because a CSS background cannot use sizes. */
+function zoomedBackground(slot: number, zoom: number): ImageRecipe {
+  const drawn = Math.round(slot * zoom);
+  return { widths: ladder(drawn, [1, 2]), sizes: "", background: true };
+}
 
 export const imageRecipes: Record<string, ImageRecipe> = {
-  /* Video thumbnail. 16:9, full width of the card. */
-  "test-call-thumbnail.png": FULL_WIDTH,
-
-  /* The order sheet. Native 1917x937 ratio, full width of the card. */
-  "sheet-orders.png": FULL_WIDTH,
-
-  /* Sole evidence slot on the job pipeline, so it fills the card width. */
-  "n8n-job-pipeline-canvas.png": FULL_WIDTH,
-
-  /* Left column of the two-slot evidence grid: (1160 - 24 gap) * 2.37/3.37
-     = 799px on desktop. Below 720px the grid collapses to one column, where
-     it reaches at most 640px, so desktop is now the worst case. */
-  "n8n-restaurant-canvas.png": {
-    widths: [400, 800, 1200, 1600],
-    sizes: "(max-width: 720px) calc(100vw - 80px), 800px",
-  },
-
-  /* Telegram alert. Pinned to 270px by maxWidth on the slot itself, so it
-     never renders wider than that except on a phone narrower than 350px.
-     Native is 591 wide, which is 2.2x the slot, so the ladder stops there
-     rather than upscaling. */
-  "telegram-alert.jpg": {
-    widths: [270, 591],
-    sizes: "(max-width: 350px) calc(100vw - 80px), 270px",
-  },
-
-  /* Vapi transcript. Rendered as a background at background-size: 370%, so
-     the drawn image is 3.7x the slot width: a 337px slot draws at 1247px on
-     desktop, and a 295px slot on a 375px phone draws at 1092px. A CSS
-     background cannot use sizes, so these two widths go to image-set() as 1x
-     and 2x and are picked by pixel ratio. */
-  "vapi-transcript.png": {
-    widths: [1280, 1919],
-    sizes: "",
-    background: true,
-  },
+  "test-call-thumbnail.png": fullWidth(),
+  "sheet-orders.png": fullWidth(),
+  "n8n-job-pipeline-canvas.png": fullWidth(),
+  "n8n-restaurant-canvas.png": evidenceSlot(evidenceMajor),
+  "telegram-alert.jpg": pinnedSlot(LAYOUT.telegramSlot),
+  "vapi-transcript.png": zoomedBackground(evidenceMinor, LAYOUT.transcriptZoom),
 };
 
 /* /images/foo.png -> foo.png */
@@ -83,7 +120,7 @@ export function imageKey(src: string): string {
   return src.slice(src.lastIndexOf("/") + 1);
 }
 
-/* foo.png at 820 -> /images/generated/foo-820.webp */
+/* foo.png at 1160 -> /images/generated/foo-1160.webp */
 export function variantPath(key: string, width: number): string {
   return `/images/generated/${key.replace(/\.(png|jpg|jpeg)$/i, "")}-${width}.webp`;
 }
