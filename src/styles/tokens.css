@@ -41,6 +41,7 @@
   --leading-meta: 1.5;
   --leading-flat: 1;
   --tracking-hero: -0.035em;
+  --tracking-eyebrow: 0.06em;
   /* Display weights. The hero carries more weight and tighter tracking
      than the headings below it. */
   --weight-hero: 800;

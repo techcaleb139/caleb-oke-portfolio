@@ -24,6 +24,7 @@ export default function Portfolio() {
         {/* ---- hero ---- */}
         <section className="hero">
           <div className="shell heroInner">
+            <p className="eyebrow">{hero.eyebrow}</p>
             <h1>{hero.title}</h1>
             <p className="heroLead">{hero.lead}</p>
 
