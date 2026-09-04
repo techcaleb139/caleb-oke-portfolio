@@ -26,7 +26,6 @@ export const nav = [
 export const navAction = { label: "Start a conversation", href: "/#contact" };
 
 export const hero = {
-  eyebrow: "Available for remote work.",
   title: "I build the systems that stop work falling through the cracks.",
   lead: "Forms, spreadsheets, APIs and voice tools, connected so information reaches the right place without anyone retyping it. Every project below shows what I built, what it measured, and what it still cannot do.",
   primary: { label: "See what I have built", href: "/#work" },
