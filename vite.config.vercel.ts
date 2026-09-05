@@ -11,6 +11,10 @@ import { generateImagesPlugin } from './scripts/generate-images.ts';
 const siteUrl = 'https://www.caleboke.com';
 const NL = String.fromCharCode(10);
 
+function robotsTxt(): string {
+  return ['User-agent: *', 'Allow: /', '', `Sitemap: ${siteUrl}/sitemap.xml`, ''].join(NL);
+}
+
 function sitemapXml(): string {
   const entry = (loc: string, priority: string) => [
     '  <url>',
@@ -49,17 +53,31 @@ function setMeta(html: string, selector: RegExp, replacement: string): string {
 }
 
 function pageMetadata(html: string, pagePath: string): string {
-  if (pagePath === '/') return html;
+  /* The template names no host. Every URL in index.html - canonical, og:url,
+     og:image, twitter:image and all five JSON-LD fields - is written as
+     {{SITE_URL}} and resolved here, so siteUrl is the only place the host
+     exists and changing it moves every URL on every page.
+
+     There used to be an `if (pagePath === '/') return html` above this. It was
+     redundant: the project lookup below already returns the template
+     unchanged for any path that is not a project route, the homepage
+     included. What it actually did was skip this substitution for the
+     homepage, which is why the homepage kept the apex host while the project
+     pages moved to www. */
+  let output = html.replaceAll('{{SITE_URL}}', siteUrl);
 
   const canonical = `${siteUrl}${pagePath}`;
   const project = allProjects.find((item) => `/projects/${item.slug}` === pagePath);
-  if (!project) return html;
+
+  /* Not a project route. The homepage lands here and keeps its own
+     hand-written title and description, now with the host resolved. */
+  if (!project) return output;
 
   const title = project.seoTitle || `${project.title} | Caleb Oke`;
   const description = project.seoDescription || project.opening;
   const image = `${siteUrl}/og.png`;
 
-  let output = html.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`);
+  output = output.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(title)}</title>`);
   output = setMeta(output, /<meta name="description"[^>]*>/, `<meta name="description" content="${escapeHtml(description)}" />`);
   output = setMeta(output, /<link rel="canonical"[^>]*>/, `<link rel="canonical" href="${canonical}" />`);
   output = setMeta(output, /<meta property="og:title"[^>]*>/, `<meta property="og:title" content="${escapeHtml(title)}" />`);
@@ -128,6 +146,7 @@ function preparePageHtml(): Plugin {
     async writeBundle(options) {
       const outputDirectory = typeof options.dir === 'string' ? options.dir : path.resolve('dist');
       await writeFile(path.resolve(outputDirectory, 'sitemap.xml'), sitemapXml(), 'utf8');
+      await writeFile(path.resolve(outputDirectory, 'robots.txt'), robotsTxt(), 'utf8');
     },
   };
 }
