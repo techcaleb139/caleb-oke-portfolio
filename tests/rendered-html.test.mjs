@@ -151,7 +151,7 @@ test("the honeypot stays hidden from assistive technology and the tab order", as
 
 test("publishes complete search and social metadata", async () => {
   const html = await homepage();
-  assert.match(html, /rel="canonical" href="https:\/\/caleboke\.com\/"/);
+  assert.match(html, /rel="canonical" href="https:\/\/www\.caleboke\.com\/"/);
   assert.match(html, /name="robots" content="index, follow/);
   assert.match(html, /property="og:title"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
@@ -354,10 +354,15 @@ test("no page links to an anchor it does not contain", async () => {
   }
 });
 
-/* The canonical host is the product, not the deploy target. Declaring the
-   vercel.app URL as canonical tells search engines that caleboke.com is the
-   copy. This walks every built page and the sitemap. */
-test("no built page points search engines at the vercel.app host", async () => {
+/* Vercel serves www as production and 308-redirects the apex to it, so the
+   apex must not appear as a declared URL anywhere: naming it splits indexing
+   signals between two hosts.
+
+   This asserts over the whole rendered file rather than per tag. The previous
+   version only checked rel="canonical", which is exactly why og:url,
+   og:image, twitter:image and every JSON-LD field drifted to the apex without
+   anything failing. */
+test("no built page declares a URL on a host other than www.caleboke.com", async () => {
   const files = [
     path.join(distDir, "index.html"),
     path.join(distDir, "sitemap.xml"),
@@ -369,9 +374,24 @@ test("no built page points search engines at the vercel.app host", async () => {
 
   for (const file of files) {
     const text = await readFile(file, "utf8");
-    assert.doesNotMatch(text, /vercel\.app/, `${path.relative(distDir, file)} still references the vercel.app host`);
+    const where = path.relative(distDir, file);
+
+    // The apex without www, anywhere in the file, in any tag or field.
+    const apex = [...text.matchAll(/https:\/\/caleboke\.com[^"'<s]*/g)].map((m) => m[0]);
+    assert.deepEqual(apex, [], `${where} names the apex host instead of www: ${apex.join(", ")}`);
+
+    // The deploy target is never the declared host either.
+    assert.doesNotMatch(text, /vercel\.app/, `${where} still references the vercel.app host`);
+
+    // The token must have been resolved, not shipped.
+    assert.doesNotMatch(text, /{{SITE_URL}}/, `${where} shipped an unresolved {{SITE_URL}} token`);
+
     if (file.endsWith(".html")) {
-      assert.match(text, /rel="canonical" href="https:\/\/caleboke\.com/, `${path.relative(distDir, file)} declares a caleboke.com canonical`);
+      assert.match(
+        text,
+        /rel="canonical" href="https:\/\/www\.caleboke\.com/,
+        `${where} declares a www.caleboke.com canonical`,
+      );
     }
   }
 });
