@@ -1,5 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="18" fill="#10251d"/>
-  <path d="M18 18v28h17v-7H25V25h10v-7H18Z" fill="#b8f3d2"/>
-  <path d="M39 18h7l-4 28h-7l4-28Z" fill="#fdfcf8"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Caleb Oke">
+  <rect width="64" height="64" rx="15" fill="#14584A"/>
+  <path
+    d="M45.5 20.5A18 18 0 1 0 45.5 43.5"
+    fill="none"
+    stroke="#FFFFFF"
+    stroke-width="9"
+    stroke-linecap="round"
+  />
+  <rect x="42" y="40" width="8" height="8" rx="2" fill="#FFFFFF"/>
 </svg>
