@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://caleboke.com/sitemap.xml
+Sitemap: https://www.caleboke.com/sitemap.xml
